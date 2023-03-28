@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ReviewsServiceApplication<game_search>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "upm.tfg.b190222.reviews_service.ReviewsServiceApplication",
+            "projectName": "game_search",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

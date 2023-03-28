@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-UsuariosServiceApplication<usuarios_service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "upm.tfg.b190222.usuarios_service.UsuariosServiceApplication",
+            "projectName": "usuarios_service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

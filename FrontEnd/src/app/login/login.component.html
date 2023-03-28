@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="login.component.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <h3>Login</h3>
+            <form>
+                <div class="mb-3">
+                    <label for="Username" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" id="Username" name="username" maxlength="20" [(ngModel)]="username">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Constraseña</label>
+                    <input type="text" class="form-control" id="Password" name="password" maxlength="25" [(ngModel)]="password">
+                </div>
+                <div class="mb-4">
+                <button type="button" class="btn btn-info" role="button" (click)="login()">Entrar</button> 
+                </div>
+            </form>
+            <div class="container">
+                <div class="mb-4">
+                    <button type="button" class="btn btn-info" role="button" [routerLink]="['/register']">¿No tienes una cuenta? Registrate</button> 
+                    </div>
+            </div>
+        </div>
+    </body>
+</html>
