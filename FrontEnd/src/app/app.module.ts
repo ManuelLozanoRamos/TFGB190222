@@ -11,14 +11,19 @@ import { ReviewsComponent } from './reviews/reviews.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { FormReviewsComponent } from './reviews/form-reviews/form-reviews.component';
+import { UserReviewsComponent } from './reviews/user-reviews/user-reviews.component';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
   {path:'login', component:LoginComponent},
   {path:'register', component:RegisterComponent},
   {path:'home', component:HomeComponent},
-  {path:'reviews', component:ReviewsComponent},
-  {path:'reviews/create', component:FormReviewsComponent}
+  //{path:'games', component:GomeComponent},
+  {path:'reviews?game=:game', component:ReviewsComponent},
+  {path:'reviews/create', component:FormReviewsComponent},
+  {path:'reviews/create?game=:game', component:FormReviewsComponent},
+  {path:':username/reviews', component:UserReviewsComponent},
+  {path:':username/reviews/:id/edit', component:FormReviewsComponent},
 ]
 
 @NgModule({
@@ -28,7 +33,8 @@ const routes : Routes = [
     ReviewsComponent,
     LoginComponent,
     RegisterComponent,
-    FormReviewsComponent
+    FormReviewsComponent,
+    UserReviewsComponent
   ],
   imports: [
     BrowserModule,

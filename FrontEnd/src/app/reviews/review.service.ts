@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { Review } from './review';
 import { FormResponse } from './form-reviews/form-response';
 import { SearchResponse } from './search-response';
+import { DeleteResponse } from './delete-response';
+import { SearchByIdResponse } from './searchById-response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +17,20 @@ export class ReviewService {
   constructor(private http:HttpClient) { }
 
   //Obtener reviews
-  getReviews(game:string):Observable<SearchResponse>{
+  getReviews(game:string, username:string):Observable<SearchResponse>{
     if(String.length > 50){
       return of(new SearchResponse([], "ERROR_LEN_VID"));
     }
 
-    return this.http.get<SearchResponse>(this.url,{params:{juego:game}});
+    if(String.length > 20){
+      username = "any";
+    }
+
+    return this.http.get<SearchResponse>(this.url,{params:{juego:game, username:username}});
+  }
+
+  getReviewById(idReview:number):Observable<SearchByIdResponse>{
+    return this.http.get<SearchByIdResponse>(this.url + '/' + encodeURIComponent(idReview));
   }
 
   //Crear review
@@ -39,5 +49,10 @@ export class ReviewService {
     }
 
     return this.http.post<FormResponse>(this.url, review);
+  }
+
+  //Elimina una review
+  delete(idReview:number):Observable<DeleteResponse>{
+    return this.http.delete<DeleteResponse>(this.url + '/' + encodeURIComponent(idReview) + '/delete');
   }
 }

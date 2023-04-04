@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
@@ -9,11 +9,29 @@ import { ReviewService } from '../review.service';
   templateUrl: './form-reviews.component.html',
   styleUrls: ['./form-reviews.component.css']
 })
-export class FormReviewsComponent {
+export class FormReviewsComponent implements OnInit{
   review:Review;
 
-  constructor(private appComponent:AppComponent, private reviewService:ReviewService, private router:Router){
+  constructor(private appComponent:AppComponent, private reviewService:ReviewService, 
+              private router:Router, private activatedRoute:ActivatedRoute){
     this.review = new Review();
+  }
+  ngOnInit(): void {
+    this.cargar();
+  }
+
+  cargar(){
+    this.activatedRoute.params.subscribe(
+      //Comprobar si hay errore y demás
+      r => {
+        let id=r['id'];
+        if(id){
+          this.reviewService.getReviewById(id).subscribe(
+            rev => this.review = rev.review
+          );
+        }
+      }
+    );
   }
 
   createReview(){
