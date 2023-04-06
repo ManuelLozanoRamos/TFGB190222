@@ -6,6 +6,8 @@ import { FormResponse } from './form-reviews/form-response';
 import { SearchResponse } from './search-response';
 import { DeleteResponse } from './delete-response';
 import { SearchByIdResponse } from './searchById-response';
+import { EditResponse } from './edit-response';
+import { ReviewInfo } from './reviewInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +56,9 @@ export class ReviewService {
   //Elimina una review
   delete(idReview:number):Observable<DeleteResponse>{
     return this.http.delete<DeleteResponse>(this.url + '/' + encodeURIComponent(idReview) + '/delete');
+  }
+
+  editReview(idReview:number, reviewInfo:ReviewInfo):Observable<EditResponse>{
+    return this.http.put<EditResponse>(this.url + '/' + encodeURIComponent(idReview) + '/edit', reviewInfo);
   }
 }

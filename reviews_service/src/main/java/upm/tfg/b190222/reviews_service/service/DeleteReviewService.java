@@ -20,7 +20,7 @@ public class DeleteReviewService {
     @Transactional
     public String deleteReview(int idReview){
         try{
-           CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Review> cq = cb.createQuery(Review.class);
             Root<Review> reviews = cq.from(Review.class); 
 
@@ -34,7 +34,6 @@ public class DeleteReviewService {
 
             return "OK";
         } catch (Exception e){
-            e.printStackTrace();
             return "ERROR";
         }
     }
