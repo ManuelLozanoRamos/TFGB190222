@@ -8,7 +8,10 @@
             <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games']">Buscar Juegos</button>
         </div>
         <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/',username,'reviews']">Ver mis Reseñas</button>
+            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/users/',username,'reviews']">Ver mis Reseñas</button>
+        </div>
+        <div class="container" *ngIf="username == 'admin'">
+            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/admin']">Administrar Juegos</button>
         </div>
     </body>
 </html>

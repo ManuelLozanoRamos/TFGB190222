@@ -9,7 +9,7 @@ create table Game (
 	nombre varchar(75) unique not null,
     plataforma varchar(40) not null,
     desarrolladora varchar(50) not null,
-    generos varchar(75) not null,
+    generos varchar(79) not null,
     fechaLanzamiento Date not null,
     fechaRegistro Date not null,
     primary key(nombre)

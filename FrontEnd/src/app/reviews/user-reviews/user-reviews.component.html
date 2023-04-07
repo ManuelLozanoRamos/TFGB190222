@@ -17,6 +17,9 @@
             <div class="mb-4">
             <button type="button" class="btn btn-info" role="button" (click)="searchByGame()">Buscar Reviews</button> 
             </div>
+            <div class="mb-4">
+                <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button> 
+            </div>
         </form>
     </div>
 
@@ -26,7 +29,6 @@
         <h4 *ngIf="reviews[0] == null">No hay resultados</h4>
 
         <tr *ngIf="reviews[0] != null">
-            <th scope="col">ID</th>
             <th scope="col">Usuario</th>
             <th scope="col">Game</th>
             <th scope="col">Titulo</th>
@@ -37,14 +39,13 @@
         </thead>
         <tbody>
         <tr *ngFor="let review of reviews">
-            <th scope="row">{{review.idReview}}</th>
             <td>{{review.username}}</td>
             <td>{{review.videojuego}}</td>
             <td>{{review.titulo}}</td>
             <td>{{review.nota}}</td>
             <td>{{review.comentario}}</td>
             <td>{{review.fechaRegistro}}</td>
-            <button type="button" class="btn btn-info" role="button" [routerLink]="['/'+review.username+'/reviews/'+review.idReview+'/edit']">Editar</button>
+            <button type="button" class="btn btn-info" role="button" [routerLink]="['/users/'+review.username+'/reviews/'+review.idReview+'/edit']">Editar</button>
             <button type="button" class="btn btn-danger" role="button" (click)="delete(review.idReview)">Eliminar</button> 
         </tr>   
         </tbody>

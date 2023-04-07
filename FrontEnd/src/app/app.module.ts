@@ -15,6 +15,7 @@ import { UserReviewsComponent } from './reviews/user-reviews/user-reviews.compon
 import { GamesComponent } from './games/games.component';
 import { FormGamesComponent } from './games/form-games/form-games.component';
 import { AdminGamesComponent } from './games/admin-games/admin-games.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
@@ -24,15 +25,17 @@ const routes : Routes = [
   {path:'home', component:HomeComponent},
 
   {path:'games', component:GamesComponent},
-  {path:'games/create', component:FormGamesComponent},
-  {path:'games/:id/edit', component:FormGamesComponent},
 
-  {path:'games/:id/reviews', component:ReviewsComponent},
-  {path:'games/:id/reviews/create', component:FormReviewsComponent},
-  //{path:'reviews/create?game=:game', component:FormReviewsComponent},
+  {path:'games/:game/reviews', component:ReviewsComponent},
+  {path:'games/:game/reviews/create', component:FormReviewsComponent},
 
-  {path:':username/reviews', component:UserReviewsComponent},
-  {path:':username/reviews/:id/edit', component:FormReviewsComponent},
+  {path:'users/:username/reviews', component:UserReviewsComponent},
+  {path:'users/:username/reviews/:id/edit', component:FormReviewsComponent},
+
+  {path:'admin', component:AdminComponent},
+  {path:'admin/games', component:AdminGamesComponent},
+  {path:'admin/games/create', component:FormGamesComponent},
+  {path:'admin/games/:id/edit', component:FormGamesComponent},
 ]
 
 @NgModule({
@@ -46,7 +49,8 @@ const routes : Routes = [
     UserReviewsComponent,
     GamesComponent,
     FormGamesComponent,
-    AdminGamesComponent
+    AdminGamesComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

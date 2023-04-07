@@ -8,16 +8,36 @@
         <div class="container">
             <button type="button" role="button" class="btn btn-primary" [routerLink]="['/home']">Home</button>
         </div>
-        <h4>Introduzca un videojuego para buscar reseñas sobre él</h4>
-        <form>
-            <div class="mb-3">
-                <label for="GameName" class="form-label">Videojuego</label>
-                <input type="text" class="form-control" id="GameName" name="game" maxlength="50" [(ngModel)]="game">
-            </div>
-            <div class="mb-4">
-            <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Reviews</button> 
-            </div>
-        </form>
+        <div class="container">
+            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games']">Regresar a Ver Juegos</button>
+        </div>
+        <h4>Está viendo las reviews de {{game}}</h4>
+    </div>
+
+    <div class="container" [hidden]="!finished" *ngIf="!userHasReview">
+        <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games/'+game+'/reviews/create']">Crear Review</button>
+    </div>
+    <div class="container" [hidden]="!finished" *ngIf="userHasReview">
+        <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Usuario</th>
+            <th scope="col">Titulo</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Comentario</th>
+            <th scope="col">Fecha Registro</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{userReview.username}}</td>
+            <td>{{userReview.titulo}}</td>
+            <td>{{userReview.nota}}</td>
+            <td>{{userReview.comentario}}</td>
+            <td>{{userReview.fechaRegistro}}</td>
+        </tr>   
+        </tbody>
+        </table>
     </div>
 
     <div class="container">
@@ -26,9 +46,7 @@
         <h4 *ngIf="reviews[0] == null">No hay resultados</h4>
 
         <tr *ngIf="reviews[0] != null">
-            <th scope="col">ID</th>
             <th scope="col">Usuario</th>
-            <th scope="col">Game</th>
             <th scope="col">Titulo</th>
             <th scope="col">Nota</th>
             <th scope="col">Comentario</th>
@@ -37,9 +55,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let review of reviews">
-            <th scope="row">{{review.idReview}}</th>
             <td>{{review.username}}</td>
-            <td>{{review.videojuego}}</td>
             <td>{{review.titulo}}</td>
             <td>{{review.nota}}</td>
             <td>{{review.comentario}}</td>

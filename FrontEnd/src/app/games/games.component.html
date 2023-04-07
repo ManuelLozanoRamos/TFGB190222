@@ -17,6 +17,9 @@
             <div class="mb-4">
             <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
             </div>
+            <div class="mb-4">
+                <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button> 
+                </div>
         </form>
     </div>
 
@@ -33,6 +36,7 @@
             <th scope="col">Géneros</th>
            <!-- <th scope="col">Nota Media</th> -->
             <th scope="col">Fecha de Lanzamiento</th>
+            <th scope="col">Reviews</th>
         </tr>
         </thead>
         <tbody>
@@ -42,6 +46,7 @@
             <td>{{game.desarrolladora}}</td>
             <td>{{game.generos}}</td>
             <td>{{game.fechaLanzamiento}}</td>
+            <button type="submit" class="btn btn-primary" role="button" [routerLink]="[game.nombre+'/reviews']">Ver Reviews</button>
         </tr>   
         </tbody>
         </table>

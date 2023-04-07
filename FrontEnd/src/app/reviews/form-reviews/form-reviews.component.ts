@@ -11,6 +11,7 @@ import { ReviewInfo } from '../reviewInfo';
   styleUrls: ['./form-reviews.component.css']
 })
 export class FormReviewsComponent implements OnInit{
+  username:string;
   review:Review;
   reviewInfo:ReviewInfo;
   editOrCreate:string;
@@ -18,6 +19,7 @@ export class FormReviewsComponent implements OnInit{
   constructor(private appComponent:AppComponent, private reviewService:ReviewService, 
               private router:Router, private activatedRoute:ActivatedRoute){
     this.review = new Review();
+    this.username = appComponent.username;
     this.reviewInfo = new ReviewInfo();
     this.editOrCreate = 'create';
   }
@@ -27,9 +29,10 @@ export class FormReviewsComponent implements OnInit{
 
   cargar(){
     this.activatedRoute.params.subscribe(
-      //Comprobar si hay errore y demás
+      //Comprobar si hay errores y demás
       r => {
         let id=r['id'];
+        let game=r['game'];
         if(id){
           this.reviewService.getReviewById(id).subscribe(
             resp =>{
@@ -37,6 +40,8 @@ export class FormReviewsComponent implements OnInit{
               this.editOrCreate = 'edit';
             } 
           );
+        } else if(game){
+          this.review.videojuego = game;
         }
       }
     );
@@ -51,18 +56,18 @@ export class FormReviewsComponent implements OnInit{
       //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/home']);
+            this.router.navigate(['/users/'+this.username+'/reviews']);
           }
         }
       );
     } else {
       this.review.fechaRegistro = new Date();
-      this.review.username = this.appComponent.username;
+      this.review.username = this.username;
       this.reviewService.createReview(this.review).subscribe(
       //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/home']);
+            this.router.navigate(['/games/'+this.review.videojuego+'/reviews']);
           }
         }
       );

@@ -28,7 +28,7 @@ public class GamesSearchService {
 
             if(!juego.equals("any")){
                 Predicate p = cb.equal(games.get("nombre"), juego);
-                cq.select(games).where(p).orderBy(cb.desc(games.get("fecha")));
+                cq.select(games).where(p).orderBy(cb.desc(games.get("fechaRegistro")));
             } else {
                 cq.select(games).orderBy(cb.desc(games.get("fechaRegistro")));
             }        
