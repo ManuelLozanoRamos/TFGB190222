@@ -35,7 +35,7 @@
             <th scope="col">Plataforma</th>
             <th scope="col">Desarrolladora</th>
             <th scope="col">Géneros</th>
-           <!-- <th scope="col">Nota Media</th> -->
+            <th scope="col">Nota Media</th> 
             <th scope="col">Fecha de Lanzamiento</th>
         </tr>
         </thead>
@@ -45,6 +45,7 @@
             <td>{{game.plataforma}}</td>
             <td>{{game.desarrolladora}}</td>
             <td>{{game.generos}}</td>
+            <td>{{game.notaMedia}}</td>
             <td>{{game.fechaLanzamiento}}</td>
             <button type="button" class="btn btn-info" role="button" [routerLink]="['/admin/games/'+game.nombre+'/edit']">Editar</button>
             <button type="button" class="btn btn-danger" role="button" (click)="delete(game.nombre)">Eliminar</button> 

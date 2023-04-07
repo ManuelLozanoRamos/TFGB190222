@@ -10,6 +10,7 @@ create table Game (
     plataforma varchar(40) not null,
     desarrolladora varchar(50) not null,
     generos varchar(79) not null,
+    notaMedia float default 5,
     fechaLanzamiento Date not null,
     fechaRegistro Date not null,
     primary key(nombre)
@@ -30,8 +31,57 @@ create table Review (
 		on delete cascade on update cascade
 );
 
+
+delimiter $$
+create trigger actualizarNotaMediaInsert
+after insert on Review 
+for each Row
+begin 
+	update Game 
+    set notaMedia = (
+		select avg(nota) 
+        from Review 
+        where videojuego = NEW.videojuego
+	) 
+	where nombre = NEW.videojuego; 
+end$$
+
+delimiter $$
+create trigger actualizarNotaMediaUpdate
+after update on Review 
+for each Row
+begin 
+	update Game 
+    set notaMedia = (
+		select avg(nota) 
+        from Review 
+        where videojuego = NEW.videojuego
+	) 
+	where nombre = NEW.videojuego; 
+end$$
+
+delimiter $$
+create trigger actualizarNotaMediaDelete
+after delete on Review 
+for each Row
+begin 
+	update Game 
+    set notaMedia = (
+		select avg(nota)
+        from Review 
+        where videojuego = OLD.videojuego
+	) 
+	where nombre = OLD.videojuego; 
+    
+    IF (SELECT notaMedia FROM Game WHERE nombre = OLD.videojuego) IS NULL THEN
+        UPDATE Game SET notaMedia = 5 WHERE nombre = OLD.videojuego;
+    END IF;
+    
+end$$
+
+
 insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', '2023-06-04');
-insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción, Plataformas', '2007-01-11', '2023-06-04');
+insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción, Plataformas', 5, '2007-01-11', '2023-06-04');
 insert into Review values(1, 'admin', 'Super Mario Galaxy', 'Juegazo', 9, 'Divino de la muerte', '2023-02-14');
 
 select * from Review where videojuego='Super Mario Galaxy';

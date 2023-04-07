@@ -28,15 +28,16 @@ public class GamesSearchService {
 
             if(!juego.equals("any")){
                 Predicate p = cb.equal(games.get("nombre"), juego);
-                cq.select(games).where(p).orderBy(cb.desc(games.get("fechaRegistro")));
+                cq.select(games).where(p).orderBy(cb.desc(games.get("notaMedia")));
             } else {
-                cq.select(games).orderBy(cb.desc(games.get("fechaRegistro")));
+                cq.select(games);
             }        
 
             List<Game> result = entityManager.createQuery(cq).getResultList();
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
+            e.printStackTrace();
             return new SearchResponse(new ArrayList<Game>(), "ERROR");
         }
     }

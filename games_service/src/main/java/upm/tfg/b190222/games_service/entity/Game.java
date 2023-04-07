@@ -29,6 +29,9 @@ public class Game {
     @Column(name="generos")
     private String generos;
 
+    @Column(name="notaMedia")
+    private float notaMedia;
+
     @Column(name="fechaLanzamiento")
     private LocalDate fechaLanzamiento;
 
