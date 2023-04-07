@@ -32,8 +32,8 @@ export class FormReviewsComponent implements OnInit{
         let id=r['id'];
         if(id){
           this.reviewService.getReviewById(id).subscribe(
-            rev =>{
-              this.review = rev.review;
+            resp =>{
+              this.review = resp.review;
               this.editOrCreate = 'edit';
             } 
           );
@@ -56,7 +56,7 @@ export class FormReviewsComponent implements OnInit{
         }
       );
     } else {
-      this.review.fecha = new Date();
+      this.review.fechaRegistro = new Date();
       this.review.username = this.appComponent.username;
       this.reviewService.createReview(this.review).subscribe(
       //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia

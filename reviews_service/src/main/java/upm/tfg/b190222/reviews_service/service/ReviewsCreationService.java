@@ -41,7 +41,7 @@ public class ReviewsCreationService {
             }
         
             if(v == null){
-                review.setFecha(LocalDate.now());
+                review.setFechaRegistro(LocalDate.now());
                 entityManager.persist(review);
 
                 return "OK";

@@ -40,6 +40,6 @@ public class Review {
     @Column(name="comentario")
     private String comentario;
 
-    @Column(name="fecha")
-    private LocalDate fecha;
+    @Column(name="fechaRegistro")
+    private LocalDate fechaRegistro;
 }

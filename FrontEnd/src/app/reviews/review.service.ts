@@ -20,12 +20,8 @@ export class ReviewService {
 
   //Obtener reviews
   getReviews(game:string, username:string):Observable<SearchResponse>{
-    if(String.length > 50){
+    if(game.length > 75){
       return of(new SearchResponse([], "ERROR_LEN_VID"));
-    }
-
-    if(String.length > 20){
-      username = "any";
     }
 
     return this.http.get<SearchResponse>(this.url,{params:{juego:game, username:username}});
@@ -37,13 +33,10 @@ export class ReviewService {
 
   //Crear review
   createReview(review:Review):Observable<FormResponse>{
-    if(review.videojuego.length > 50){
-      return of(new FormResponse("ERROR_LEN_VID"));
-    }
-    if(review.titulo.length > 50){
+    if(review.titulo.length > 75){
       return of(new FormResponse("ERROR_LEN_TIT"));
     }
-    if(review.comentario.length > 150){
+    if(review.comentario.length > 200){
       return of(new FormResponse("ERROR_LEN_COM"));
     }
     if(review.nota < 1 || review.nota > 10){
@@ -59,6 +52,16 @@ export class ReviewService {
   }
 
   editReview(idReview:number, reviewInfo:ReviewInfo):Observable<EditResponse>{
+    if(reviewInfo.titulo.length > 75){
+      return of(new FormResponse("ERROR_LEN_TIT"));
+    }
+    if(reviewInfo.comentario.length > 200){
+      return of(new FormResponse("ERROR_LEN_COM"));
+    }
+    if(reviewInfo.nota < 1 || reviewInfo.nota > 10){
+      return of(new FormResponse("ERROR_TAM_NOTA"));
+    }
+
     return this.http.put<EditResponse>(this.url + '/' + encodeURIComponent(idReview) + '/edit', reviewInfo);
   }
 }

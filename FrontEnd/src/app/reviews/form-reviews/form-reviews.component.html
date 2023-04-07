@@ -5,17 +5,17 @@
     </head>
     <body>
         <form>
-            <div class="mb-3" *ngIf="editOrCreate == 'create'">
+            <div class="mb-3">
                 <label for="videojuego" class="form-label">Nombre del Videojuego</label>
-                <input type="text" class="form-control" id="videojuego" maxlength="50" name="videojuego" [(ngModel)]="review.videojuego">
+                <input type="text" class="form-control" id="videojuego" readOnly maxlength="75" readOnly name="videojuego" [(ngModel)]="review.videojuego">
             </div>
             <div class="mb-3">
                 <label for="titulo" class="form-label">Título</label>
-                <input type="text" class="form-control" id="titulo" maxlength="50" name="titulo" [(ngModel)]="review.titulo">
+                <input type="text" class="form-control" id="titulo" maxlength="75" name="titulo" [(ngModel)]="review.titulo">
             </div>
             <div class="mb-3">
                 <label for="comentario" class="form-label">Comentario</label>
-                <input type="text" class="form-control" id="comentario" maxlength="150" name="comentario" [(ngModel)]="review.comentario">
+                <input type="text" class="form-control" id="comentario" maxlength="200" name="comentario" [(ngModel)]="review.comentario">
             </div>
             <div class="mb-3">
                 <label for="nota" class="form-label">Nota (1-10)</label>

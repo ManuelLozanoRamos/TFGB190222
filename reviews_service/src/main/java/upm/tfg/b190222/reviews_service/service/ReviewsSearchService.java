@@ -46,7 +46,7 @@ public class ReviewsSearchService {
                 predicates[0] = predicatesList.get(0);
             }
 
-            cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("fecha")));
+            cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("fechaRegistro")));
 
             List<Review> result = entityManager.createQuery(cq).getResultList();
 

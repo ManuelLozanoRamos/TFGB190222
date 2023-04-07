@@ -13,5 +13,5 @@ public class ReviewInfo {
      private String titulo;
      private String comentario;
      private int nota;
-     private LocalDate fecha;
+     private LocalDate fechaRegistro;
 }

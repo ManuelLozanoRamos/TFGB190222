@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="form-games.component.css"/>
+    </head>
+    <body>
+        <form>
+            <div class="mb-3" *ngIf="editOrCreate == 'create'">
+                <label for="videojuego" class="form-label">Nombre del Videojuego</label>
+                <input type="text" class="form-control" id="videojuego" maxlength="75" name="videojuego" [(ngModel)]="game.nombre">
+            </div>
+            <div class="mb-3" *ngIf="editOrCreate == 'edit'">
+                <label for="videojuego" class="form-label">Nombre del Videojuego</label>
+                <input type="text" class="form-control" id="videojuego" readOnly maxlength="75" name="videojuego" [(ngModel)]="game.nombre">
+            </div>
+            <div class="mb-3">
+                <label for="plataforma" class="form-label">Plataforma</label>
+                <input type="text" class="form-control" id="plataforma" maxlength="40" name="plataforma" [(ngModel)]="game.plataforma">
+            </div>
+            <div class="mb-3">
+                <label for="desarrolladora" class="form-label">Desarrolladora</label>
+                <input type="text" class="form-control" id="desarrolladora" maxlength="50" name="desarrolladora" [(ngModel)]="game.desarrolladora">
+            </div>
+            <div class="mb-3">
+                <label for="genero1" class="form-label">Género 1</label>
+                <input type="number" class="form-control" id="genero1" maxlength="25" name="genero1" [(ngModel)]="genero1">
+            </div>
+            <div class="mb-3">
+                <label for="genero2" class="form-label">Género 2</label>
+                <input type="number" class="form-control" id="genero2" maxlength="25" name="genero2" [(ngModel)]="genero2">
+            </div>
+            <div class="mb-3">
+                <label for="genero3" class="form-label">Género 3</label>
+                <input type="number" class="form-control" id="genero3" maxlength="25" name="genero3" [(ngModel)]="genero3">
+            </div>
+            <button type="submit" class="btn btn-primary" role="button" (click)="createGame()" *ngIf="editOrCreate == 'create'">Crear Videojuego</button>
+                <button type="submit" class="btn btn-primary" role="button" (click)="createGame()" *ngIf="editOrCreate == 'edit'">Actualizar Videojuego</button>
+            
+        </form>
+        <div class="container">
+            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/home']">Volver al Home</button>
+        </div>
+        
+    </body>
+</html>

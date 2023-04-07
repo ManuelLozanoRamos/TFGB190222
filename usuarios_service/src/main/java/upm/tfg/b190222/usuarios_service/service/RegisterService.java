@@ -44,6 +44,7 @@ public class RegisterService {
                 Usuario user = new Usuario();
                 user.setUsername(username);
                 user.setPassword(password);
+                user.setFechaRegistro(usuario.getFechaRegistro());
                         
                 entityManager.persist(user);
 

@@ -20,7 +20,7 @@ public class ReviewsCreationController {
     ReviewsCreationService reviewsCreationService;
     
     @PostMapping(value="/reviews")
-    public CreationResponse reviewsCrteation(@RequestBody Review review){
+    public CreationResponse reviewsCreation(@RequestBody Review review){
         return new CreationResponse(reviewsCreationService.createReview(review));
     }
 }

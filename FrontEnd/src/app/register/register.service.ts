@@ -26,13 +26,12 @@ export class RegisterService {
     if(repeatedPassword.length > 25){
       return of(new RegisterResponse('ERROR_LEN_RPASS'));
     }
-
-    if(password == repeatedPassword){
-      this.user.username = username;
-      this.user.password = password;
-      return this.http.post<RegisterResponse>(this.url, this.user);
-    } else{
-      return of(new RegisterResponse('BAD'));
+    if(password != repeatedPassword){
+      return of(new RegisterResponse('ERROR_NOT_EQ_PASS'));
     }
+
+    this.user.username = username;
+    this.user.password = password;
+    return this.http.post<RegisterResponse>(this.url, this.user);
   }
 }
