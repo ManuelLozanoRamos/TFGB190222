@@ -16,26 +16,30 @@ import { GamesComponent } from './games/games.component';
 import { FormGamesComponent } from './games/form-games/form-games.component';
 import { AdminGamesComponent } from './games/admin-games/admin-games.component';
 import { AdminComponent } from './admin/admin.component';
+import { CookieService } from 'ngx-cookie-service';
+import { GuardGuard } from './guard.guard';
+import { AdminGuardGuard } from './admin-guard.guard';
+import { LoginGuardGuard } from './login-guard.guard';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
-  {path:'login', component:LoginComponent},
-  {path:'register', component:RegisterComponent},
+  {path:'login', component:LoginComponent, canActivate:[LoginGuardGuard]},
+  {path:'signup', component:RegisterComponent, canActivate:[LoginGuardGuard]},
 
-  {path:'home', component:HomeComponent},
+  {path:'home', component:HomeComponent, canActivate:[GuardGuard]},
 
-  {path:'games', component:GamesComponent},
+  {path:'games', component:GamesComponent, canActivate:[GuardGuard]},
 
-  {path:'games/:game/reviews', component:ReviewsComponent},
-  {path:'games/:game/reviews/create', component:FormReviewsComponent},
+  {path:'games/:game/reviews', component:ReviewsComponent, canActivate:[GuardGuard]},
+  {path:'games/:game/reviews/create', component:FormReviewsComponent, canActivate:[GuardGuard]},
 
-  {path:'users/:username/reviews', component:UserReviewsComponent},
-  {path:'users/:username/reviews/:id/edit', component:FormReviewsComponent},
+  {path:'users/:username/reviews', component:UserReviewsComponent, canActivate:[GuardGuard]},
+  {path:'users/:username/reviews/:id/edit', component:FormReviewsComponent, canActivate:[GuardGuard]},
 
-  {path:'admin', component:AdminComponent},
-  {path:'admin/games', component:AdminGamesComponent},
-  {path:'admin/games/create', component:FormGamesComponent},
-  {path:'admin/games/:id/edit', component:FormGamesComponent},
+  {path:'admin', component:AdminComponent, canActivate:[AdminGuardGuard]},
+  {path:'admin/games', component:AdminGamesComponent, canActivate:[AdminGuardGuard]},
+  {path:'admin/games/create', component:FormGamesComponent, canActivate:[AdminGuardGuard]},
+  {path:'admin/games/:id/edit', component:FormGamesComponent, canActivate:[AdminGuardGuard]},
 ]
 
 @NgModule({
@@ -58,7 +62,7 @@ const routes : Routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

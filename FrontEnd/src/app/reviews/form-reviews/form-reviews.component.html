@@ -4,6 +4,37 @@
         <link rel="stylesheet" href="form-reviews.component.css"/>
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
+                  </li>
+                </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                  <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
+                </form>
+                <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+              </div>
+            </div>
+        </nav>
+
         <form>
             <div class="mb-3">
                 <label for="videojuego" class="form-label">Nombre del Videojuego</label>
@@ -25,9 +56,6 @@
             <button type="submit" class="btn btn-primary" role="button" (click)="createReview()" *ngIf="editOrCreate == 'edit'">Actualizar Review</button>
             
         </form>
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/home']">Volver al Home</button>
-        </div>
         <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'create'" [routerLink]="['/games/'+review.videojuego]">Volver Atrás</button>
         <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'edit'" [routerLink]="['/users/'+username+'/reviews']">Volver Atrás</button>
         

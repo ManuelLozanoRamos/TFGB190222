@@ -4,10 +4,38 @@
         <link rel="stylesheet" href="reviews.component.css"/>
     </head>
    <body>
-    <div class="container">
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/home']">Home</button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
+            </form>
+            <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+          </div>
         </div>
+    </nav>
+
+    <div class="container">
         <div class="container">
             <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games']">Regresar a Ver Juegos</button>
         </div>
@@ -15,6 +43,7 @@
     </div>
 
     <div class="container" [hidden]="!finished" *ngIf="!userHasReview">
+        <h6>No has realizado ninguna review de este juego</h6>
         <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games/'+game+'/reviews/create']">Crear Review</button>
     </div>
     <div class="container" [hidden]="!finished" *ngIf="userHasReview">
@@ -34,7 +63,7 @@
             <td>{{userReview.titulo}}</td>
             <td>{{userReview.nota}}</td>
             <td>{{userReview.comentario}}</td>
-            <td>{{userReview.fechaRegistro}}</td>
+            <td>{{userReview.fechaRegistro | date:'dd-MM-yyyy'}}</td>
         </tr>   
         </tbody>
         </table>
@@ -59,7 +88,7 @@
             <td>{{review.titulo}}</td>
             <td>{{review.nota}}</td>
             <td>{{review.comentario}}</td>
-            <td>{{review.fechaRegistro}}</td>
+            <td>{{review.fechaRegistro | date:'dd-MM-yyyy'}}</td>
         </tr>   
         </tbody>
         </table>

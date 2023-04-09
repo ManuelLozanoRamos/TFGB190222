@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from 'src/app/app.component';
 import { Game } from '../game';
 import { GameService } from '../game.service';
@@ -11,6 +12,7 @@ import { GameInfo } from '../gameInfo';
   styleUrls: ['./form-games.component.css']
 })
 export class FormGamesComponent implements OnInit{
+  username:string;
   game:Game;
   genero1:string;
   genero2:string;
@@ -18,8 +20,9 @@ export class FormGamesComponent implements OnInit{
   gameInfo:GameInfo;
   editOrCreate:string;
 
-  constructor(private appComponent:AppComponent, private gameService:GameService, 
+  constructor(private gameService:GameService, private cookieService:CookieService,
               private router:Router, private activatedRoute:ActivatedRoute){
+    this.username = this.cookieService.get('token');
     this.game = new Game();
     this.genero1 = '';
     this.genero2 = '';
@@ -115,5 +118,10 @@ export class FormGamesComponent implements OnInit{
         );
       } 
     }
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 }

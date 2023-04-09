@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from '../app.component';
 import { LoginService } from './login.service';
 
@@ -12,7 +13,8 @@ export class LoginComponent implements OnInit{
   username:string;
   password:string;
 
-  constructor(private appComponent:AppComponent, private loginService:LoginService, private router:Router){
+  constructor(private appComponent:AppComponent, private loginService:LoginService, 
+              private router:Router, private cookieService:CookieService){
     this.username = '';
     this.password = '';
   }
@@ -25,7 +27,7 @@ export class LoginComponent implements OnInit{
       //Comprobar mensajes de error y validaciones y mostrar mensaje
       b => {
         if(b.response == 'OK'){
-          this.appComponent.username = this.username;
+          this.cookieService.set('token', this.username);
           this.router.navigate(['/home']);
         } else {
           //mostrar mensaje de que no son validas las credenciales y quitar la redireccion

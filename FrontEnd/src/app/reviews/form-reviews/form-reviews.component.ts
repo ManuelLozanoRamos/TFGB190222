@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from 'src/app/app.component';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
@@ -16,13 +17,14 @@ export class FormReviewsComponent implements OnInit{
   reviewInfo:ReviewInfo;
   editOrCreate:string;
 
-  constructor(private appComponent:AppComponent, private reviewService:ReviewService, 
+  constructor(private reviewService:ReviewService, private cookieService:CookieService,
               private router:Router, private activatedRoute:ActivatedRoute){
     this.review = new Review();
-    this.username = appComponent.username;
+    this.username = this.cookieService.get('token');
     this.reviewInfo = new ReviewInfo();
     this.editOrCreate = 'create';
   }
+  
   ngOnInit(): void {
     this.cargar();
   }
@@ -72,5 +74,10 @@ export class FormReviewsComponent implements OnInit{
         }
       );
     }
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 }

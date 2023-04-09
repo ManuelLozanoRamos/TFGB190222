@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AppComponent } from '../app.component';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { Game } from './game';
 import { GameService } from './game.service';
 
@@ -9,10 +10,12 @@ import { GameService } from './game.service';
   styleUrls: ['./games.component.css']
 })
 export class GamesComponent {
+  username:string;
   games:Game[];
   game:string;
 
-  constructor(private gameService:GameService, private appComponent:AppComponent){
+  constructor(private gameService:GameService, private router:Router, private cookieService:CookieService){
+    this.username = this.cookieService.get('token');
     this.games = [];
     this.game = '';
     this.searchAll();
@@ -33,5 +36,10 @@ export class GamesComponent {
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r => this.games = r.games 
     );
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 }

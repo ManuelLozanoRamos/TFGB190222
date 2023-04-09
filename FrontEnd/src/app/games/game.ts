@@ -7,6 +7,7 @@ export class Game {
     fechaLanzamiento:Date;
     fechaRegistro:Date;
 
+
     constructor(){
         this.nombre = '';
         this.plataforma = '';

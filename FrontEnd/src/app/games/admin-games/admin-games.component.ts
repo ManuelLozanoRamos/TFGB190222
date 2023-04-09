@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppComponent } from 'src/app/app.component';
+import { CookieService } from 'ngx-cookie-service';
 import { Game } from '../game';
 import { GameService } from '../game.service';
 
@@ -10,11 +10,12 @@ import { GameService } from '../game.service';
   styleUrls: ['./admin-games.component.css']
 })
 export class AdminGamesComponent {
-
+  username:string;
   games:Game[];
   game:string;
 
-  constructor(private gameService:GameService, private appComponent:AppComponent, private router:Router){
+  constructor(private gameService:GameService, private router:Router, private cookieService:CookieService){
+    this.username = this.cookieService.get('token');
     this.games = [];
     this.game = '';
     this.searchAll();
@@ -39,6 +40,11 @@ export class AdminGamesComponent {
     this.gameService.delete(idGame).subscribe(
       r => window.location.reload()
     );
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 
 }

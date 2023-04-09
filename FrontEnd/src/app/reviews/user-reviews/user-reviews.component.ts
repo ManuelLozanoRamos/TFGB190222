@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppComponent } from 'src/app/app.component';
+import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
 
@@ -10,25 +10,27 @@ import { ReviewService } from '../review.service';
   styleUrls: ['./user-reviews.component.css']
 })
 export class UserReviewsComponent {
-
+  username:string;
   reviews:Review[];
   game:string;
 
-  constructor(private reviewService:ReviewService, private appComponent:AppComponent, private router:Router){
+  constructor(private reviewService:ReviewService,
+              private router:Router, private cookieService:CookieService){
+    this.username = this.cookieService.get('token');
     this.reviews = [];
     this.game = '';
     this.searchAll();
   }
 
   searchByGame() : void {
-    this.reviewService.getReviews(this.game, this.appComponent.username).subscribe(
+    this.reviewService.getReviews(this.game, this.username).subscribe(
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r => this.reviews = r.reviews 
     );
   }
 
   searchAll() : void {
-    this.reviewService.getReviews("any", this.appComponent.username).subscribe(
+    this.reviewService.getReviews("any", this.username).subscribe(
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r => this.reviews = r.reviews 
     );
@@ -39,6 +41,11 @@ export class UserReviewsComponent {
     this.reviewService.delete(idReview).subscribe(
       r => window.location.reload()
     );
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 
 }

@@ -4,10 +4,38 @@
         <link rel="stylesheet" href="games.component.css"/>
     </head>
    <body>
-    <div class="container">
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/home']">Home</button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
+            </form>
+            <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+          </div>
         </div>
+    </nav>
+
+    <div class="container">
         <h4>Introduzca el videojuego que quiera buscar</h4>
         <form>
             <div class="mb-3">
@@ -46,7 +74,7 @@
             <td>{{game.desarrolladora}}</td>
             <td>{{game.generos}}</td>
             <td>{{game.notaMedia}}</td>
-            <td>{{game.fechaLanzamiento}}</td>
+            <td>{{game.fechaLanzamiento | date:'dd-MM-yyyy'}}</td>
             <button type="submit" class="btn btn-primary" role="button" [routerLink]="[game.nombre+'/reviews']">Ver Reviews</button>
         </tr>   
         </tbody>

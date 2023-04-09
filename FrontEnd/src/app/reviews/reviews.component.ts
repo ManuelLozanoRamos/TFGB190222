@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from '../app.component';
 import { Review } from './review';
 import { ReviewService } from './review.service';
@@ -10,13 +11,16 @@ import { ReviewService } from './review.service';
   styleUrls: ['./reviews.component.css']
 })
 export class ReviewsComponent implements OnInit{
+  username:string;
   userReview:Review;
   userHasReview:boolean;
   finished:boolean;
   reviews:Review[];
   game:string;
 
-  constructor(private reviewService:ReviewService, private appComponent:AppComponent, private activatedRoute:ActivatedRoute){
+  constructor(private reviewService:ReviewService, private activatedRoute:ActivatedRoute,
+              private router:Router, private cookieService:CookieService){
+    this.username = this.cookieService.get('token');
     this.userReview = new Review;
     this.userHasReview = false;
     this.finished = false;
@@ -45,7 +49,7 @@ export class ReviewsComponent implements OnInit{
   }
 
   searchByGame() : void {
-    this.reviewService.getReviews(this.game, this.appComponent.username).subscribe(
+    this.reviewService.getReviews(this.game, this.username).subscribe(
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r =>{
         if(r.reviews.length != 0){
@@ -55,5 +59,10 @@ export class ReviewsComponent implements OnInit{
         this.finished = true;
       } 
     );
+  }
+
+  logout() : void {
+    this.cookieService.delete('token');
+    this.router.navigate(['/login']);
   }
 }

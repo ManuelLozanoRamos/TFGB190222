@@ -9,7 +9,9 @@ create table Game (
 	nombre varchar(75) unique not null,
     plataforma varchar(40) not null,
     desarrolladora varchar(50) not null,
-    generos varchar(79) not null,
+    genero1 varchar(25) not null,
+    genero2 varchar(25),
+    genero3 varchar(25),
     notaMedia float default 5,
     fechaLanzamiento Date not null,
     fechaRegistro Date not null,
@@ -80,10 +82,11 @@ begin
 end$$
 
 
-insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', '2023-06-04');
-insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción, Plataformas', 5, '2007-01-11', '2023-06-04');
+insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', '2023-04-06');
+insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción', 'Plataformas', null, 5, '2007-11-01', '2023-06-04');
 insert into Review values(1, 'admin', 'Super Mario Galaxy', 'Juegazo', 9, 'Divino de la muerte', '2023-02-14');
 
 select * from Review where videojuego='Super Mario Galaxy';
 select * from Usuario;
 select * from Review;
+select * from Game;
