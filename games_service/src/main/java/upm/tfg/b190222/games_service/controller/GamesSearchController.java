@@ -22,9 +22,24 @@ public class GamesSearchController{
     GamesSearchService gamesSearchService;
 
     @GetMapping(value="/games")
-    public SearchResponse gamesSearch(@RequestParam String juego){
-        return gamesSearchService.findGames(juego);
+    public SearchResponse gamesSearch(@RequestParam(required = false) String nombre, @RequestParam(required = false) String plataforma, 
+        @RequestParam(required = false) String desarrolladora, @RequestParam(required = false) String genero1, @RequestParam(required = false) String genero2,
+        @RequestParam(required = false) String genero3, @RequestParam(required = false) String notaMediaIni, @RequestParam(required = false) String notaMediaFin, 
+        @RequestParam(required = false) String fechaLanIni, @RequestParam(required = false) String fechaLanFin, @RequestParam(required = false) String order){
+
+        if(nombre == null && plataforma == null && desarrolladora == null && genero1 == null 
+            && genero2 == null && genero3 == null && notaMediaIni == null && notaMediaFin == null 
+            && fechaLanIni == null && fechaLanIni == null && order == null)
+            {
+                return gamesSearchService.findAllGames();
+            }    
+        else{
+            return gamesSearchService.findGames(nombre, plataforma, desarrolladora, genero1, genero2, 
+                                                genero3, notaMediaIni, notaMediaFin, fechaLanIni, 
+                                                fechaLanFin, order);
+        }
     }
+
 
     @GetMapping(value="/games/{idGame}")
     public SearchByIdResponse gamesSearchById(@PathVariable String idGame){

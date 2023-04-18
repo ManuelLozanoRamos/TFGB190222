@@ -1,5 +1,6 @@
 package upm.tfg.b190222.reviews_service.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +21,50 @@ public class ReviewsSearchService {
     @Autowired
     EntityManager entityManager;
 
-    public SearchResponse findReviews(String juego, String username){
+    public SearchResponse findReviews(String videojuego, String username, String notaIni, 
+                                      String notaFin,String fechaRegIni, String fechaRegFin, String order){
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Review> cq = cb.createQuery(Review.class);
             Root<Review> reviews = cq.from(Review.class);
             
-            List<Predicate> predicatesList = new ArrayList<>();
-
-            if(!juego.equals("any")){
-                predicatesList.add(cb.equal(reviews.get("videojuego"), juego));
+            List<Predicate> predicateList = new ArrayList<>();
+            if(videojuego != null){
+                predicateList.add(cb.equal(reviews.get("videojuego"), videojuego));
             }
-            if(!username.equals("any")){
-                predicatesList.add(cb.equal(reviews.get("username"), username));
+            if(username != null){
+                predicateList.add(cb.equal(reviews.get("username"), username));
+            }
+            if(notaIni != null){
+                predicateList.add(cb.between(reviews.get("nota"), Integer.valueOf(notaIni), Integer.valueOf(notaFin)));
+
+            }
+            if(fechaRegIni != null){
+                predicateList.add(cb.between(reviews.get("fechaRegistro"), LocalDate.parse(fechaRegIni), LocalDate.parse(fechaRegFin)));
+            } 
+
+            Predicate[] predicates = new Predicate[predicateList.size()];
+            for(int i=0; i< predicateList.size(); i++){
+                predicates[i] = predicateList.get(i);
             }
 
-            Predicate [] predicates;
-            if(predicatesList.size() == 2){
-                predicates = new Predicate [2];
-                predicates[0] = predicatesList.get(0);
-                predicates[1] = predicatesList.get(1);
-
-            } else {
-                predicates = new Predicate [1];
-                predicates[0] = predicatesList.get(0);
+            if(order == null || order.equals("Fecha Descendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("fechaRegistro")));
+            }
+            else if(order.equals("Fecha Ascendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("fechaRegistro")));
+            }
+            else if(order.equals("Juego Ascendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("videojuego")));
+            }
+            else if(order.equals("Juego Descendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("videojuego")));
+            }
+            else if(order.equals("Nota Ascendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("nota")));
+            }
+            else if(order.equals("Nota Descendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("nota")));
             }
 
             cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("fechaRegistro")));
@@ -52,6 +73,7 @@ public class ReviewsSearchService {
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
+            e.printStackTrace();
             return new SearchResponse(new ArrayList<Review>(), "ERROR");
         }
     }

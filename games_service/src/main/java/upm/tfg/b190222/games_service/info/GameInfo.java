@@ -12,7 +12,9 @@ import lombok.Setter;
 public class GameInfo {
     private String plataforma;
     private String desarrolladora;
-    private String generos;
+    private String genero1;
+    private String genero2;
+    private String genero3;
     private LocalDate fechaLanzamiento;
     private LocalDate fechaRegistro;
 }

@@ -1,7 +1,9 @@
 upm/tfg/b190222/usuarios_service/entity/Usuario.class
 upm/tfg/b190222/usuarios_service/service/RegisterService.class
 upm/tfg/b190222/usuarios_service/service/LoginService.class
+upm/tfg/b190222/usuarios_service/response/RegisterResponse.class
 upm/tfg/b190222/usuarios_service/controller/LoginController.class
 upm/tfg/b190222/usuarios_service/utils/Cifrado.class
+upm/tfg/b190222/usuarios_service/response/LoginResponse.class
 upm/tfg/b190222/usuarios_service/UsuariosServiceApplication.class
 upm/tfg/b190222/usuarios_service/controller/RegisterController.class

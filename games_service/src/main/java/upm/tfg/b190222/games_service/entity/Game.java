@@ -26,8 +26,14 @@ public class Game {
     @Column(name="desarrolladora")
     private String desarrolladora;
 
-    @Column(name="generos")
-    private String generos;
+    @Column(name="genero1")
+    private String genero1;
+
+    @Column(name="genero2")
+    private String genero2;
+
+    @Column(name="genero3")
+    private String genero3;
 
     @Column(name="notaMedia")
     private float notaMedia;

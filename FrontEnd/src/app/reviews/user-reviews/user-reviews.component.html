@@ -35,20 +35,33 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h4>Introduzca un videojuego para buscar reseñas sobre él</h4>
-        <form>
-            <div class="mb-3">
-                <label for="GameName" class="form-label">Videojuego</label>
-                <input type="text" class="form-control" id="GameName" name="game" maxlength="50" [(ngModel)]="game">
-            </div>
-            <div class="mb-4">
-            <button type="button" class="btn btn-info" role="button" (click)="searchByGame()">Buscar Reviews</button> 
-            </div>
-            <div class="mb-4">
-                <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button> 
-            </div>
-        </form>
+    <div class="mb-3">
+      <label for="Videojuego" class="form-label">Videojuego</label>
+      <input type="text" class="form-control" id="Videojuego" name="videojuego" maxlength="75" [(ngModel)]="videojuego">
+    </div>
+    <div class="mb-3">
+      <label for="FechaRegIni" class="form-label">Fecha Registro Inicial</label>
+      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegIni" name="fechaRegIni" [(ngModel)]="fechaRegIni">
+    </div>
+    <div class="mb-3">
+      <label for="FechaRegFin" class="form-label">Fecha Registro Final</label>
+      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegFin" name="fechaRegFin" [(ngModel)]="fechaRegFin">
+    </div>
+    <div class="mb-3">
+      <label for="NotaIni" class="form-label">Nota Inicial</label>
+      <input type="text" class="form-control" id="NotaIni" name="notaIni" maxlength="2" [(ngModel)]="notaIni">
+    </div>
+    <div class="mb-3">
+      <label for="NotaFin" class="form-label">Nota Final</label>
+      <input type="text" class="form-control" id="NotaFin" name="notaFin" maxlength="2" [(ngModel)]="notaFin">
+    </div>
+    <div class="mb-3">
+      <label for="Order" class="form-label">Ordenación</label>        
+      <p-dropdown [options]="orders" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
+    </div>
+    <div class="mb-4">
+    <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
+    <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button>
     </div>
 
     <div class="container">

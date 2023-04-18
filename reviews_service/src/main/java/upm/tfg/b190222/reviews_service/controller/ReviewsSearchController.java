@@ -22,8 +22,12 @@ public class ReviewsSearchController{
     ReviewsSearchService reviewsSearchService;
 
     @GetMapping(value="/reviews")
-    public SearchResponse reviewsSearch(@RequestParam String juego, @RequestParam String username){
-        return reviewsSearchService.findReviews(juego, username);
+    public SearchResponse reviewsSearch(@RequestParam(required = false) String videojuego, @RequestParam(required = false) String username,
+                                        @RequestParam(required = false) String notaIni, @RequestParam(required = false) String notaFin, 
+                                        @RequestParam(required = false) String fechaRegIni, @RequestParam(required = false) String fechaRegFin, 
+                                        @RequestParam(required = false) String order){
+
+        return reviewsSearchService.findReviews(videojuego, username, notaIni, notaFin, fechaRegIni, fechaRegFin, order);
     }
 
     @GetMapping(value="/reviews/{idReview}")

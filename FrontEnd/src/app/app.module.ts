@@ -21,6 +21,12 @@ import { GuardGuard } from './guard.guard';
 import { AdminGuardGuard } from './admin-guard.guard';
 import { LoginGuardGuard } from './login-guard.guard';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { RippleModule } from 'primeng/ripple';
+import { InputTextModule } from 'primeng/inputtext';
+
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
   {path:'login', component:LoginComponent, canActivate:[LoginGuardGuard]},
@@ -60,7 +66,12 @@ const routes : Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    ButtonModule,
+    DropdownModule,
+    BrowserAnimationsModule,
+    RippleModule,
+    InputTextModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

@@ -1,7 +1,9 @@
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/service/LoginService.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/utils/Cifrado.java
+/home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/response/LoginResponse.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/controller/RegisterController.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/controller/LoginController.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/service/RegisterService.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/entity/Usuario.java
 /home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/UsuariosServiceApplication.java
+/home/manuel/TFG/usuarios_service/src/main/java/upm/tfg/b190222/usuarios_service/response/RegisterResponse.java

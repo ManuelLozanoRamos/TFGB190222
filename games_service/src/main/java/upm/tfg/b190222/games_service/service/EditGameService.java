@@ -20,7 +20,9 @@ public class EditGameService {
 
             game.setDesarrolladora(newGameInfo.getDesarrolladora());
             game.setPlataforma(newGameInfo.getPlataforma());
-            game.setGeneros(newGameInfo.getGeneros());
+            game.setGenero1(newGameInfo.getGenero1());
+            game.setGenero2(newGameInfo.getGenero2());
+            game.setGenero3(newGameInfo.getGenero3());
             game.setFechaLanzamiento(newGameInfo.getFechaLanzamiento());
             game.setFechaRegistro(newGameInfo.getFechaRegistro());
 

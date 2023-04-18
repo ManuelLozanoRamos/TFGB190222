@@ -18,6 +18,14 @@ export class ReviewsComponent implements OnInit{
   reviews:Review[];
   game:string;
 
+  user:string;
+  notaIni:string;
+  notaFin:string;
+  fechaRegIni:string;
+  fechaRegFin:string;
+  order:string;
+  orders:string[];
+
   constructor(private reviewService:ReviewService, private activatedRoute:ActivatedRoute,
               private router:Router, private cookieService:CookieService){
     this.username = this.cookieService.get('token');
@@ -26,6 +34,14 @@ export class ReviewsComponent implements OnInit{
     this.finished = false;
     this.reviews = [];
     this.game = '';
+
+    this.user = '';
+    this.notaIni = '';
+    this.notaFin = '';
+    this.fechaRegIni = '';
+    this.fechaRegFin = '';
+    this.order='';
+    this.orders = ['Fecha Descendiente', 'Fecha Ascendiente', 'Juego Descendente', 'Juego Ascendente', 'Nota Descendente', 'Nota Asccendente'];
   }
   
   ngOnInit(): void {
@@ -37,19 +53,63 @@ export class ReviewsComponent implements OnInit{
         }
       }
     );
-    this.searchByGame();
-    this.search();
+    this.searchByUser();
+    this.searchAll();
   }
 
   search() : void {
-    this.reviewService.getReviews(this.game, "any").subscribe(
+    let parametros:Map<string, string> = new Map();
+    let realizarPeticion:boolean = false;
+    parametros.set('videojuego', this.game);
+    if(this.user != ''){
+      parametros.set('username', this.user);
+      realizarPeticion = true;
+    } 
+    if(this.notaIni != ''){
+      parametros.set('notaIni', this.notaIni);
+      realizarPeticion = true;
+    } 
+    if(this.notaFin != ''){
+      parametros.set('notaFin', this.notaFin);
+      realizarPeticion = true;
+    } 
+    if(this.fechaRegIni != ''){
+      parametros.set('fechaRegIni', this.fechaRegIni);
+      realizarPeticion = true;
+    } 
+    if(this.fechaRegFin != ''){
+      parametros.set('fechaRegFin', this.fechaRegFin);
+      realizarPeticion = true;
+    } 
+    if(this.order != ''){
+      parametros.set("order", this.order);
+      realizarPeticion = true;
+    } 
+
+    if(realizarPeticion){
+      this.reviewService.getReviews(parametros).subscribe(
+        //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
+        r => this.reviews = r.reviews 
+      );
+    }
+  }
+
+  searchAll() : void {
+    let parametros:Map<string, string> = new Map();
+    parametros.set('videojuego', this.game);
+
+    this.reviewService.getReviews(parametros).subscribe(
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r => this.reviews = r.reviews 
     );
   }
 
-  searchByGame() : void {
-    this.reviewService.getReviews(this.game, this.username).subscribe(
+  searchByUser() : void {
+    let parametros:Map<string, string> = new Map();
+    parametros.set('videojuego', this.game);
+    parametros.set('username', this.username);
+
+    this.reviewService.getReviews(parametros).subscribe(
       //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r =>{
         if(r.reviews.length != 0){

@@ -69,6 +69,35 @@
         </table>
     </div>
 
+    <div class="mb-3">
+      <label for="User" class="form-label">Usuario</label>
+      <input type="text" class="form-control" id="User" name="user" maxlength="20" [(ngModel)]="user">
+    </div>
+    <div class="mb-3">
+      <label for="FechaRegIni" class="form-label">Fecha Registro Inicial</label>
+      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegIni" name="fechaRegIni" [(ngModel)]="fechaRegIni">
+    </div>
+    <div class="mb-3">
+      <label for="FechaRegFin" class="form-label">Fecha Registro Final</label>
+      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegFin" name="fechaRegFin" [(ngModel)]="fechaRegFin">
+    </div>
+    <div class="mb-3">
+      <label for="NotaIni" class="form-label">Nota Inicial</label>
+      <input type="text" class="form-control" id="NotaIni" name="notaIni" maxlength="2" [(ngModel)]="notaIni">
+    </div>
+    <div class="mb-3">
+      <label for="NotaFin" class="form-label">Nota Final</label>
+      <input type="text" class="form-control" id="NotaFin" name="notaFin" maxlength="2" [(ngModel)]="notaFin">
+    </div>
+    <div class="mb-3">
+      <label for="Order" class="form-label">Ordenación</label>        
+      <p-dropdown [options]="orders" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
+    </div>
+    <div class="mb-4">
+    <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
+    <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button>
+    </div>
+
     <div class="container">
         <table class="table">
         <thead>

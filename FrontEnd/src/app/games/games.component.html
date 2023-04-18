@@ -39,13 +39,53 @@
         <h4>Introduzca el videojuego que quiera buscar</h4>
         <form>
             <div class="mb-3">
-                <label for="GameName" class="form-label">Videojuego</label>
-                <input type="text" class="form-control" id="GameName" name="game" maxlength="50" [(ngModel)]="game">
+                <label for="Nombre" class="form-label">Videojuego</label>
+                <input type="text" class="form-control" id="Nombre" name="game" maxlength="50" [(ngModel)]="nombre">
+            </div>
+            <div class="mb-3">
+              <label for="Plataforma" class="form-label">Plataforma</label>
+              <input type="text" class="form-control" id="Plataforma" name="plataforma" maxlength="40" [(ngModel)]="plataforma">
+            </div>
+            <div class="mb-3">
+              <label for="Desarrolladora" class="form-label">Desarrolladora</label>
+              <input type="text" class="form-control" id="Desarrolladora" name="desarrolladora" maxlength="50" [(ngModel)]="desarrolladora">
+            </div>
+            <div class="mb-3">
+              <label for="Genero1" class="form-label">Género 1</label>
+              <input type="text" class="form-control" id="Genero1" name="genero1" maxlength="25" [(ngModel)]="genero1">
+            </div>
+            <div class="mb-3">
+              <label for="Genero2" class="form-label">Género 2</label>
+              <input type="text" class="form-control" id="Genero2" name="genero2" maxlength="25" [(ngModel)]="genero2">
+            </div>
+            <div class="mb-3">
+              <label for="Genero3" class="form-label">Género 3</label>
+              <input type="text" class="form-control" id="Genero3" name="genero3" maxlength="25" [(ngModel)]="genero3">
+            </div>
+            <div class="mb-3">
+              <label for="FechaLanIni" class="form-label">Fecha Lanzamiento Inicial</label>
+              <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaLanIni" name="fechaLanIni" [(ngModel)]="fechaLanIni">
+            </div>
+            <div class="mb-3">
+              <label for="FechaLanFin" class="form-label">Fecha Lanzamiento Final</label>
+              <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaLanFin" name="fechaLanFin" [(ngModel)]="fechaLanFin">
+            </div>
+            <div class="mb-3">
+              <label for="NotaMediaIni" class="form-label">Nota Media Inicial</label>
+              <input type="text" class="form-control" id="NotaMediaIni" name="notaMediaIni" maxlength="2" [(ngModel)]="notaMediaIni">
+            </div>
+            <div class="mb-3">
+              <label for="NotaMediaFin" class="form-label">Nota Media Final</label>
+              <input type="text" class="form-control" id="NotaMediaFin" name="notaMediaFin" maxlength="2" [(ngModel)]="notaMediaFin">
+            </div>
+            <div class="mb-3">
+              <label for="Order" class="form-label">Ordenación</label>        
+              <p-dropdown [options]="orders" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
             </div>
             <div class="mb-4">
             <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
             </div>
-            <div class="mb-4">
+            <div class=" mb-4">
                 <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button> 
                 </div>
         </form>
@@ -55,9 +95,9 @@
     <div class="container">
         <table class="table">
         <thead>
-        <h4 *ngIf="games[0] == null">No hay resultados</h4>
+        <h4 *ngIf="games.length == 0">No hay resultados</h4>
 
-        <tr *ngIf="games[0] != null">
+        <tr *ngIf="games.length != 0">
             <th scope="col">Nombre</th>
             <th scope="col">Plataforma</th>
             <th scope="col">Desarrolladora</th>

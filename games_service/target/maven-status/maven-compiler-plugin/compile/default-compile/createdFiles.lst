@@ -1,0 +1,16 @@
+upm/tfg/b190222/games_service/response/EditionResponse.class
+upm/tfg/b190222/games_service/info/GameInfo.class
+upm/tfg/b190222/games_service/controller/GamesEditionController.class
+upm/tfg/b190222/games_service/controller/GamesCreationController.class
+upm/tfg/b190222/games_service/service/GamesCreationService.class
+upm/tfg/b190222/games_service/GamesServiceApplication.class
+upm/tfg/b190222/games_service/service/GamesSearchService.class
+upm/tfg/b190222/games_service/service/EditGameService.class
+upm/tfg/b190222/games_service/response/DeleteResponse.class
+upm/tfg/b190222/games_service/service/DeleteGameService.class
+upm/tfg/b190222/games_service/entity/Game.class
+upm/tfg/b190222/games_service/controller/DeleteGameController.class
+upm/tfg/b190222/games_service/response/CreationResponse.class
+upm/tfg/b190222/games_service/response/SearchResponse.class
+upm/tfg/b190222/games_service/response/SearchByIdResponse.class
+upm/tfg/b190222/games_service/controller/GamesSearchController.class
