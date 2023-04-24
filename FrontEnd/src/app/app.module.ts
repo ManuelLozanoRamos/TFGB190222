@@ -10,6 +10,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ActivationComponent } from './register/activation/activation.component';
 import { FormReviewsComponent } from './reviews/form-reviews/form-reviews.component';
 import { UserReviewsComponent } from './reviews/user-reviews/user-reviews.component';
 import { GamesComponent } from './games/games.component';
@@ -26,22 +27,19 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
   {path:'login', component:LoginComponent, canActivate:[LoginGuardGuard]},
   {path:'signup', component:RegisterComponent, canActivate:[LoginGuardGuard]},
-
+  {path:'users/:username/activate', component:ActivationComponent},
   {path:'home', component:HomeComponent, canActivate:[GuardGuard]},
-
   {path:'games', component:GamesComponent, canActivate:[GuardGuard]},
-
   {path:'games/:game/reviews', component:ReviewsComponent, canActivate:[GuardGuard]},
   {path:'games/:game/reviews/create', component:FormReviewsComponent, canActivate:[GuardGuard]},
-
   {path:'users/:username/reviews', component:UserReviewsComponent, canActivate:[GuardGuard]},
   {path:'users/:username/reviews/:id/edit', component:FormReviewsComponent, canActivate:[GuardGuard]},
-
   {path:'admin', component:AdminComponent, canActivate:[AdminGuardGuard]},
   {path:'admin/games', component:AdminGamesComponent, canActivate:[AdminGuardGuard]},
   {path:'admin/games/create', component:FormGamesComponent, canActivate:[AdminGuardGuard]},
@@ -60,7 +58,8 @@ const routes : Routes = [
     GamesComponent,
     FormGamesComponent,
     AdminGamesComponent,
-    AdminComponent
+    AdminComponent,
+    ActivationComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +70,8 @@ const routes : Routes = [
     DropdownModule,
     BrowserAnimationsModule,
     RippleModule,
-    InputTextModule
+    InputTextModule,
+    PasswordModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

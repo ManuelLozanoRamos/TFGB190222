@@ -28,9 +28,11 @@ public class DeleteReviewService {
 
             cq.select(reviews).where(p);
 
-            Review v = entityManager.createQuery(cq).getSingleResult();
+            Review review = entityManager.createQuery(cq).getSingleResult();
 
-            entityManager.remove(v);
+            if(review == null) return "NOT_FOUND";
+
+            entityManager.remove(review);
 
             return "OK";
         } catch (Exception e){

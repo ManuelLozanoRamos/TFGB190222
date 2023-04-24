@@ -1,6 +1,7 @@
 package upm.tfg.b190222.usuarios_service.entity;
 
 import java.time.LocalDate;
+import java.util.BitSet;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +24,12 @@ public class Usuario {
     @Column(name = "password")
     private String password;
 
-    @Column(name ="fechaRegistro")
+    @Column(name = "mail")
+    private String mail;
+
+    @Column(name = "fechaRegistro")
     private LocalDate fechaRegistro;
+
+    @Column(name="activado")
+    private boolean activado;
 }

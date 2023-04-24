@@ -1,4 +1,4 @@
-export class RegisterResponse {
+export class UserResponse {
     response:string;
 
     constructor(response:string){

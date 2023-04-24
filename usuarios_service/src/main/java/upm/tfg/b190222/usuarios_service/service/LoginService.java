@@ -32,7 +32,10 @@ public class LoginService {
             try{
                 u = entityManager.createQuery(cq).getSingleResult();
 
-                if(Cifrado.decrypt(u.getPassword()).equals(password)) return "OK";
+                if(Cifrado.decrypt(u.getPassword()).equals(password)){
+                    if(!u.isActivado()) return "NOT_VALIDATED";
+                    else return "OK";
+                } 
                 else return "BAD_PASS";
             } catch(NoResultException e){
                 return "NO_USER_EXISTS";

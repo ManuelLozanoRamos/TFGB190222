@@ -8,16 +8,20 @@
             <h3>Crea una cuenta para empezar a usar la web</h3>
             <form>
                 <div class="mb-3">
-                    <label for="Username" class="form-label">Usuario</label>
+                    <label for="Username" class="form-label">Nombre de usuario</label>
                     <input type="text" class="form-control" id="Username" name="username" maxlength="20" [(ngModel)]="username">
                 </div>
                 <div class="mb-3">
-                    <label for="Password" class="form-label">Constraseña</label>
+                    <label for="Mail" class="form-label">Dirección de correo electrónico </label>
+                    <input type="text" class="form-control" id="Mail" name="mail" maxlength="100" [(ngModel)]="mail">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Contraseña</label>
                     <input type="text" class="form-control" id="Password" name="password" maxlength="25" [(ngModel)]="password">
                 </div>
                 <div class="mb-3">
-                    <label for="Password" class="form-label">Repite la Constraseña</label>
-                    <input type="text" class="form-control" id="Password" name="password" maxlength="25" [(ngModel)]="repeatedPassword">
+                    <label for="RepeatedPassword" class="form-label">Confirma la contraseña</label>
+                    <input type="text" class="form-control" id="RepeatedPassword" name="repeatedPassword" maxlength="25" [(ngModel)]="repeatedPassword">
                 </div>
                 <div class="mb-4">
                 <button type="button" class="btn btn-info" role="button" (click)="register()">Registrarse</button> 

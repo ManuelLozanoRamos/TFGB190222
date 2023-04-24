@@ -5,12 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponse {
-
+public class UserResponse {
     private String response;
 
-    public LoginResponse(String response){
+    public UserResponse(String response){
         this.response = response;
     }
-    
 }

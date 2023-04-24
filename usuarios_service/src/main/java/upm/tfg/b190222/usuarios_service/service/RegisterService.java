@@ -12,24 +12,25 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.usuarios_service.entity.Usuario;
 import upm.tfg.b190222.usuarios_service.utils.Cifrado;
+import upm.tfg.b190222.usuarios_service.utils.Mail;
 
 @Service
 public class RegisterService {
+
+    private static final String SUBJECT_VALIDATION = "Confirme su dirección de correo electrónico en GameRatings";
+    private static final String BODY_VALIDATION="Acaba de crear una nueva cuenta en GameRatings.\nConfirme su dirección de correo para comenzar a disfrutar de su nueva cuenta pulsando en el siguiente enlace: http://localhost:8080/users/userToValidate/activate";
     
     @Autowired
     private EntityManager entityManager;
 
     @Transactional
-    public String register(Usuario usuario) throws Exception{
+    public String register(Usuario usuario) {
         try{
-            String username = usuario.getUsername();
-            String password = Cifrado.encript(usuario.getPassword());
-
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
             Root<Usuario> usuarios = cq.from(Usuario.class);
 
-            Predicate p = cb.equal(usuarios.get("username"), username);
+            Predicate p = cb.equal(usuarios.get("username"), usuario.getUsername());
 
             cq.select(usuarios).where(p);
 
@@ -41,12 +42,17 @@ public class RegisterService {
             }
         
             if(u == null){
-                Usuario user = new Usuario();
-                user.setUsername(username);
-                user.setPassword(password);
-                user.setFechaRegistro(usuario.getFechaRegistro());
+                //Envío del correo de confirmación de mail
+                try{
+                    Mail.sendMail(usuario.getUsername(), usuario.getMail(), SUBJECT_VALIDATION, BODY_VALIDATION);
+                } catch(Exception e){
+                    e.printStackTrace();
+                    return "MAIL_ERROR";
+                }    
+
+                usuario.setPassword(Cifrado.encript(usuario.getPassword()));
                         
-                entityManager.persist(user);
+                entityManager.persist(usuario);
 
                 return "OK";
             } else {

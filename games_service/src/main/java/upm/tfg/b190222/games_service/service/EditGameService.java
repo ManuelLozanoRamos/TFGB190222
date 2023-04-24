@@ -18,6 +18,8 @@ public class EditGameService {
         try{
             Game game = entityManager.find(Game.class, idGame);
 
+            if(game == null) return "NOT_FOUND";
+
             game.setDesarrolladora(newGameInfo.getDesarrolladora());
             game.setPlataforma(newGameInfo.getPlataforma());
             game.setGenero1(newGameInfo.getGenero1());

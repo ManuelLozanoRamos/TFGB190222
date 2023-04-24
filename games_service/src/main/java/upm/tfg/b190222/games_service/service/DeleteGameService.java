@@ -28,9 +28,11 @@ public class DeleteGameService {
 
             cq.select(games).where(p);
 
-            Game g = entityManager.createQuery(cq).getSingleResult();
+            Game game = entityManager.createQuery(cq).getSingleResult();
 
-            entityManager.remove(g);
+            if(game == null) return "NOT_FOUND";
+
+            entityManager.remove(game);
 
             return "OK";
         } catch (Exception e){

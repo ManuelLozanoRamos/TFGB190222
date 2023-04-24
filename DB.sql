@@ -1,7 +1,9 @@
 create table Usuario (
     username varchar(20) unique not null,
     password varchar(100) not null,
+    mail varchar(100) not null,
 	fechaRegistro Date not null,
+    activado bit not null,
     primary key(username)
 );
 
@@ -82,7 +84,7 @@ begin
 end$$
 
 
-insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', '2023-04-06');
+insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', 'gameratingsweb@gmail.com', '2023-04-06', 1);
 insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción', 'Plataformas', null, 5, '2007-11-01', '2023-06-04');
 insert into Review values(1, 'admin', 'Super Mario Galaxy', 'Juegazo', 9, 'Divino de la muerte', '2023-02-14');
 

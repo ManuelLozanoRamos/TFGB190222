@@ -18,6 +18,8 @@ public class EditReviewService {
         try{
             Review review = entityManager.find(Review.class, idReview);
 
+            if(review == null) return "NOT_FOUND";
+
             review.setTitulo(newReviewInfo.getTitulo());
             review.setComentario(newReviewInfo.getComentario());
             review.setNota(newReviewInfo.getNota());
