@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -20,15 +21,7 @@ public class DeleteGameService {
     @Transactional
     public String deleteGame(String idGame){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Game> cq = cb.createQuery(Game.class);
-            Root<Game> games = cq.from(Game.class); 
-
-            Predicate p = cb.equal(games.get("nombre"), idGame);
-
-            cq.select(games).where(p);
-
-            Game game = entityManager.createQuery(cq).getSingleResult();
+            Game game = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_WRITE);
 
             if(game == null) return "NOT_FOUND";
 

@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit{
   }
 
   login() : void{
-    this.loginService.isRegister(this.username, this.password).subscribe(
+    this.loginService.isRegistered(this.username, this.password).subscribe(
       //Comprobar mensajes de error y validaciones y mostrar mensaje
       b => {
         if(b.response == 'OK'){

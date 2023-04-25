@@ -3,6 +3,7 @@ package upm.tfg.b190222.games_service.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.games_service.entity.Game;
 import upm.tfg.b190222.games_service.info.GameInfo;
@@ -16,7 +17,7 @@ public class EditGameService {
     @Transactional
     public String editGame(String idGame, GameInfo newGameInfo){
         try{
-            Game game = entityManager.find(Game.class, idGame);
+            Game game = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_WRITE);
 
             if(game == null) return "NOT_FOUND";
 

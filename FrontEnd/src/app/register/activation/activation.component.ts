@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivationService } from './activation.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './activation.component.html',
   styleUrls: ['./activation.component.css']
 })
-export class ActivationComponent {
+export class ActivationComponent implements OnInit{
 
   activated:boolean;
   username:string;

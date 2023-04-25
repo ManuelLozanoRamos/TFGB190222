@@ -27,7 +27,7 @@ public class Mail {
         message.setFrom(new InternetAddress(to));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));   
         message.setSubject(subject);
-        body = body.replaceFirst("userToValidate", username);
+        body = body.replaceFirst("userTo", username);
         message.setText(body);
 
         Transport transport = session.getTransport("smtp");

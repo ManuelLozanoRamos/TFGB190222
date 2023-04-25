@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.reviews_service.entity.Review;
 
@@ -20,15 +17,7 @@ public class DeleteReviewService {
     @Transactional
     public String deleteReview(int idReview){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Review> cq = cb.createQuery(Review.class);
-            Root<Review> reviews = cq.from(Review.class); 
-
-            Predicate p = cb.equal(reviews.get("idReview"), idReview);
-
-            cq.select(reviews).where(p);
-
-            Review review = entityManager.createQuery(cq).getSingleResult();
+            Review review = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_WRITE);
 
             if(review == null) return "NOT_FOUND";
 

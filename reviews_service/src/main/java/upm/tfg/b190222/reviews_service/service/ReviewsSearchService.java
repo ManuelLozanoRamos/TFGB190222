@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -69,7 +70,7 @@ public class ReviewsSearchService {
 
             cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("fechaRegistro")));
 
-            List<Review> result = entityManager.createQuery(cq).getResultList();
+            List<Review> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
@@ -81,15 +82,7 @@ public class ReviewsSearchService {
 
     public SearchByIdResponse findReviewById(int idReview){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Review> cq = cb.createQuery(Review.class);
-            Root<Review> reviews = cq.from(Review.class);
-            
-            Predicate p = cb.equal(reviews.get("idReview"), idReview);
-
-            cq.select(reviews).where(p);
-
-            Review result = entityManager.createQuery(cq).getSingleResult();
+            Review result = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_READ);
 
             return new SearchByIdResponse(result, "OK");
         } catch(Exception e){

@@ -28,12 +28,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { ChangePasswordComponent } from './login/change-password/change-password.component';
+import { RequestChangePasswordComponent } from './login/request-change-password/request-change-password.component';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
   {path:'login', component:LoginComponent, canActivate:[LoginGuardGuard]},
   {path:'signup', component:RegisterComponent, canActivate:[LoginGuardGuard]},
   {path:'users/:username/activate', component:ActivationComponent},
+  {path:'users/request/change/password', component:RequestChangePasswordComponent},
+  {path:'users/:username/change/password', component:ChangePasswordComponent},
   {path:'home', component:HomeComponent, canActivate:[GuardGuard]},
   {path:'games', component:GamesComponent, canActivate:[GuardGuard]},
   {path:'games/:game/reviews', component:ReviewsComponent, canActivate:[GuardGuard]},
@@ -59,7 +63,9 @@ const routes : Routes = [
     FormGamesComponent,
     AdminGamesComponent,
     AdminComponent,
-    ActivationComponent
+    ActivationComponent,
+    ChangePasswordComponent,
+    RequestChangePasswordComponent
   ],
   imports: [
     BrowserModule,

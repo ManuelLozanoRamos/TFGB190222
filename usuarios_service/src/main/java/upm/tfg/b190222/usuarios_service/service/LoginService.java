@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -20,28 +21,15 @@ public class LoginService {
 
     public String login(String username, String password){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
-            Root<Usuario> usuarios = cq.from(Usuario.class);
+            Usuario usuario = entityManager.find(Usuario.class, username, LockModeType.PESSIMISTIC_READ);
 
-            Predicate p = cb.equal(usuarios.get("username"), username);
+            if(usuario == null) return "NO_USER_EXISTS";
 
-            cq.select(usuarios).where(p);
-
-            Usuario u;
-            try{
-                u = entityManager.createQuery(cq).getSingleResult();
-
-                if(Cifrado.decrypt(u.getPassword()).equals(password)){
-                    if(!u.isActivado()) return "NOT_VALIDATED";
-                    else return "OK";
-                } 
-                else return "BAD_PASS";
-            } catch(NoResultException e){
-                return "NO_USER_EXISTS";
-            } catch(Exception e){
-                return "ERROR";
-            }
+            if(Cifrado.decrypt(usuario.getPassword()).equals(password)){
+                if(!usuario.isActivado()) return "NOT_VALIDATED";
+                else return "OK";
+            } 
+            else return "BAD_PASS";
         } catch(Exception e){
             return "ERROR";
         }     

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -83,7 +84,7 @@ public class GamesSearchService {
 
             cq.select(games).where(predicates).orderBy(cb.desc(games.get("notaMedia")));
 
-            List<Game> result = entityManager.createQuery(cq).getResultList();
+            List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
@@ -101,7 +102,7 @@ public class GamesSearchService {
 
             cq.select(games);     
 
-            List<Game> result = entityManager.createQuery(cq).getResultList();
+            List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
@@ -114,15 +115,7 @@ public class GamesSearchService {
 
     public SearchByIdResponse findGameById(String idGame){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Game> cq = cb.createQuery(Game.class);
-            Root<Game> games = cq.from(Game.class);
-            
-            Predicate p = cb.equal(games.get("nombre"), idGame);
-
-            cq.select(games).where(p);
-
-            Game result = entityManager.createQuery(cq).getSingleResult();
+            Game result = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_READ);
 
             return new SearchByIdResponse(result, "OK");
         } catch(Exception e){

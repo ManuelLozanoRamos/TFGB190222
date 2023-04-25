@@ -13,14 +13,15 @@ export class LoginService {
   constructor(private http:HttpClient) { }
 
   //comprobar si usuario está registrado
-  isRegister(un:string, psw:string) : Observable<UserResponse>{
-    if(un.length > 20){
-      return of(new UserResponse("ERROR_LEN_USE"));
+  isRegistered(username:string, password:string) : Observable<UserResponse>{
+    const regex = new RegExp('^[ \t\n]*$');
+    if(regex.test(username)){
+      return of(new UserResponse("ERROR_EMPTY_USER"));
     }
-    if(psw.length > 25){
-      return of(new UserResponse("ERROR_LEN_PASS"));
+    if(regex.test(password)){
+      return of(new UserResponse("ERROR_EMPTY_PASS"));
     }
 
-    return this.http.get<UserResponse>(this.url, {params:{username:un, password:psw}});
+    return this.http.get<UserResponse>(this.url, {params:{username:username, password:password}});
   }
 }

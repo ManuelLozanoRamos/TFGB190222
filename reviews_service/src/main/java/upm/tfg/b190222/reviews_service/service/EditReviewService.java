@@ -3,6 +3,7 @@ package upm.tfg.b190222.reviews_service.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.reviews_service.entity.Review;
 import upm.tfg.b190222.reviews_service.info.ReviewInfo;
@@ -16,7 +17,7 @@ public class EditReviewService {
     @Transactional
     public String editReview(int idReview, ReviewInfo newReviewInfo){
         try{
-            Review review = entityManager.find(Review.class, idReview);
+            Review review = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_WRITE);
 
             if(review == null) return "NOT_FOUND";
 

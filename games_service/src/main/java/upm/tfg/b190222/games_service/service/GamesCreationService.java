@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -23,29 +24,14 @@ public class GamesCreationService {
     @Transactional
     public String createGame(Game game){
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Game> cq = cb.createQuery(Game.class);
-            Root<Game> games = cq.from(Game.class);
-
-            Predicate p = cb.equal(games.get("nombre"), game.getNombre());
-
-            cq.select(games).where(p);
-
-            Game g;
-            try{
-                g = entityManager.createQuery(cq).getSingleResult();
-            } catch(NoResultException e){
-                g = null;
-            }
+            Game g = entityManager.find(Game.class, game.getNombre(), LockModeType.PESSIMISTIC_READ);
         
-            if(g == null){
-                game.setFechaRegistro(LocalDate.now());
-                entityManager.persist(game);
+            if(g != null) return "EXISTS";
 
-                return "OK";
-            } else {
-                return "EXISTS";
-            }  
+            game.setFechaRegistro(LocalDate.now());
+            entityManager.persist(game);
+
+            return "OK";
         } catch(Exception e){
             return "ERROR";
         }  

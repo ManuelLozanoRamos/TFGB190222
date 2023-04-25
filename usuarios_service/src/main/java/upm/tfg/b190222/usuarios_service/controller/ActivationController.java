@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +19,8 @@ public class ActivationController  {
     @Autowired
     ActivationService activationService;
 
-    @PostMapping("/usuarios/{user}/activate")
-    public UserResponse activate(@PathVariable String user){
+    @PostMapping(value = "/usuarios/{user}/activate")
+    public UserResponse activate(@PathVariable String user, @RequestParam String newPassword){
         return new UserResponse(activationService.activate(user));
     }
 

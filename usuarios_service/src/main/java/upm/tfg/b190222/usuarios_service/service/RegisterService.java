@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,8 +18,8 @@ import upm.tfg.b190222.usuarios_service.utils.Mail;
 @Service
 public class RegisterService {
 
-    private static final String SUBJECT_VALIDATION = "Confirme su dirección de correo electrónico en GameRatings";
-    private static final String BODY_VALIDATION="Acaba de crear una nueva cuenta en GameRatings.\nConfirme su dirección de correo para comenzar a disfrutar de su nueva cuenta pulsando en el siguiente enlace: http://localhost:8080/users/userToValidate/activate";
+    private static final String SUBJECT_VALIDATION = "Confirma tu dirección de correo electrónico en GameRatings";
+    private static final String BODY_VALIDATION = "Acabas de crear una nueva cuenta en GameRatings.\nConfirma tu dirección de correo electrónico pulsando en el siguiente enlace para comenzar a disfrutar de tu nueva cuenta: http://localhost:8080/users/userTo/activate";
     
     @Autowired
     private EntityManager entityManager;
@@ -26,38 +27,22 @@ public class RegisterService {
     @Transactional
     public String register(Usuario usuario) {
         try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
-            Root<Usuario> usuarios = cq.from(Usuario.class);
-
-            Predicate p = cb.equal(usuarios.get("username"), usuario.getUsername());
-
-            cq.select(usuarios).where(p);
-
-            Usuario u;
-            try{
-                u = entityManager.createQuery(cq).getSingleResult();
-            } catch(NoResultException e){
-                u = null;
-            }
+            Usuario user = entityManager.find(Usuario.class, usuario.getUsername(), LockModeType.PESSIMISTIC_READ);
         
-            if(u == null){
-                //Envío del correo de confirmación de mail
-                try{
-                    Mail.sendMail(usuario.getUsername(), usuario.getMail(), SUBJECT_VALIDATION, BODY_VALIDATION);
-                } catch(Exception e){
-                    e.printStackTrace();
-                    return "MAIL_ERROR";
-                }    
+            if(user != null) return "EXISTS";
 
-                usuario.setPassword(Cifrado.encript(usuario.getPassword()));
+            //Envío del correo de confirmación de mail
+            try{
+                Mail.sendMail(usuario.getUsername(), usuario.getMail(), SUBJECT_VALIDATION, BODY_VALIDATION);
+            } catch(Exception e){
+                return "MAIL_ERROR";
+            }    
+
+            usuario.setPassword(Cifrado.encript(usuario.getPassword()));
                         
-                entityManager.persist(usuario);
+            entityManager.persist(usuario);
 
-                return "OK";
-            } else {
-                return "EXISTS";
-            }  
+            return "OK";
         } catch(Exception e){
             return "ERROR";
         }     
