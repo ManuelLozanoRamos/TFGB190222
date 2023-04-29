@@ -20,6 +20,10 @@ public class LoginController {
 
     @GetMapping(value = "/usuarios")
     public UserResponse login(@RequestParam String username, @RequestParam String password){
-        return new UserResponse(loginService.login(username, password));
+        try{
+            return new UserResponse(loginService.login(username, password));
+        } catch(Exception e){
+            return new UserResponse("ERROR");
+        }
     }
 }

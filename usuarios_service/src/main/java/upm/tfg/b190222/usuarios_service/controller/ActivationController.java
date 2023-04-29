@@ -21,7 +21,10 @@ public class ActivationController  {
 
     @PostMapping(value = "/usuarios/{user}/activate")
     public UserResponse activate(@PathVariable String user, @RequestParam String newPassword){
-        return new UserResponse(activationService.activate(user));
+        try{
+            return new UserResponse(activationService.activate(user));
+        } catch(Exception e){
+            return new UserResponse("ERROR");
+        } 
     }
-
 }

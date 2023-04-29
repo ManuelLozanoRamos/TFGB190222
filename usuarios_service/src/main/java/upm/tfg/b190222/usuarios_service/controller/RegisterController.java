@@ -21,6 +21,10 @@ public class RegisterController {
 
     @PostMapping(value = "/usuarios")
     public UserResponse register(@RequestBody Usuario usuario){
-        return new UserResponse(registerService.register(usuario));
+        try{
+            return new UserResponse(registerService.register(usuario));
+        } catch(Exception e){
+            return new UserResponse("ERROR");
+        }
     }
 }

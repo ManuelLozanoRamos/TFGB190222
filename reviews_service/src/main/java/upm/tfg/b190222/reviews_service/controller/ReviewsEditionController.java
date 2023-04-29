@@ -22,6 +22,10 @@ public class ReviewsEditionController {
 
     @PutMapping(value="/reviews/{idReview}/edit")
     public EditionResponse reviewsEdition(@PathVariable("idReview") Integer idReview, @RequestBody ReviewInfo newReviewInfo){
-        return new EditionResponse(editReviewService.editReview(idReview, newReviewInfo));
+        try{
+            return new EditionResponse(editReviewService.editReview(idReview, newReviewInfo));
+        } catch(Exception e){
+            return new EditionResponse("ERROR");
+        }
     }
 }

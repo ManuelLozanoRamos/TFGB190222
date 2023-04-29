@@ -19,7 +19,7 @@ import upm.tfg.b190222.usuarios_service.utils.Mail;
 public class ChangePasswordService {
 
     private static final String SUBJECT_VALIDATION = "Solicitud de reseteo de contraseña en GameRatings";
-    private static final String BODY_VALIDATION = "La cuenta de GameRatings asociada a este correo electrónico ha solicitado un reseteo de contraseña.\nPulsa en el siguiente enlace para realizar dicho reseteo: http://localhost:8080/users/userTo/change/password";
+    private static final String BODY_VALIDATION = "La cuenta de GameRatings asociada a este correo electrónico ha solicitado restablecer la contraseña.\nPulsa en el siguiente enlace para completar la operación: http://localhost:8080/users/userTo/change/password";
 
     @Autowired
     EntityManager entityManager;

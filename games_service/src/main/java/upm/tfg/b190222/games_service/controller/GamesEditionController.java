@@ -22,6 +22,10 @@ public class GamesEditionController {
 
     @PutMapping(value="/games/{idGame}/edit")
     public EditionResponse gameEdition(@PathVariable("idGame") String idGame, @RequestBody GameInfo newGameInfo){
-        return new EditionResponse(editGameService.editGame(idGame, newGameInfo));
+        try{
+            return new EditionResponse(editGameService.editGame(idGame, newGameInfo));
+        } catch(Exception e){
+            return new EditionResponse("ERROR");
+        }
     }
 }

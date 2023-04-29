@@ -20,6 +20,10 @@ public class DeleteReviewController {
     
     @DeleteMapping(value="/reviews/{idReview}/delete")
     public DeleteResponse deleteReview(@PathVariable Integer idReview){
-        return new DeleteResponse(deleteReviewService.deleteReview(idReview));
+        try{
+            return new DeleteResponse(deleteReviewService.deleteReview(idReview));
+        } catch(Exception e){
+            return new DeleteResponse("ERROR");
+        }
     }
 }

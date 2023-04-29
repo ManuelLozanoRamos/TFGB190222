@@ -7,6 +7,17 @@ create table Usuario (
     primary key(username)
 );
 
+create table Token (
+	token varchar(86) unique not null,
+    proceso varchar(15) not null,
+    username varchar(20) not null, 
+    fechaCreacion Datetime not null,
+    fechaValidez Datetime not null,
+    primary key(token),
+    foreign key(username) references Usuario(username)
+		on delete cascade on update cascade
+);
+
 create table Game (
 	nombre varchar(75) unique not null,
     plataforma varchar(40) not null,
@@ -92,3 +103,4 @@ select * from Review where videojuego='Super Mario Galaxy';
 select * from Usuario;
 select * from Review;
 select * from Game;
+select * from Token;

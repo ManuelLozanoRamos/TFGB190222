@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import upm.tfg.b190222.usuarios_service.entity.Usuario;
 import upm.tfg.b190222.usuarios_service.utils.Cifrado;
 
@@ -19,6 +20,7 @@ public class LoginService {
     @Autowired
     private EntityManager entityManager;
 
+    @Transactional
     public String login(String username, String password){
         try{
             Usuario usuario = entityManager.find(Usuario.class, username, LockModeType.PESSIMISTIC_READ);

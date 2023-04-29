@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import upm.tfg.b190222.reviews_service.entity.Review;
 import upm.tfg.b190222.reviews_service.response.SearchByIdResponse;
 import upm.tfg.b190222.reviews_service.response.SearchResponse;
@@ -22,6 +23,7 @@ public class ReviewsSearchService {
     @Autowired
     EntityManager entityManager;
 
+    @Transactional
     public SearchResponse findReviews(String videojuego, String username, String notaIni, 
                                       String notaFin,String fechaRegIni, String fechaRegFin, String order){
         try{
@@ -74,12 +76,12 @@ public class ReviewsSearchService {
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
-            e.printStackTrace();
             return new SearchResponse(new ArrayList<Review>(), "ERROR");
         }
     }
 
 
+    @Transactional
     public SearchByIdResponse findReviewById(int idReview){
         try{
             Review result = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_READ);

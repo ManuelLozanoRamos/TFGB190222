@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import upm.tfg.b190222.games_service.entity.Game;
 import upm.tfg.b190222.games_service.response.SearchByIdResponse;
 import upm.tfg.b190222.games_service.response.SearchResponse;
@@ -22,6 +23,7 @@ public class GamesSearchService {
     @Autowired
     EntityManager entityManager;
 
+    @Transactional
     public SearchResponse findGames(String nombre, String plataforma, String desarrolladora,  
      String genero1,  String genero2, String genero3, String notaMediaIni,  
      String notaMediaFin, String fechaLanIni, String fechaLanFin, String order){
@@ -88,12 +90,12 @@ public class GamesSearchService {
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
-            e.printStackTrace();
             return new SearchResponse(new ArrayList<Game>(), "ERROR");
         }
     }
 
 
+    @Transactional
     public SearchResponse findAllGames(){
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -106,13 +108,12 @@ public class GamesSearchService {
 
             return new SearchResponse(result, "OK");
         } catch(Exception e){
-            e.printStackTrace();
             return new SearchResponse(new ArrayList<Game>(), "ERROR");
         }
     }
 
 
-
+    @Transactional
     public SearchByIdResponse findGameById(String idGame){
         try{
             Game result = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_READ);

@@ -22,11 +22,19 @@ public class ChangePasswordController {
 
     @PostMapping(value = "/usuarios/reset/password/send/mail")
     public UserResponse sendResetPasswordMail(@RequestParam String mail){
-        return new UserResponse(changePasswordService.sendResetPasswordMail(mail));
+        try{
+            return new UserResponse(changePasswordService.sendResetPasswordMail(mail));
+        } catch(Exception e){
+            return new UserResponse("ERROR");
+        }
     }
     
     @PutMapping(value = "/usuarios/{user}/change/password")
     public UserResponse changePassword(@PathVariable String user, @RequestParam String newPassword){
-        return new UserResponse(changePasswordService.changePassword(user, newPassword));
+        try{
+            return new UserResponse(changePasswordService.changePassword(user, newPassword));
+        } catch(Exception e){
+            return new UserResponse("ERROR");
+        }     
     }
 }

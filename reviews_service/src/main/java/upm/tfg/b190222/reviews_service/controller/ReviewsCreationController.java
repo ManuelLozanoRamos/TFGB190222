@@ -21,6 +21,10 @@ public class ReviewsCreationController {
     
     @PostMapping(value="/reviews")
     public CreationResponse reviewsCreation(@RequestBody Review review){
-        return new CreationResponse(reviewsCreationService.createReview(review));
+        try{
+            return new CreationResponse(reviewsCreationService.createReview(review));
+        } catch(Exception e){
+            return new CreationResponse("ERROR");
+        }
     }
 }
