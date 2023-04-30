@@ -1,8 +1,11 @@
 package upm.tfg.b190222.reviews_service.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -14,6 +17,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.reviews_service.entity.Review;
+import upm.tfg.b190222.reviews_service.response.ReviewResponse;
 
 @Service
 public class ReviewsCreationService {
@@ -22,7 +26,7 @@ public class ReviewsCreationService {
     private EntityManager entityManager;
     
     @Transactional
-    public String createReview(Review review){
+    public ResponseEntity<ReviewResponse> createReview(Review review){
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Review> cq = cb.createQuery(Review.class);
@@ -45,12 +49,12 @@ public class ReviewsCreationService {
                 review.setFechaRegistro(LocalDate.now());
                 entityManager.persist(review);
 
-                return "OK";
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("OK", new Review(), new ArrayList<>()), HttpStatus.OK);
             } else {
-                return "EXISTS";
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("EXISTS", new Review(), new ArrayList<>()), HttpStatus.OK);
             }  
         } catch(Exception e){
-            return "ERROR";
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }  
     }
 }

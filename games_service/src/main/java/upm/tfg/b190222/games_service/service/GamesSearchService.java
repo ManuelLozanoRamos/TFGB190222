@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -14,8 +16,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.games_service.entity.Game;
-import upm.tfg.b190222.games_service.response.SearchByIdResponse;
-import upm.tfg.b190222.games_service.response.SearchResponse;
+import upm.tfg.b190222.games_service.response.GameResponse;
 
 @Service
 public class GamesSearchService {
@@ -24,7 +25,7 @@ public class GamesSearchService {
     EntityManager entityManager;
 
     @Transactional
-    public SearchResponse findGames(String nombre, String plataforma, String desarrolladora,  
+    public ResponseEntity<GameResponse> findGames(String nombre, String plataforma, String desarrolladora,  
      String genero1,  String genero2, String genero3, String notaMediaIni,  
      String notaMediaFin, String fechaLanIni, String fechaLanFin, String order){
         try{
@@ -87,16 +88,16 @@ public class GamesSearchService {
             cq.select(games).where(predicates).orderBy(cb.desc(games.get("notaMedia")));
 
             List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
-
-            return new SearchResponse(result, "OK");
+    
+            return new ResponseEntity<GameResponse>(new GameResponse("OK", new Game(), result), HttpStatus.OK);
         } catch(Exception e){
-            return new SearchResponse(new ArrayList<Game>(), "ERROR");
+            return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @Transactional
-    public SearchResponse findAllGames(){
+    public ResponseEntity<GameResponse> findAllGames(){
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Game> cq = cb.createQuery(Game.class);
@@ -106,21 +107,21 @@ public class GamesSearchService {
 
             List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
-            return new SearchResponse(result, "OK");
+            return new ResponseEntity<GameResponse>(new GameResponse("OK", new Game(), result), HttpStatus.OK);
         } catch(Exception e){
-            return new SearchResponse(new ArrayList<Game>(), "ERROR");
+            return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @Transactional
-    public SearchByIdResponse findGameById(String idGame){
+    public ResponseEntity<GameResponse> findGameById(String idGame){
         try{
             Game result = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_READ);
 
-            return new SearchByIdResponse(result, "OK");
+            return new ResponseEntity<GameResponse>(new GameResponse("OK", result, new ArrayList<>()), HttpStatus.OK);
         } catch(Exception e){
-            return new SearchByIdResponse(new Game(), "ERROR");
+            return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     

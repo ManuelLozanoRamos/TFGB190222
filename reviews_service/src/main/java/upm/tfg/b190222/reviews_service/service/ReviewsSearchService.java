@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -14,8 +16,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.reviews_service.entity.Review;
-import upm.tfg.b190222.reviews_service.response.SearchByIdResponse;
-import upm.tfg.b190222.reviews_service.response.SearchResponse;
+import upm.tfg.b190222.reviews_service.response.ReviewResponse;
 
 @Service
 public class ReviewsSearchService {
@@ -24,7 +25,7 @@ public class ReviewsSearchService {
     EntityManager entityManager;
 
     @Transactional
-    public SearchResponse findReviews(String videojuego, String username, String notaIni, 
+    public ResponseEntity<ReviewResponse> findReviews(String videojuego, String username, String notaIni, 
                                       String notaFin,String fechaRegIni, String fechaRegFin, String order){
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -74,21 +75,21 @@ public class ReviewsSearchService {
 
             List<Review> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
-            return new SearchResponse(result, "OK");
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("OK", new Review(), result), HttpStatus.OK);
         } catch(Exception e){
-            return new SearchResponse(new ArrayList<Review>(), "ERROR");
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @Transactional
-    public SearchByIdResponse findReviewById(int idReview){
+    public ResponseEntity<ReviewResponse> findReviewById(int idReview){
         try{
             Review result = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_READ);
 
-            return new SearchByIdResponse(result, "OK");
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("OK", result, new ArrayList<>()), HttpStatus.OK);
         } catch(Exception e){
-            return new SearchByIdResponse(new Review(), "ERROR");
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -30,14 +30,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ChangePasswordComponent } from './login/change-password/change-password.component';
 import { RequestChangePasswordComponent } from './login/request-change-password/request-change-password.component';
+import { InterceptorInterceptor } from './interceptor.interceptor';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
   {path:'login', component:LoginComponent, canActivate:[LoginGuardGuard]},
   {path:'signup', component:RegisterComponent, canActivate:[LoginGuardGuard]},
-  {path:'users/:username/activate', component:ActivationComponent},
-  {path:'users/request/change/password', component:RequestChangePasswordComponent},
-  {path:'users/:username/change/password', component:ChangePasswordComponent},
+  {path:'users/:username/activate/:token', component:ActivationComponent, canActivate:[LoginGuardGuard]},
+  {path:'users/request/change/password', component:RequestChangePasswordComponent, canActivate:[LoginGuardGuard]},
+  {path:'users/:username/change/password/:token', component:ChangePasswordComponent, canActivate:[LoginGuardGuard]},
   {path:'home', component:HomeComponent, canActivate:[GuardGuard]},
   {path:'games', component:GamesComponent, canActivate:[GuardGuard]},
   {path:'games/:game/reviews', component:ReviewsComponent, canActivate:[GuardGuard]},
@@ -79,7 +80,7 @@ const routes : Routes = [
     InputTextModule,
     PasswordModule
   ],
-  providers: [CookieService],
+  providers: [{provide:HTTP_INTERCEPTORS, useClass:InterceptorInterceptor, multi:true}, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

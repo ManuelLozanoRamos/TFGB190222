@@ -8,11 +8,11 @@ import upm.tfg.b190222.tokens_service.entity.Token;
 @Setter
 public class TokenResponse {
 
-    private Token token;
     private String response;
+    private Token token;
 
-    public TokenResponse(Token token, String response){
-        this.token = token;
+    public TokenResponse(String response, Token token){
         this.response = response;
+        this.token = token;
     }
 }

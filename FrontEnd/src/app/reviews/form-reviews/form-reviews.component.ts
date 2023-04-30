@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AppComponent } from 'src/app/app.component';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
 import { ReviewInfo } from '../reviewInfo';

@@ -3,13 +3,17 @@
     <head>
         <link rel="stylesheet" href="activation.component.css"/>
     </head>
-    <body>
-        <p *ngIf="activated" >Cuenta {{username}} validada con exito</p>
-        <p *ngIf="!activated" >Error al valdiar la cuenta {{username}}</p>
-            <div class="container">
-                <div class="mb-4">
-                    <button type="button" class="btn btn-info" role="button" [routerLink]="['/login']">Ir a Login</button> 
-                    </div>
+    <body>    
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <div class="surface-card p-4 shadow-2 border-round lg:w-5">
+                <div class="text-center mb-5" style="font-weight: bold;">
+                    <div *ngIf="activated" class="text-900 text-3xl font-medium mb-3" style="font-weight: bold !important;">Cuenta "{{username}}" validada con exito</div>
+                    <div *ngIf="!activated" class="text-900 text-3xl font-medium mb-3" style="font-weight: bold !important;">Error al validar la cuenta {{username}}</div>
+                </div>
+                <div>
+                    <button pButton pRipple [routerLink]="['/login']" label="Ir a Login" class="w-full" style="margin-top: 20px;"></button>
+                </div>
             </div>
+        </div>
     </body>
 </html>

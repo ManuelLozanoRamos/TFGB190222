@@ -23,12 +23,6 @@ public class Token {
     @Column(name="token")
     private String token;
 
-    @Column(name="proceso")
-    private String proceso;
-
-    @Column(name="username")
-    private String username;
-
     @Column(name="fechaCreacion")
     private LocalDateTime fechaCreacion;
 

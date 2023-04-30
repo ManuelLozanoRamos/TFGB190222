@@ -1,6 +1,8 @@
 package upm.tfg.b190222.usuarios_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +21,11 @@ public class LoginController {
     private LoginService loginService;
 
     @GetMapping(value = "/usuarios")
-    public UserResponse login(@RequestParam String username, @RequestParam String password){
+    public ResponseEntity<UserResponse> login(@RequestParam String username, @RequestParam String password){
         try{
-            return new UserResponse(loginService.login(username, password));
+            return loginService.login(username, password);
         } catch(Exception e){
-            return new UserResponse("ERROR");
+            return new ResponseEntity<UserResponse>(new UserResponse("ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

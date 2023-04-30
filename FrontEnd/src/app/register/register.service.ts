@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { UserResponse } from './user-response';
+import { UserResponse } from '../responses/user-response';
 import { Usuario } from './usuario';
 
 @Injectable({
@@ -19,19 +19,19 @@ export class RegisterService {
   register(username:string, password:string, repeatedPassword:string, mail:string) : Observable<UserResponse> {
     const regex = new RegExp('^[ \t\n]*$');
     if(regex.test(username)){
-      return of(new UserResponse('ERROR_EMPTY_USER'));
+      return of(new UserResponse('ERROR_EMPTY_USER', ''));
     }
     if(regex.test(mail)){
-      return of(new UserResponse('ERROR_EMPTY_MAIL'));
+      return of(new UserResponse('ERROR_EMPTY_MAIL', ''));
     }
     if(regex.test(password)){
-      return of(new UserResponse('ERROR_EMPTY_PASS'));
+      return of(new UserResponse('ERROR_EMPTY_PASS', ''));
     }
     if(regex.test(repeatedPassword)){
-      return of(new UserResponse('ERROR_EMPTY_RPASS'));
+      return of(new UserResponse('ERROR_EMPTY_RPASS', ''));
     }
     if(password != repeatedPassword){
-      return of(new UserResponse('ERROR_NOT_EQ_PASS'));
+      return of(new UserResponse('ERROR_NOT_EQ_PASS', ''));
     }
 
     this.user.username = username;

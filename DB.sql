@@ -1,21 +1,17 @@
 create table Usuario (
     username varchar(20) unique not null,
     password varchar(100) not null,
-    mail varchar(100) not null,
+    mail varchar(100) unique not null,
 	fechaRegistro Date not null,
     activado bit not null,
     primary key(username)
 );
 
 create table Token (
-	token varchar(86) unique not null,
-    proceso varchar(15) not null,
-    username varchar(20) not null, 
+	token varchar(123) unique not null,
     fechaCreacion Datetime not null,
     fechaValidez Datetime not null,
-    primary key(token),
-    foreign key(username) references Usuario(username)
-		on delete cascade on update cascade
+    primary key(token)
 );
 
 create table Game (

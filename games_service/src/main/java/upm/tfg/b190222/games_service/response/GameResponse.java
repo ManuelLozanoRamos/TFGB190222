@@ -8,14 +8,16 @@ import upm.tfg.b190222.games_service.entity.Game;
 
 @Getter
 @Setter
-public class SearchResponse {
+public class GameResponse {
     
-    private List<Game> games;
     private String response;
+    private Game game;
+    private List<Game> games;
 
-    public SearchResponse(List<Game> games, String response){
-        this.games = games;
+    public GameResponse(String response, Game game, List<Game> games){
         this.response = response;
+        this.game = game;
+        this.games = games;
     }
 
 }

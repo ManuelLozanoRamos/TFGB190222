@@ -11,24 +11,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserValidationService {
 
-    private String validationUrl = "localhost:8084/api/token/validate?username=param1&token=param2&process=USER_SESSION";
-
-    public String validate(String username, String token){
+    public String validate(String token){
         try{
-            validationUrl = validationUrl.replaceFirst("param1", username);
-            validationUrl = validationUrl.replaceFirst("param2", token);
+            String validationUrl = "http://localhost:8084/api/token/validate?token=param&protectionToken=sonvelbOVnVGDxeXu3XOZZecXQ3gz7iVsWae8DYuOlOhchLrqqld11auFB34SAT2Tl_qh8ntQFJEtLTCyjClqg";
+            validationUrl = validationUrl.replaceFirst("param", token);
 
             URL url = new URL(validationUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             StringBuffer response = new StringBuffer();
-            while((line=br.readLine()) != null){
+            while((line=bufferedReader.readLine()) != null){
                 response.append(line);
             }
-            br.close();
+            bufferedReader.close();
 
             JSONObject json = new JSONObject(response.toString());
 

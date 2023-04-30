@@ -3,6 +3,8 @@ package upm.tfg.b190222.games_service.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import upm.tfg.b190222.games_service.entity.Game;
-import upm.tfg.b190222.games_service.response.SearchByIdResponse;
-import upm.tfg.b190222.games_service.response.SearchResponse;
+import upm.tfg.b190222.games_service.response.GameResponse;
 import upm.tfg.b190222.games_service.service.GamesSearchService;
+import upm.tfg.b190222.games_service.service.UserValidationService;
 
 
 @RequestMapping("/api")
@@ -24,11 +27,26 @@ public class GamesSearchController{
     @Autowired
     GamesSearchService gamesSearchService;
 
+    @Autowired
+    UserValidationService userValidationService;
+
     @GetMapping(value="/games")
-    public SearchResponse gamesSearch(@RequestParam(required = false) String nombre, @RequestParam(required = false) String plataforma, 
+    public ResponseEntity<GameResponse> gamesSearch(@RequestParam(required = false) String nombre, @RequestParam(required = false) String plataforma, 
         @RequestParam(required = false) String desarrolladora, @RequestParam(required = false) String genero1, @RequestParam(required = false) String genero2,
         @RequestParam(required = false) String genero3, @RequestParam(required = false) String notaMediaIni, @RequestParam(required = false) String notaMediaFin, 
-        @RequestParam(required = false) String fechaLanIni, @RequestParam(required = false) String fechaLanFin, @RequestParam(required = false) String order){
+        @RequestParam(required = false) String fechaLanIni, @RequestParam(required = false) String fechaLanFin, @RequestParam(required = false) String order, HttpServletRequest request){
+
+        String authorizationHeader = request.getHeader("Authorization");
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String token = authorizationHeader.substring(7);
+    
+            if(!token.contains("USER_SESSION") || !userValidationService.validate(token).equals("VALID_ADMIN")){
+                return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            }
+    
+        } else {
+            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+        }
 
         try{
             if(nombre == null && plataforma == null && desarrolladora == null && genero1 == null 
@@ -42,17 +60,29 @@ public class GamesSearchController{
                                                     fechaLanFin, order);
             }
         } catch(Exception e){
-            return new SearchResponse(new ArrayList<Game>(), "ERROR");
+            return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @GetMapping(value="/games/{idGame}")
-    public SearchByIdResponse gamesSearchById(@PathVariable String idGame){
+    public ResponseEntity<GameResponse> gamesSearchById(@PathVariable String idGame, HttpServletRequest request){
+        String authorizationHeader = request.getHeader("Authorization");
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String token = authorizationHeader.substring(7);
+    
+            if(!token.contains("USER_SESSION") || !userValidationService.validate(token).equals("VALID_ADMIN")){
+                return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            }
+    
+        } else {
+            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+        }
+
         try{
             return gamesSearchService.findGameById(idGame);
         } catch(Exception e){
-            return new SearchByIdResponse(new Game(), "ERROR");
+            return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

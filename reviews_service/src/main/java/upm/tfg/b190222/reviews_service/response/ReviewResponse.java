@@ -8,14 +8,16 @@ import upm.tfg.b190222.reviews_service.entity.Review;
 
 @Getter
 @Setter
-public class SearchResponse {
+public class ReviewResponse {
     
-    private List<Review> reviews;
     private String response;
+    private Review review;
+    private List<Review> reviews;
 
-    public SearchResponse(List<Review> reviews, String response){
-        this.reviews = reviews;
+    public ReviewResponse(String response, Review review, List<Review> reviews){
         this.response = response;
+        this.review = review;
+        this.reviews = reviews;
     }
 
 }

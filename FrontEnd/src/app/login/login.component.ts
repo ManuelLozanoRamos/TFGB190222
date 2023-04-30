@@ -27,13 +27,14 @@ export class LoginComponent implements OnInit{
       //Comprobar mensajes de error y validaciones y mostrar mensaje
       b => {
         if(b.response == 'OK'){
-          this.cookieService.set('token', this.username);
+          this.cookieService.set('token', b.token);
           this.router.navigate(['/home']);
         } else {
           //mostrar mensaje de que no son validas las credenciales y quitar la redireccion
           this.router.navigate(['/login']);
         }
-      }
+      },
+      error => console.log('Error interno: ' + error.status)
     );
   }
 

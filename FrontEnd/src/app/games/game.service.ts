@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Observable, of } from 'rxjs';
-import { SearchResponse } from './search-response';
-import { DeleteResponse } from './delete-response';
-import { SearchByIdResponse } from './searchById-response';
-import { EditResponse } from './edit-response';
 import { Game } from './game';
 import { GameInfo } from './gameInfo';
-import { FormResponse } from './form-games/form-response';
+import { GameResponse } from '../responses/game-response';
 
 
 @Injectable({
@@ -20,12 +16,12 @@ export class GameService {
   constructor(private http:HttpClient) { }
 
   //Obtener todos los games
-  getAllGames():Observable<SearchResponse>{
-    return this.http.get<SearchResponse>(this.url);
+  getAllGames():Observable<GameResponse>{
+    return this.http.get<GameResponse>(this.url);
   }
 
   //Obtener games
-  getGames(parametros:Map<string, string>):Observable<SearchResponse>{
+  getGames(parametros:Map<string, string>):Observable<GameResponse>{
     if(parametros.size != 0){
       let httpParams = new HttpParams();
 
@@ -35,67 +31,67 @@ export class GameService {
       let fechaLanFin = parametros.get("fechaLanFin");
 
       if(Number(notaMediaIni) < 1 || Number(notaMediaIni) > 10){
-        return of(new SearchResponse([], "ERROR_RAN_NINI"));
+        return of(new GameResponse("ERROR_RAN_NINI",new Game() , []));
       }
       if(Number(notaMediaFin) < 1 || Number(notaMediaFin) > 10){
-        return of(new SearchResponse([], "ERROR_RAN_NFIN"));
+        return of(new GameResponse("ERROR_RAN_NFIN", new Game(), []));
       }
       if(Number(notaMediaIni) > Number(notaMediaFin)){
-        return of(new SearchResponse([], "ERROR_NINI_MAYOR_NFIN"));
+        return of(new GameResponse("ERROR_NINI_MAYOR_NFIN", new Game(), []));
       }
       if((notaMediaIni != '' && notaMediaFin == '') || (notaMediaIni == '' && notaMediaFin != '')){
-        return of(new SearchResponse([], "ERROR_SOLO_UNA_NOTA"));
+        return of(new GameResponse("ERROR_SOLO_UNA_NOTA", new Game(), []));
       }
       if(fechaLanIni != '' && fechaLanFin != '' && String(fechaLanIni) > String(fechaLanFin)){
-        return of(new SearchResponse([], "ERROR_FINI_MAYOR_FFIN"));
+        return of(new GameResponse("ERROR_FINI_MAYOR_FFIN", new Game(), []));
       }
       if(fechaLanIni != '' && fechaLanFin == '' || (fechaLanIni == '' && fechaLanFin != '')){
-        return of(new SearchResponse([], "ERROR_SOLO_UNA_FECHA"));
+        return of(new GameResponse("ERROR_SOLO_UNA_FECHA", new Game(), []));
       }
 
       parametros.forEach((value, key) =>{
         httpParams = httpParams.set(key, value)
       });
 
-      return this.http.get<SearchResponse>(this.url, {params:httpParams});
+      return this.http.get<GameResponse>(this.url, {params:httpParams});
     }
     else{
-      return of(new SearchResponse([], "NO_PETICION"));
+      return of(new GameResponse("NO_PETICION", new Game(), []));
     }
   }
 
-  getGameById(idGame:number):Observable<SearchByIdResponse>{
-    return this.http.get<SearchByIdResponse>(this.url + '/' + encodeURIComponent(idGame));
+  getGameById(idGame:number):Observable<GameResponse>{
+    return this.http.get<GameResponse>(this.url + '/' + encodeURIComponent(idGame));
   }
 
   //Crear game
-  createGame(game:Game):Observable<FormResponse>{
+  createGame(game:Game):Observable<GameResponse>{
     if(game.nombre.length > 75){
-      return of(new FormResponse("ERROR_LEN_NOM"));
+      return of(new GameResponse("ERROR_LEN_NOM", new Game(), []));
     }
     if(game.plataforma.length > 40){
-      return of(new FormResponse("ERROR_LEN_PLAT"));
+      return of(new GameResponse("ERROR_LEN_PLAT", new Game(), []));
     }
     if(game.desarrolladora.length > 50){
-      return of(new FormResponse("ERROR_LEN_PLAT"));
+      return of(new GameResponse("ERROR_LEN_PLAT", new Game(), []));
     }
 
-    return this.http.post<FormResponse>(this.url, game);
+    return this.http.post<GameResponse>(this.url, game);
   }
 
   //Elimina un game
-  delete(idGame:string):Observable<DeleteResponse>{
-    return this.http.delete<DeleteResponse>(this.url + '/' + encodeURIComponent(idGame) + '/delete');
+  delete(idGame:string):Observable<GameResponse>{
+    return this.http.delete<GameResponse>(this.url + '/' + encodeURIComponent(idGame) + '/delete');
   }
 
-  editGame(idGame:string, gameInfo:GameInfo):Observable<EditResponse>{
+  editGame(idGame:string, gameInfo:GameInfo):Observable<GameResponse>{
     if(gameInfo.plataforma.length > 40){
-      return of(new FormResponse("ERROR_LEN_PLAT"));
+      return of(new GameResponse("ERROR_LEN_PLAT", new Game(), []));
     }
     if(gameInfo.desarrolladora.length > 50){
-      return of(new FormResponse("ERROR_LEN_PLAT"));
+      return of(new GameResponse("ERROR_LEN_PLAT", new Game(), []));
     }
 
-    return this.http.put<EditResponse>(this.url + '/' + encodeURIComponent(idGame) + '/edit', gameInfo);
+    return this.http.put<GameResponse>(this.url + '/' + encodeURIComponent(idGame) + '/edit', gameInfo);
   }
 }

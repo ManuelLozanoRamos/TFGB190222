@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { UserResponse } from 'src/app/register/user-response';
+import { UserResponse } from 'src/app/responses/user-response';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class RequestChangePasswordService {
   requestChangePassword(mail:string) : Observable<UserResponse>{
     const regex = new RegExp('^[ \t\n]*$');
     if(regex.test(mail)){
-      return of(new UserResponse("ERROR_EMPTY_USER"));
+      return of(new UserResponse("ERROR_EMPTY_USER", ''));
     }
 
     return this.http.post<UserResponse>(this.url + '/reset/password/send/mail', null, {params:{mail:mail}});

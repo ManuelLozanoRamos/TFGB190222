@@ -14,12 +14,14 @@ export class LoginGuardGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const cookie = this.cookieService.check('token');
-      if(cookie){
-        this.router.navigate(['/home']);
-        return false;
+      if(!cookie || !this.cookieService.get('token').includes('USER_SESSION')){
+        this.cookieService.delete('token');
+        return true;
       } 
       else {
-        return true;
+        if(this.cookieService.get('token').includes(''))
+        this.router.navigate(['/home']);
+        return false;
       }
   }
   

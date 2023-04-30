@@ -13,7 +13,7 @@ public class Mail {
     private static final String PASSWORD = "pledvdulsoeorcne";
 
     
-    public static void sendMail(String username, String to, String subject, String body) throws Exception{
+    public static void sendMail(String token, String username, String to, String subject, String body) throws Exception{
         Properties props = System.getProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");  
         props.put("mail.smtp.user", USER);
@@ -27,7 +27,8 @@ public class Mail {
         message.setFrom(new InternetAddress(to));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));   
         message.setSubject(subject);
-        body = body.replaceFirst("userTo", username);
+        body = body.replaceFirst("param1", username);
+        body = body.replaceFirst("param2", token);
         message.setText(body);
 
         Transport transport = session.getTransport("smtp");

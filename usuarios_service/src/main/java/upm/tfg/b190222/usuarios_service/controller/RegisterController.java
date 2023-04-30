@@ -1,6 +1,8 @@
 package upm.tfg.b190222.usuarios_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +22,11 @@ public class RegisterController {
     private RegisterService registerService;
 
     @PostMapping(value = "/usuarios")
-    public UserResponse register(@RequestBody Usuario usuario){
+    public ResponseEntity<UserResponse> register(@RequestBody Usuario usuario){
         try{
-            return new UserResponse(registerService.register(usuario));
+            return registerService.register(usuario);
         } catch(Exception e){
-            return new UserResponse("ERROR");
+            return new ResponseEntity<UserResponse>(new UserResponse("ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
