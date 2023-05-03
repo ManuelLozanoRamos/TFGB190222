@@ -16,37 +16,42 @@ export class ReviewService {
 
   //Obtener reviews
   getReviews(parametros:Map<string, string>):Observable<ReviewResponse>{
-    let httpParams = new HttpParams();
+    if(parametros.size != 0){
+      let httpParams = new HttpParams();
 
-    let notaIni = parametros.get("notaIni");
-    let notaFin = parametros.get("notaFin");
-    let fechaRegIni = parametros.get("fechaRegIni");
-    let fechaRegFin = parametros.get("fechaRegFin");
+      let notaIni = parametros.get("notaIni");
+      let notaFin = parametros.get("notaFin");
+      let fechaRegIni = parametros.get("fechaRegIni");
+      let fechaRegFin = parametros.get("fechaRegFin");
 
-    if(Number(notaIni) < 1 || Number(notaIni) > 10){
-      return of(new ReviewResponse("ERROR_RAN_NINI", new Review(), []));
-    }
-    if(Number(notaFin) < 1 || Number(notaFin) > 10){
-      return of(new ReviewResponse("ERROR_RAN_NFIN", new Review(), []));
-    }
-    if(Number(notaIni) > Number(notaFin)){
-      return of(new ReviewResponse("ERROR_NINI_MAYOR_NFIN", new Review(), []));
-    }
-    if((notaIni != '' && notaFin == '') || (notaIni == '' && notaFin != '')){
-      return of(new ReviewResponse("ERROR_SOLO_UNA_NOTA", new Review(), []));
-    }
-    if(fechaRegIni != '' && fechaRegFin != '' && String(fechaRegIni) > String(fechaRegFin)){
-      return of(new ReviewResponse("ERROR_FINI_MAYOR_FFIN", new Review(), []));
-    }
-    if(fechaRegIni != '' && fechaRegFin == '' || (fechaRegIni == '' && fechaRegFin != '')){
-      return of(new ReviewResponse("ERROR_SOLO_UNA_FECHA", new Review(), []));
-    }
+      if(Number(notaIni) < 1 || Number(notaIni) > 10){
+        return of(new ReviewResponse("ERROR_RAN_NINI", new Review(), []));
+      }
+      if(Number(notaFin) < 1 || Number(notaFin) > 10){
+        return of(new ReviewResponse("ERROR_RAN_NFIN", new Review(), []));
+      }
+      if(Number(notaIni) > Number(notaFin)){
+        return of(new ReviewResponse("ERROR_NINI_MAYOR_NFIN", new Review(), []));
+      }
+      if((notaIni != '' && notaFin == '') || (notaIni == '' && notaFin != '')){
+        return of(new ReviewResponse("ERROR_SOLO_UNA_NOTA", new Review(), []));
+      }
+      if(fechaRegIni != '' && fechaRegFin != '' && String(fechaRegIni) > String(fechaRegFin)){
+        return of(new ReviewResponse("ERROR_FINI_MAYOR_FFIN", new Review(), []));
+      }
+      if(fechaRegIni != '' && fechaRegFin == '' || (fechaRegIni == '' && fechaRegFin != '')){
+        return of(new ReviewResponse("ERROR_SOLO_UNA_FECHA", new Review(), []));
+      }
 
-    parametros.forEach((value, key) =>{
-      httpParams = httpParams.set(key, value)
-    });
+      parametros.forEach((value, key) =>{
+        httpParams = httpParams.set(key, value)
+      });
 
-    return this.http.get<ReviewResponse>(this.url, {params:httpParams});
+      return this.http.get<ReviewResponse>(this.url, {params:httpParams});
+    }
+    else{
+      return of(new ReviewResponse("NO_PETICION", new Review(), []));
+    }
   }
 
   getReviewById(idReview:number):Observable<ReviewResponse>{
@@ -55,10 +60,21 @@ export class ReviewService {
 
   //Crear review
   createReview(review:Review):Observable<ReviewResponse>{
+    const regex = new RegExp('^[ \t\n]*$');
+    if(review.titulo == null || review.titulo.length == 0 || regex.test(review.titulo)){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+    if(review.comentario == null || review.comentario.length == 0 || regex.test(review.comentario)){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+    if(review.nota == null){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+
     if(review.titulo.length > 75){
       return of(new ReviewResponse("ERROR_LEN_TIT", new Review, []));
     }
-    if(review.comentario.length > 200){
+    if(review.comentario.length > 500){
       return of(new ReviewResponse("ERROR_LEN_COM", new Review(), []));
     }
     if(review.nota < 1 || review.nota > 10){
@@ -74,10 +90,21 @@ export class ReviewService {
   }
 
   editReview(idReview:number, reviewInfo:ReviewInfo):Observable<ReviewResponse>{
+    const regex = new RegExp('^[ \t\n]*$');
+    if(reviewInfo.titulo == null || reviewInfo.titulo.length == 0 || regex.test(reviewInfo.titulo)){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+    if(reviewInfo.comentario == null || reviewInfo.comentario.length == 0 || regex.test(reviewInfo.comentario)){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+    if(reviewInfo.nota == null){
+      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+    }
+
     if(reviewInfo.titulo.length > 75){
       return of(new ReviewResponse("ERROR_LEN_TIT", new Review(), []));
     }
-    if(reviewInfo.comentario.length > 200){
+    if(reviewInfo.comentario.length > 500){
       return of(new ReviewResponse("ERROR_LEN_COM", new Review(), []));
     }
     if(reviewInfo.nota < 1 || reviewInfo.nota > 10){

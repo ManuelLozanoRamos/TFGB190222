@@ -3,124 +3,129 @@
     <head>
         <link rel="stylesheet" href="reviews.component.css"/>
     </head>
-   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
-              </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
-            </form>
-            <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+    <body>
+      <div style="display: flex; flex-direction: column; min-height: 100vh;">
+        <p-menubar class="card" [model]="items" [style]="{'margin-bottom': '50px'}">
+          <ng-template pTemplate="start">
+            <h3 style="padding-right: 12px;">GameRatings</h3>
+          </ng-template>
+          <ng-template pTemplate="end">
+            <p-splitButton [model]="itemsUser" label="{{username}}" icon="pi pi-user" styleClass="p-button-outlined"></p-splitButton>
+          </ng-template>
+        </p-menubar>
+    
+        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+            <div class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Reseñas de "{{game}}"</div>
+            <div class="container" style="display: flex; align-items: center; margin-bottom: 35px;" [hidden]="!finished" *ngIf="!userHasReview">
+              <p class="w-6" style="font-weight: bold;">No has realizado ninguna reseña de "{{game}}"</p>
+              <button class="w-6" pButton pRipple label="Crear reseña" [routerLink]="['/games/'+game+'/reviews/create']" icon="pi pi-plus"></button>            
+            </div>
+            <div class="col-12" style="margin-bottom: 10px;" [hidden]="!finished" *ngIf="userHasReview">
+              <p style="font-weight: bold;">Tu reseña de "{{game}}":</p>
+              <div class="flex" style="flex-direction: column; display: flex;">
+                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                  <p class="text-500 w-2">Juego</p>
+                  <p class="w-10">{{userReview.videojuego}}</p>
+                </div>
+                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                  <p class="text-500 w-2">Nota media</p>
+                  <p class="w-10">{{userReview.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
+                </div>
+                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                  <p class="text-500 w-2">Fecha Registro</p>
+                  <p class="w-10">{{userReview.fechaRegistro}}</p>
+                </div>
+                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                  <p class="text-500 w-2">Título</p>
+                  <p class="w-10">{{userReview.titulo}}</p>
+                </div>
+                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                  <p class="text-500  w-2">Reseña</p>
+                  <p class="w-10">{{userReview.comentario}}</p>
+                </div>
+              </div>
+            </div> 
+
+            <p-accordion [activeIndex]="1" class="w-full">
+              <p-accordionTab>
+                <ng-template pTemplate="header">
+                  <div class="flex align-items-center">
+                    <i class="pi pi-filter flex align-items-center" style="margin-right: 10px;"></i>
+                    <i class="pi pi-sort-alt flex align-items-center" style="margin-right: 10px;"></i>
+                    <span class="vertical-align-middle">Filtrado y ordenación</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                      <label for="usuario" class="block text-900 font-medium">Usuario</label>
+                      <input type="text" pInputText placeholder="Usuario" id="usuario" maxlength="20" name="usuario" [(ngModel)]="user">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">  
+                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaIni" class="block text-900 font-medium">Nota media inicial</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media inicial" id="notaIni" name="notaIni" [min]="1" [max]="10" [(ngModel)]="notaIni"></p-inputNumber>
+                    </div>
+                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaFin" class="block text-900 font-medium">Nota media final</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media final" id="notaFin" name="notaFin" [min]="1" [max]="10" [(ngModel)]="notaFin"></p-inputNumber>
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">  
+                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                      <label for="fechaRegIni" class="block text-900 font-medium">Fecha registro inicial</label>
+                      <input type="date" format="dd-MM-yyyy" pInputText id="fechaRegIni" name="fechaRegIni" [(ngModel)]="fechaRegIni">
+                    </div>
+                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                      <label for="fechaRegIni" class="block text-900 font-medium">Fecha registro final</label>
+                      <input type="date" format="dd-MM-yyyy" pInputText id="fechaRegFin" name="fechaRegFin" [(ngModel)]="fechaRegFin">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                      <label for="order" class="block text-900 font-medium">Ordenación</label>   
+                      <p-dropdown [options]="orders" id="order" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
+                    </div>
+                  </div>
+                  <button pButton pRipple label="Buscar juego" (click)="search()" icon="pi pi-search" class="w-full" style="margin-top: 30px;"></button>
+                </ng-template>
+              </p-accordionTab>
+            </p-accordion>
+      
+            <button pButton pRipple label="Ver todas las reseñas" (click)="searchAll()" icon="pi pi-search" class="w-full" style="margin-top: 40px; margin-bottom: 40px;"></button>
+
+            <p-dataView #dv [value]="reviews" [rows]="3" [paginator]="true" emptyMessage="No hay resultados">
+              <ng-template let-review pTemplate="listItem">
+                <div class="col-12">
+                  <div class="flex" style="flex-direction: column; display: flex;">
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500 w-2">Juego</p>
+                      <p class="w-10">{{review.videojuego}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500 w-2">Nota media</p>
+                      <p class="w-10">{{review.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500 w-2">Fecha Registro</p>
+                      <p class="w-10">{{review.fechaRegistro}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500 w-2">Título</p>
+                      <p class="w-10">{{review.titulo}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500  w-2">Reseña</p>
+                      <p class="w-10">{{review.comentario}}</p>
+                    </div>
+                  </div>
+                </div> 
+              </ng-template>
+            </p-dataView>
           </div>
         </div>
-    </nav>
-
-    <div class="container">
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games']">Regresar a Ver Juegos</button>
-        </div>
-        <h4>Está viendo las reviews de {{game}}</h4>
-    </div>
-
-    <div class="container" [hidden]="!finished" *ngIf="!userHasReview">
-        <h6>No has realizado ninguna review de este juego</h6>
-        <button type="button" role="button" class="btn btn-primary" [routerLink]="['/games/'+game+'/reviews/create']">Crear Review</button>
-    </div>
-    <div class="container" [hidden]="!finished" *ngIf="userHasReview">
-        <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Usuario</th>
-            <th scope="col">Titulo</th>
-            <th scope="col">Nota</th>
-            <th scope="col">Comentario</th>
-            <th scope="col">Fecha Registro</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{userReview.username}}</td>
-            <td>{{userReview.titulo}}</td>
-            <td>{{userReview.nota}}</td>
-            <td>{{userReview.comentario}}</td>
-            <td>{{userReview.fechaRegistro | date:'dd-MM-yyyy'}}</td>
-        </tr>   
-        </tbody>
-        </table>
-    </div>
-
-    <div class="mb-3">
-      <label for="User" class="form-label">Usuario</label>
-      <input type="text" class="form-control" id="User" name="user" maxlength="20" [(ngModel)]="user">
-    </div>
-    <div class="mb-3">
-      <label for="FechaRegIni" class="form-label">Fecha Registro Inicial</label>
-      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegIni" name="fechaRegIni" [(ngModel)]="fechaRegIni">
-    </div>
-    <div class="mb-3">
-      <label for="FechaRegFin" class="form-label">Fecha Registro Final</label>
-      <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaRegFin" name="fechaRegFin" [(ngModel)]="fechaRegFin">
-    </div>
-    <div class="mb-3">
-      <label for="NotaIni" class="form-label">Nota Inicial</label>
-      <input type="text" class="form-control" id="NotaIni" name="notaIni" maxlength="2" [(ngModel)]="notaIni">
-    </div>
-    <div class="mb-3">
-      <label for="NotaFin" class="form-label">Nota Final</label>
-      <input type="text" class="form-control" id="NotaFin" name="notaFin" maxlength="2" [(ngModel)]="notaFin">
-    </div>
-    <div class="mb-3">
-      <label for="Order" class="form-label">Ordenación</label>        
-      <p-dropdown [options]="orders" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
-    </div>
-    <div class="mb-4">
-    <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
-    <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button>
-    </div>
-
-    <div class="container">
-        <table class="table">
-        <thead>
-        <h4 *ngIf="reviews[0] == null">No hay resultados</h4>
-
-        <tr *ngIf="reviews[0] != null">
-            <th scope="col">Usuario</th>
-            <th scope="col">Titulo</th>
-            <th scope="col">Nota</th>
-            <th scope="col">Comentario</th>
-            <th scope="col">Fecha Registro</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let review of reviews">
-            <td>{{review.username}}</td>
-            <td>{{review.titulo}}</td>
-            <td>{{review.nota}}</td>
-            <td>{{review.comentario}}</td>
-            <td>{{review.fechaRegistro | date:'dd-MM-yyyy'}}</td>
-        </tr>   
-        </tbody>
-        </table>
-    </div> 
-   </body> 
+      </div>
+    </body>    
 </html>

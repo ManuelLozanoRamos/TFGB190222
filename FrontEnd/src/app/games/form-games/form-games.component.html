@@ -4,76 +4,66 @@
         <link rel="stylesheet" href="form-games.component.css"/>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
-                  </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                  <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
-                </form>
-                <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+      <div style="display: flex; flex-direction: column; min-height: 100vh;">
+        <p-menubar class="card" [model]="items" [style]="{'margin-bottom': '50px'}">
+          <ng-template pTemplate="start">
+            <h3 style="padding-right: 12px;">GameRatings</h3>
+          </ng-template>
+          <ng-template pTemplate="end">
+            <p-splitButton [model]="itemsUser" label="{{username}}" icon="pi pi-user" styleClass="p-button-outlined"></p-splitButton>
+          </ng-template>
+        </p-menubar>
+    
+        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+            <div *ngIf="editOrCreate == 'create'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Registrar juego</div>
+            <div *ngIf="editOrCreate == 'edit'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Editar juego</div>
+            <div class="formgrid grid" style="margin-bottom: 10px;">
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'create'">
+                <label for="videojuego" class="block text-900 font-medium">Nombre del juego</label>
+                <input type="text" pInputText id="videojuego" maxlength="75" placeholder="Nombre del videojuego" name="videojuego" [(ngModel)]="game.nombre">
+              </div>
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'edit'">
+                  <label for="videojuego" class="block text-900 font-medium">Nombre del juego</label>
+                  <input type="text" pInputText id="videojuego" readOnly maxlength="75" placeholder="Nombre del videojuego" name="videojuego" [(ngModel)]="game.nombre">
+              </div>
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+                  <label for="plataforma" class="block text-900 font-medium">Plataforma</label>
+                  <input type="text" pInputText id="plataforma" maxlength="40" placeholder="Plataforma" name="plataforma" [(ngModel)]="game.plataforma">
+              </div>
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+                  <label for="desarrolladora" class="block text-900 font-medium">Desarrolladora</label>
+                  <input type="text" pInputText id="desarrolladora" maxlength="50" placeholder="Desarrolladora" name="desarrolladora" [(ngModel)]="game.desarrolladora">
               </div>
             </div>
-        </nav> 
+            <div class="formgrid grid" style="margin-bottom: 10px;">
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+                  <label for="genero1" class="block text-900 font-medium">Género 1</label>
+                  <input type="text" pInputText  id="genero1" maxlength="25" placeholder="Género 1" name="genero1" [(ngModel)]="game.genero1">
+              </div>
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+                  <label for="genero2" class="block text-900 font-medium">Género 2</label>
+                  <input type="text" pInputText  id="genero2" maxlength="25" placeholder="Género 2" name="genero2" [(ngModel)]="game.genero2">
+              </div>
+              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+                  <label for="genero3" class="block text-900 font-medium ">Género 3</label>
+                  <input type="text" pInputText  id="genero3" maxlength="25" placeholder="Género 3" name="genero3" [(ngModel)]="game.genero3">
+              </div>
+            </div>
+            <div class="formgrid grid">
+              <div class="field col-12" style="display: grid; justify-items: center;">
+                <label for="fechaLanzamiento" class="block text-900 font-medium">Fecha de lanzamiento</label>
+                <input type="date" format="dd-MM-yyyy" pInputText id="fechaLanzamiento" name="fechaLanzamiento" [(ngModel)]="game.fechaLanzamiento">
+             </div>
+            </div>
+              
+            <button pButton pRipple label="Registrar juego" *ngIf="editOrCreate == 'create'" (click)="createGame()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
+            <button pButton pRipple label="Actualizar juego" *ngIf="editOrCreate == 'edit'" (click)="createGame()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
 
-        <form>
-            <div class="mb-3" *ngIf="editOrCreate == 'create'">
-                <label for="videojuego" class="form-label">Nombre del Videojuego</label>
-                <input type="text" class="form-control" id="videojuego" maxlength="75" name="videojuego" [(ngModel)]="game.nombre">
-            </div>
-            <div class="mb-3" *ngIf="editOrCreate == 'edit'">
-                <label for="videojuego" class="form-label">Nombre del Videojuego</label>
-                <input type="text" class="form-control" id="videojuego" readOnly maxlength="75" name="videojuego" [(ngModel)]="game.nombre">
-            </div>
-            <div class="mb-3">
-                <label for="plataforma" class="form-label">Plataforma</label>
-                <input type="text" class="form-control" id="plataforma" maxlength="40" name="plataforma" [(ngModel)]="game.plataforma">
-            </div>
-            <div class="mb-3">
-                <label for="desarrolladora" class="form-label">Desarrolladora</label>
-                <input type="text" class="form-control" id="desarrolladora" maxlength="50" name="desarrolladora" [(ngModel)]="game.desarrolladora">
-            </div>
-            <div class="mb-3">
-                <label for="genero1" class="form-label">Género 1</label>
-                <input type="text" class="form-control" id="genero1" maxlength="25" name="genero1" [(ngModel)]="game.genero1">
-            </div>
-            <div class="mb-3">
-                <label for="genero2" class="form-label">Género 2</label>
-                <input type="text" class="form-control" id="genero2" maxlength="25" name="genero2" [(ngModel)]="game.genero2">
-            </div>
-            <div class="mb-3">
-                <label for="genero3" class="form-label">Género 3</label>
-                <input type="text" class="form-control" id="genero3" maxlength="25" name="genero3" [(ngModel)]="game.genero3">
-            </div>
-            <div class="mb-3">"
-                <label for="fechaLanzamiento" class="form-label">Fecha de Lanzamiento</label>
-                <input type="date" format="dd-MM-yyyy" class="form-control" id="fechaLanzamiento" name="fechaLanzamiento" [(ngModel)]="game.fechaLanzamiento">
-            </div>
-            <button type="submit" class="btn btn-primary" role="button" (click)="createGame()" *ngIf="editOrCreate == 'create'">Crear Videojuego</button>
-            <button type="submit" class="btn btn-primary" role="button" (click)="createGame()" *ngIf="editOrCreate == 'edit'">Actualizar Videojuego</button>
-            
-        </form>
-        <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'create'" [routerLink]="['/admin']">Volver</button>
-        <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'edit'" [routerLink]="['/admin/games']">Volver</button>
-        
-    </body>
+            <button pButton pRipple label="Regresar sin registrar juego" *ngIf="editOrCreate == 'create'" [routerLink]="['/admin']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
+            <button pButton pRipple label="Regresar sin actualizar juego" *ngIf="editOrCreate == 'edit'" [routerLink]="['/admin/games']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
+          </div>
+        </div>
+      </div>
+    </body>    
 </html>

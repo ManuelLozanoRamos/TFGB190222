@@ -3,3 +3,21 @@ body {
     background: -webkit-linear-gradient(to right, #093637, #44A08D);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #093637, #44A08D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+.container {
+    display: flex;
+  }
+  
+  .container > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* otras propiedades de estilo para los div internos */
+  }
+  
+  .container > div:first-child {
+    align-items: flex-start;
+  }
+  

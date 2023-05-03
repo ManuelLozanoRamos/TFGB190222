@@ -33,6 +33,7 @@ public class GamesEditionController {
     @PutMapping(value="/games/{idGame}/edit")
     public ResponseEntity<GameResponse> gameEdition(@PathVariable("idGame") String idGame, @RequestBody GameInfo newGameInfo, HttpServletRequest request){
         String authorizationHeader = request.getHeader("Authorization");
+
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
 

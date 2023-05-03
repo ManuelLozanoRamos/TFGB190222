@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
 import { ReviewInfo } from '../reviewInfo';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-form-reviews',
@@ -16,15 +17,51 @@ export class FormReviewsComponent implements OnInit{
   reviewInfo:ReviewInfo;
   editOrCreate:string;
 
+  items!:MenuItem[];
+  itemsUser!:MenuItem[];
+
   constructor(private reviewService:ReviewService, private cookieService:CookieService,
               private router:Router, private activatedRoute:ActivatedRoute){
     this.review = new Review();
-    this.username = this.cookieService.get('token');
+    this.username = this.cookieService.get('token').split(':')[0];
     this.reviewInfo = new ReviewInfo();
     this.editOrCreate = 'create';
   }
   
   ngOnInit(): void {
+    this.items=[
+      {
+        label:'Home',
+        icon:'pi pi-home',
+        routerLink:['/home']
+      },
+      {
+        label:'Buscar juegos',
+        icon:'pi pi-search',
+        routerLink:['/games']
+      },
+      {
+        label:'Ver mis reseñas',
+        icon:'pi pi-book',
+        routerLink:['/users/'+this.username+'/reviews']
+      },
+      {
+        label:'Panel de administrador',
+        icon:'pi pi-desktop',
+        routerLink:['/admin'],
+        visible:this.username=='admin'
+      }
+    ]
+    this.itemsUser = [
+      {
+        label:'Cerrar sesión',
+        icon:'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ]
+
     this.cargar();
   }
 
@@ -76,7 +113,7 @@ export class FormReviewsComponent implements OnInit{
   }
 
   logout() : void {
-    this.cookieService.delete('token');
+    this.cookieService.delete('token', '/');
     this.router.navigate(['/login']);
   }
 }

@@ -4,60 +4,53 @@
         <link rel="stylesheet" href="form-reviews.component.css"/>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
-                  </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                  <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
-                </form>
-                <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+      <div style="display: flex; flex-direction: column; min-height: 100vh;">
+        <p-menubar class="card" [model]="items" [style]="{'margin-bottom': '50px'}">
+          <ng-template pTemplate="start">
+            <h3 style="padding-right: 12px;">GameRatings</h3>
+          </ng-template>
+          <ng-template pTemplate="end">
+            <p-splitButton [model]="itemsUser" label="{{username}}" icon="pi pi-user" styleClass="p-button-outlined"></p-splitButton>
+          </ng-template>
+        </p-menubar>
+    
+        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+            <div *ngIf="editOrCreate == 'create'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Crear reseña</div>
+            <div *ngIf="editOrCreate == 'edit'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Editar reseña</div>
+            <div class="formgrid grid" style="margin-bottom: 10px;">  
+              <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                <label for="videojuego" class="block text-900 font-medium">Juego</label>
+                <input type="text" pInputText placeholder="Videojuego" id="videojuego" readOnly maxlength="75" name="videojuego" [(ngModel)]="review.videojuego">
+              </div>
+              <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                <label for="nota" class="block text-900 font-medium">Nota (1-10)</label>
+                <div class="formgrid grid" style="grid-template-columns: 1fr auto; justify-items: center;">
+                  <p-rating class="field" [(ngModel)]="review.nota" [stars]="10"></p-rating>
+                  <p class="field" style="margin-top: 0px; margin-left: 18px;">{{review.nota}}</p>
+                </div>
               </div>
             </div>
-        </nav>
+            <div class="formgrid grid" style="margin-bottom: 10px;">
+              <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                <label for="titulo" class="block text-900 font-medium">Título</label>
+                <input type="text" pInputText placeholder="Título" id="titulo" maxlength="75" name="titulo" [(ngModel)]="review.titulo">
+              </div>
+            </div>
+            <div class="formgrid grid" style="margin-bottom: 10px;">
+              <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                <label for="comentario" class="block text-900 font-medium">Review</label>
+                <textarea class="textarea-custom" [autoResize]="true" pInputTextarea maxlength="500" rows="5" placeholder="Escribe tu review" [(ngModel)]="review.comentario"></textarea>
+              </div>
+            </div>
+              
+            <button pButton pRipple label="Registrar review" *ngIf="editOrCreate == 'create'" (click)="createReview()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
+            <button pButton pRipple label="Actualizar review" *ngIf="editOrCreate == 'edit'" (click)="createReview()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
 
-        <form>
-            <div class="mb-3">
-                <label for="videojuego" class="form-label">Nombre del Videojuego</label>
-                <input type="text" class="form-control" id="videojuego" readOnly maxlength="75" readOnly name="videojuego" [(ngModel)]="review.videojuego">
-            </div>
-            <div class="mb-3">
-                <label for="titulo" class="form-label">Título</label>
-                <input type="text" class="form-control" id="titulo" maxlength="75" name="titulo" [(ngModel)]="review.titulo">
-            </div>
-            <div class="mb-3">
-                <label for="comentario" class="form-label">Comentario</label>
-                <input type="text" class="form-control" id="comentario" maxlength="200" name="comentario" [(ngModel)]="review.comentario">
-            </div>
-            <div class="mb-3">
-                <label for="nota" class="form-label">Nota (1-10)</label>
-                <input type="number" class="form-control" id="nota" min="1" max="10" name="nota" [(ngModel)]="review.nota">
-            </div>
-            <button type="submit" class="btn btn-primary" role="button" (click)="createReview()" *ngIf="editOrCreate == 'create'">Crear Review</button>
-            <button type="submit" class="btn btn-primary" role="button" (click)="createReview()" *ngIf="editOrCreate == 'edit'">Actualizar Review</button>
-            
-        </form>
-        <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'create'" [routerLink]="['/games/'+review.videojuego]">Volver Atrás</button>
-        <button type="submit" class="btn btn-primary" role="button" *ngIf="editOrCreate == 'edit'" [routerLink]="['/users/'+username+'/reviews']">Volver Atrás</button>
-        
-    </body>
+            <button pButton pRipple label="Regresar sin registrar review" *ngIf="editOrCreate == 'create'" [routerLink]="['/games/'+review.videojuego+'/reviews']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
+            <button pButton pRipple label="Regresar sin actualizar review" *ngIf="editOrCreate == 'edit'" [routerLink]="['/users/'+username+'/reviews']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
+          </div>
+        </div>
+      </div>
+    </body>    
 </html>

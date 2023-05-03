@@ -113,7 +113,8 @@
             <td>{{game.plataforma}}</td>
             <td>{{game.desarrolladora}}</td>
             <td>{{game.generos}}</td>
-            <td>{{game.notaMedia}}</td>
+            <td *ngIf="game.notaMedia != -1">{{game.notaMedia}}</td>
+            <td *ngIf="game.notaMedia == -1">--</td>
             <td>{{game.fechaLanzamiento | date:'dd-MM-yyyy'}}</td>
             <button type="submit" class="btn btn-primary" role="button" [routerLink]="[game.nombre+'/reviews']">Ver Reviews</button>
         </tr>   

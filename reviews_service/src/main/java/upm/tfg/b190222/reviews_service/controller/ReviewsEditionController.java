@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import upm.tfg.b190222.reviews_service.entity.Review;
 import upm.tfg.b190222.reviews_service.info.ReviewInfo;
 import upm.tfg.b190222.reviews_service.response.ReviewResponse;
@@ -31,14 +31,15 @@ public class ReviewsEditionController {
     UserValidationService userValidationService;
 
     @PutMapping(value="/reviews/{idReview}/edit")
-    public ResponseEntity<ReviewResponse> reviewsEdition(@PathVariable("idReview") Integer idReview, @RequestBody ReviewInfo newReviewInfo, HttpServletResponse request){
+    public ResponseEntity<ReviewResponse> reviewsEdition(@PathVariable("idReview") Integer idReview, @RequestBody ReviewInfo newReviewInfo, HttpServletRequest request){
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
 
-            if(!token.contains("USER_SESSION") || !userValidationService.validate(token).equals("VALID_ADMIN")){
+            if(!token.contains("USER_SESSION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
                 return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
             }
+
         } else {
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
         }

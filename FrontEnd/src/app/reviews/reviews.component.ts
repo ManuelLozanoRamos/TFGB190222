@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AppComponent } from '../app.component';
 import { Review } from './review';
 import { ReviewService } from './review.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-reviews',
@@ -26,9 +26,12 @@ export class ReviewsComponent implements OnInit{
   order:string;
   orders:string[];
 
+  items!:MenuItem[];
+  itemsUser!:MenuItem[];
+
   constructor(private reviewService:ReviewService, private activatedRoute:ActivatedRoute,
               private router:Router, private cookieService:CookieService){
-    this.username = this.cookieService.get('token');
+    this.username = this.cookieService.get('token').split(':')[0];
     this.userReview = new Review;
     this.userHasReview = false;
     this.finished = false;
@@ -45,6 +48,39 @@ export class ReviewsComponent implements OnInit{
   }
   
   ngOnInit(): void {
+    this.items=[
+      {
+        label:'Home',
+        icon:'pi pi-home',
+        routerLink:['/home']
+      },
+      {
+        label:'Buscar juegos',
+        icon:'pi pi-search',
+        routerLink:['/games']
+      },
+      {
+        label:'Ver mis reseñas',
+        icon:'pi pi-book',
+        routerLink:['/users/'+this.username+'/reviews']
+      },
+      {
+        label:'Panel de administrador',
+        icon:'pi pi-desktop',
+        routerLink:['/admin'],
+        visible:this.username=='admin'
+      }
+    ]
+    this.itemsUser = [
+      {
+        label:'Cerrar sesión',
+        icon:'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ]
+
     this.activatedRoute.params.subscribe(
       r => {
         let id=r['game'];
@@ -122,7 +158,7 @@ export class ReviewsComponent implements OnInit{
   }
 
   logout() : void {
-    this.cookieService.delete('token');
+    this.cookieService.delete('token', '/');
     this.router.navigate(['/login']);
   }
 }

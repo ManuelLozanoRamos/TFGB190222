@@ -7,7 +7,7 @@ export class Game {
     genero3:string;
     generos:string;
     notaMedia:number;
-    fechaLanzamiento:Date;
+    fechaLanzamiento:Date|null;
     fechaRegistro:Date;
 
 
@@ -20,7 +20,7 @@ export class Game {
         this.genero3 = '';
         this.generos = '';
         this.notaMedia = 5;
-        this.fechaLanzamiento = new Date();
+        this.fechaLanzamiento = null;
         this.fechaRegistro = new Date();
     }
 }

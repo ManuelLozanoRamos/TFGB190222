@@ -21,7 +21,7 @@ create table Game (
     genero1 varchar(25) not null,
     genero2 varchar(25),
     genero3 varchar(25),
-    notaMedia float default 5,
+    notaMedia float default -1 not null,
     fechaLanzamiento Date not null,
     fechaRegistro Date not null,
     primary key(nombre)
@@ -33,7 +33,7 @@ create table Review (
     videojuego varchar(75) not null,
     titulo varchar (75) not null,
     nota int not null,
-    comentario varchar(200) not null,
+    comentario varchar(500) not null,
     fechaRegistro Date not null,
     primary key(idReview),
     foreign key(username) references Usuario (username)
@@ -85,7 +85,7 @@ begin
 	where nombre = OLD.videojuego; 
     
     IF (SELECT notaMedia FROM Game WHERE nombre = OLD.videojuego) IS NULL THEN
-        UPDATE Game SET notaMedia = 5 WHERE nombre = OLD.videojuego;
+        UPDATE Game SET notaMedia = -1 WHERE nombre = OLD.videojuego;
     END IF;
     
 end$$

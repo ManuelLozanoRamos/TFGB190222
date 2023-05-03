@@ -42,7 +42,7 @@ public class ChangePasswordController {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
 
-            if(!token.contains("CHANGE_PASS") || !userValidationService.validate(token).equals("VALID")){
+            if(!token.contains("CHANGE_PASS") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
                 return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.FORBIDDEN);
             }
 

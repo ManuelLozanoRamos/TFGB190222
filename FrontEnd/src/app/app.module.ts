@@ -24,10 +24,18 @@ import { LoginGuardGuard } from './login-guard.guard';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonModule } from 'primeng/button';
+import { SplitButtonModule } from'primeng/splitbutton';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
+import { RatingModule } from 'primeng/rating'
 import { PasswordModule } from 'primeng/password';
+import { MenubarModule } from 'primeng/menubar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { AccordionModule } from 'primeng/accordion';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DataViewModule } from 'primeng/dataview';
+
 import { ChangePasswordComponent } from './login/change-password/change-password.component';
 import { RequestChangePasswordComponent } from './login/request-change-password/request-change-password.component';
 import { InterceptorInterceptor } from './interceptor.interceptor';
@@ -78,7 +86,14 @@ const routes : Routes = [
     BrowserAnimationsModule,
     RippleModule,
     InputTextModule,
-    PasswordModule
+    PasswordModule,
+    MenubarModule,
+    SplitButtonModule,
+    RatingModule,
+    InputTextareaModule,
+    AccordionModule,
+    InputNumberModule,
+    DataViewModule
   ],
   providers: [{provide:HTTP_INTERCEPTORS, useClass:InterceptorInterceptor, multi:true}, CookieService],
   bootstrap: [AppComponent]

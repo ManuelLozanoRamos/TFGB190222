@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Game } from './game';
 import { GameService } from './game.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-games',
   templateUrl: './games.component.html',
   styleUrls: ['./games.component.css']
 })
-export class GamesComponent {
+export class GamesComponent implements OnInit{
   username:string;
   games:Game[];
   nombre:string;
@@ -25,8 +26,11 @@ export class GamesComponent {
   order:string;
   orders:string[];
 
+  items!:MenuItem[];
+  itemsUser!:MenuItem[];
+
   constructor(private gameService:GameService, private router:Router, private cookieService:CookieService){
-    this.username = this.cookieService.get('token');
+    this.username = this.cookieService.get('token').split(':')[0];
     this.games = [];
     this.nombre = '';
     this.plataforma = '';
@@ -42,6 +46,41 @@ export class GamesComponent {
     this.order = '';
 
     this.searchAll();
+  }
+
+  ngOnInit(): void {
+    this.items=[
+      {
+        label:'Home',
+        icon:'pi pi-home',
+        routerLink:['/home']
+      },
+      {
+        label:'Buscar juegos',
+        icon:'pi pi-search',
+        routerLink:['/games']
+      },
+      {
+        label:'Ver mis reseñas',
+        icon:'pi pi-book',
+        routerLink:['/users/'+this.username+'/reviews']
+      },
+      {
+        label:'Panel de administrador',
+        icon:'pi pi-desktop',
+        routerLink:['/admin'],
+        visible:this.username=='admin'
+      }
+    ]
+    this.itemsUser = [
+      {
+        label:'Cerrar sesión',
+        icon:'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ]
   }
   
   
@@ -87,7 +126,7 @@ export class GamesComponent {
   }
 
   logout() : void {
-    this.cookieService.delete('token');
+    this.cookieService.delete('token', '/');
     this.router.navigate(['/login']);
   }
 }

@@ -32,7 +32,7 @@ public class ActivationController  {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
 
-            if(!token.contains("USER_ACTIVATION") || !userValidationService.validate(token).equals("VALID")){
+            if(!token.contains("USER_ACTIVATION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
                 return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.FORBIDDEN);
             }
 

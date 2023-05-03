@@ -23,19 +23,23 @@ export class LoginComponent implements OnInit{
   }
 
   login() : void{
-    this.loginService.isRegistered(this.username, this.password).subscribe(
-      //Comprobar mensajes de error y validaciones y mostrar mensaje
-      b => {
-        if(b.response == 'OK'){
-          this.cookieService.set('token', b.token);
-          this.router.navigate(['/home']);
-        } else {
-          //mostrar mensaje de que no son validas las credenciales y quitar la redireccion
-          this.router.navigate(['/login']);
-        }
-      },
-      error => console.log('Error interno: ' + error.status)
-    );
+    if(this.cookieService.get('token').includes('USER_SESSION')){
+      this.router.navigate(['/home']);
+    }
+    else {
+      this.loginService.isRegistered(this.username, this.password).subscribe(
+        //Comprobar mensajes de error y validaciones y mostrar mensaje
+        b => {
+          if(b.response == 'OK'){
+            this.cookieService.set('token', b.token);
+            this.router.navigate(['/home']);
+          } else {
+            //mostrar mensaje de que no son validas las credenciales y quitar la redireccion
+            this.router.navigate(['/login']);
+          }
+        },
+        error => console.log('Error interno: ' + error.status)
+      );
+    }
   }
-
 }

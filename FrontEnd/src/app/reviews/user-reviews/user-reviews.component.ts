@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-user-reviews',
   templateUrl: './user-reviews.component.html',
   styleUrls: ['./user-reviews.component.css']
 })
-export class UserReviewsComponent {
+export class UserReviewsComponent implements OnInit{
   username:string;
   reviews:Review[];
   videojuego:string;
@@ -20,9 +21,12 @@ export class UserReviewsComponent {
   order:string;
   orders:string[];
 
+  items!:MenuItem[];
+  itemsUser!:MenuItem[];
+
   constructor(private reviewService:ReviewService,
               private router:Router, private cookieService:CookieService){
-    this.username = this.cookieService.get('token');
+    this.username = this.cookieService.get('token').split(':')[0];
     this.reviews = [];
 
     this.videojuego = '';
@@ -34,6 +38,42 @@ export class UserReviewsComponent {
     this.orders = ['Fecha Descendiente', 'Fecha Ascendiente', 'Juego Descendente', 'Juego Ascendente', 'Nota Descendente', 'Nota Asccendente'];
 
     this.searchAll();
+  }
+
+
+  ngOnInit(): void {
+    this.items=[
+      {
+        label:'Home',
+        icon:'pi pi-home',
+        routerLink:['/home']
+      },
+      {
+        label:'Buscar juegos',
+        icon:'pi pi-search',
+        routerLink:['/games']
+      },
+      {
+        label:'Ver mis reseñas',
+        icon:'pi pi-book',
+        routerLink:['/users/'+this.username+'/reviews']
+      },
+      {
+        label:'Panel de administrador',
+        icon:'pi pi-desktop',
+        routerLink:['/admin'],
+        visible:this.username=='admin'
+      }
+    ]
+    this.itemsUser = [
+      {
+        label:'Cerrar sesión',
+        icon:'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ]
   }
 
   search() : void {
@@ -91,7 +131,7 @@ export class UserReviewsComponent {
   }
 
   logout() : void {
-    this.cookieService.delete('token');
+    this.cookieService.delete('token', '/');
     this.router.navigate(['/login']);
   }
 

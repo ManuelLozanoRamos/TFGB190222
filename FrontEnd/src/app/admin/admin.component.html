@@ -4,43 +4,27 @@
         <link rel="stylesheet" href="admin.component.css"/>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
-                  </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                  <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
-                </form>
-                <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
-              </div>
+      <div style="display: flex; flex-direction: column; min-height: 100vh;">
+        <p-menubar class="card" [model]="items">
+          <ng-template pTemplate="start">
+            <h3 style="padding-right: 12px;">GameRatings</h3>
+          </ng-template>
+          <ng-template pTemplate="end">
+            <p-splitButton [model]="itemsUser" label="{{username}}" icon="pi pi-user" styleClass="p-button-outlined"></p-splitButton>
+          </ng-template>
+        </p-menubar>
+    
+        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-6 lg:w-6" style="width: 100%; max-width: 4000px;">
+            <div class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Panel de administrador</div>
+            <div class="container">
+              <button pButton pRipple [routerLink]="['/admin/games']" label="Gestionar juegos" icon="pi pi-list" class="w-full"></button>
             </div>
-        </nav>
-
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/admin/games/create']">Registrar Nuevo Juego</button>
+            <div class="container">
+              <button pButton pRipple [routerLink]="['/admin/games/create']" label="Registrar nuevo juego" icon="pi pi-plus" class="w-full" style="margin-top: 45px;"></button>
+            </div>
+          </div>
         </div>
-        <div class="container">
-            <button type="button" role="button" class="btn btn-primary" [routerLink]="['/admin/games']">Gestionar Juegos</button>
-        </div>
-    </body>
+      </div>
+    </body>    
 </html>
-
