@@ -1,128 +1,147 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="admin-games.component.css"/>
+        <link rel="stylesheet"  href="admin-games.component.css"/>
     </head>
-   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/home']">Home</a>
-              </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/games']">Buscar Juegos</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/users/'+username+'/reviews']">Ver mis Reseñas</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="username == 'admin'">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" role="button" [routerLink]="['/admin']">Administrar Juegos</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
-            </form>
-            <button type="button" class="btn btn-info" role="button" (click)="logout()">Cerrar Sesión</button> 
+    <body>
+      <div style="display: flex; flex-direction: column; min-height: 100vh;">
+        <p-menubar class="card" [model]="items" [style]="{'margin-bottom': '50px'}">
+          <ng-template pTemplate="start">
+            <h3 style="padding-right: 12px;">GameRatings</h3>
+          </ng-template>
+          <ng-template pTemplate="end">
+            <p-splitButton [model]="itemsUser" label="{{username}}" icon="pi pi-user" styleClass="p-button-outlined"></p-splitButton>
+          </ng-template>
+        </p-menubar>
+    
+        <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9 xl:w-9" style="width: 100%;">
+            <button pButton pRipple class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/admin']"></button>
+            <div class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Gestionar juegos</div>
+            <p-accordion [activeIndex]="1" class="w-full">
+              <p-accordionTab>
+                <ng-template pTemplate="header">
+                  <div class="flex align-items-center">
+                    <i class="pi pi-filter flex align-items-center" style="margin-right: 10px;"></i>
+                    <i class="pi pi-sort-alt flex align-items-center" style="margin-right: 10px;"></i>
+                    <span class="vertical-align-middle">Filtrado y ordenación</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="videojuego" class="block text-900 font-medium">Juego</label>
+                      <input type="text" pInputText placeholder="Videojuego" id="videojuego" maxlength="75" name="videojuego" [(ngModel)]="nombre">
+                    </div>
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="desarrolladora" class="block text-900 font-medium">Desarrolladora</label>
+                      <input type="text" pInputText placeholder="Desarrolladora" id="desarrolladora" maxlength="50" name="desarrolladora" [(ngModel)]="desarrolladora">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="plataforma1" class="block text-900 font-medium">Plataforma 1</label>
+                      <input type="text" pInputText placeholder="Plataforma 1" id="plataforma1" maxlength="40" name="plataforma1" [(ngModel)]="plataforma1">
+                    </div>
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="plataforma2" class="block text-900 font-medium">Plataforma 2</label>
+                      <input type="text" pInputText placeholder="Plataforma 2" id="plataforma2" maxlength="40" name="plataforma2" [(ngModel)]="plataforma2">
+                    </div>
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="plataforma3" class="block text-900 font-medium">Plataforma 3</label>
+                      <input type="text" pInputText placeholder="Plataforma 3" id="plataforma3" maxlength="40" name="plataforma3" [(ngModel)]="plataforma3">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="genero1" class="block text-900 font-medium">Género 1</label>
+                      <input type="text" pInputText placeholder="Género 1" id="genero1" maxlength="25" name="genero1" [(ngModel)]="genero1">
+                    </div>
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="genero2" class="block text-900 font-medium">Género 2</label>
+                      <input type="text" pInputText placeholder="Género 2" id="genero2" maxlength="25" name="genero2" [(ngModel)]="genero2">
+                    </div>
+                    <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                      <label for="genero3" class="block text-900 font-medium">Género 3</label>
+                      <input type="text" pInputText placeholder="Género 3" id="genero3" maxlength="25" name="genero3" [(ngModel)]="genero3">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">  
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaIni" class="block text-900 font-medium">Nota media inicial</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media inicial" id="notaIni" name="notaIni" [min]="1" [max]="10" [(ngModel)]="notaMediaIni"></p-inputNumber>
+                    </div>
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaFin" class="block text-900 font-medium">Nota media final</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media final" id="notaFin" name="notaFin" [min]="1" [max]="10" [(ngModel)]="notaMediaFin"></p-inputNumber>
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">  
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="fechaLanIni" class="block text-900 font-medium">Fecha lanzamiento inicial</label>
+                      <input type="date" format="dd-MM-yyyy" pInputText id="fechaLanIni" name="fechaLanIni" [(ngModel)]="fechaLanIni">
+                    </div>
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="fechaLanIni" class="block text-900 font-medium">Fecha lanzamiento final</label>
+                      <input type="date" format="dd-MM-yyyy" pInputText id="fechaLanFin" name="fechaLanFin" [(ngModel)]="fechaLanFin">
+                    </div>
+                  </div>
+                  <div class="formgrid grid" style="margin-bottom: 10px;">
+                    <div class="field col-12 lg:col-12 xl:col-12" style="display: grid; justify-items: center;">
+                      <label for="order" class="block text-900 font-medium">Ordenación</label>   
+                      <p-dropdown [options]="orders" id="order" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
+                    </div>
+                  </div>
+                  <button pButton pRipple label="Buscar juego" (click)="search()" icon="pi pi-search" class="w-full" style="margin-top: 30px;"></button>
+                </ng-template>
+              </p-accordionTab>
+            </p-accordion>
+      
+            <button pButton pRipple label="Ver todos los juegos" (click)="searchAll()" icon="pi pi-search" class="w-full" style="margin-top: 40px; margin-bottom: 40px;"></button>
+
+            <p-dataView #dv [value]="games" [rows]="3" [paginator]="true" emptyMessage="No hay resultados">
+              <ng-template let-game pTemplate="listItem">
+                <div class="col-12">
+                  <div class="flex" style="flex-direction: column; display: flex;">
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Juego</p>
+                      <p class="w-8">{{game.nombre}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Desarrolladora</p>
+                      <p class="w-8">{{game.desarrolladora}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Plataformas</p>
+                      <p class="w-8">{{game.plataformas}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Géneros</p>
+                      <p class="w-8">{{game.generos}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Nota media</p>
+                      <p *ngIf="game.notaMedia != 0" class="w-8">{{game.notaMedia}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
+                      <p *ngIf="game.notaMedia == 0" class="w-8">--</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-4">Fecha Lanzamiento</p>
+                      <p class="w-8">{{game.fechaLanzamiento | date:'dd-MM-yyyy'}}</p>
+                    </div>
+                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
+                      <p class="text-500 w-4">Fecha Registro</p>
+                      <p class="w-8">{{game.fechaRegistro | date:'dd-MM-yyyy'}}</p>
+                    </div>
+                    <div class="flex align-items-center" style="margin-bottom: 10px;">
+                      <button pButton pRipple icon="pi pi-pencil" label="Editar" class="p-button-info" style="margin-left: auto;" [routerLink]="['/admin/games/'+game.nombre+'/edit']"></button>
+                      <button pButton pRipple icon="pi pi-trash" label="Eliminar" class="p-button-danger" style="margin-left: 10px;" (click)="delete(game.nombre)"></button> 
+                    </div> 
+                  </div>
+                </div> 
+              </ng-template>
+            </p-dataView>
           </div>
         </div>
-    </nav>
-
-    <div class="container">
-        <h4>Introduzca el videojuego que quiera buscar</h4>
-        <form>
-          <div class="mb-3">
-            <label for="Nombre" class="form-label">Videojuego</label>
-            <input type="text" class="form-control" id="Nombre" name="game" maxlength="50" [(ngModel)]="nombre">
-          </div>
-          <div class="mb-3">
-            <label for="Plataforma" class="form-label">Plataforma</label>
-            <input type="text" class="form-control" id="Plataforma" name="plataforma" maxlength="40" [(ngModel)]="plataforma">
-          </div>
-          <div class="mb-3">
-            <label for="Desarrolladora" class="form-label">Desarrolladora</label>
-            <input type="text" class="form-control" id="Desarrolladora" name="desarrolladora" maxlength="50" [(ngModel)]="desarrolladora">
-          </div>
-          <div class="mb-3">
-            <label for="Genero1" class="form-label">Género 1</label>
-            <input type="text" class="form-control" id="Genero1" name="genero1" maxlength="25" [(ngModel)]="genero1">
-          </div>
-          <div class="mb-3">
-            <label for="Genero2" class="form-label">Género 2</label>
-            <input type="text" class="form-control" id="Genero2" name="genero2" maxlength="25" [(ngModel)]="genero2">
-          </div>
-          <div class="mb-3">
-            <label for="Genero3" class="form-label">Género 3</label>
-            <input type="text" class="form-control" id="Genero3" name="genero3" maxlength="25" [(ngModel)]="genero3">
-          </div>
-          <div class="mb-3">
-            <label for="FechaLanIni" class="form-label">Fecha Lanzamiento Inicial</label>
-            <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaLanIni" name="fechaLanIni" [(ngModel)]="fechaLanIni">
-          </div>
-          <div class="mb-3">
-            <label for="FechaLanFin" class="form-label">Fecha Lanzamiento Final</label>
-            <input type="date" format="dd-MM-yyyy" class="form-control" id="FechaLanFin" name="fechaLanFin" [(ngModel)]="fechaLanFin">
-          </div>
-          <div class="mb-3">
-            <label for="NotaMediaIni" class="form-label">Nota Media Inicial</label>
-            <input type="text" class="form-control" id="NotaMediaIni" name="notaMediaIni" maxlength="2" [(ngModel)]="notaMediaIni">
-          </div>
-          <div class="mb-3">
-            <label for="NotaMediaFin" class="form-label">Nota Media Final</label>
-            <input type="text" class="form-control" id="NotaMediaFin" name="notaMediaFin" maxlength="2" [(ngModel)]="notaMediaFin">
-          </div>
-          <div class="mb-3">
-            <label for="Order" class="form-label">Ordenación</label>
-            <select id="Order" name="order" [(ngModel)]="order">
-              <option [value]="order" selected>{{order}}</option>
-              <option *ngFor="let order of orders" [value]="order">{{order}}</option>
-            </select>
-          </div>
-            <div class="mb-4">
-                <button type="button" class="btn btn-info" role="button" (click)="search()">Buscar Juego</button> 
-            </div>
-            <div class="mb-4">
-                <button type="button" class="btn btn-info" role="button" (click)="searchAll()">Ver Todos</button> 
-            </div>
-        </form>
-    </div>
-
-    <div class="container">
-        <table class="table">
-        <thead>
-        <h4 *ngIf="games.length == 0">No hay resultados</h4>
-
-        <tr *ngIf="games.length != 0">
-            <th scope="col">Nombre</th>
-            <th scope="col">Plataforma</th>
-            <th scope="col">Desarrolladora</th>
-            <th scope="col">Géneros</th>
-            <th scope="col">Nota Media</th> 
-            <th scope="col">Fecha de Lanzamiento</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let game of games">
-            <th scope="row">{{game.nombre}}</th>
-            <td>{{game.plataforma}}</td>
-            <td>{{game.desarrolladora}}</td>
-            <td>{{game.generos}}</td>
-            <td *ngIf="game.notaMedia != -1">{{game.notaMedia}}</td>
-            <td *ngIf="game.notaMedia == -1">--</td>
-            <td>{{game.fechaLanzamiento | date:'dd-MM-yyyy'}}</td>
-            <button type="button" class="btn btn-info" role="button" [routerLink]="['/admin/games/'+game.nombre+'/edit']">Editar</button>
-            <button type="button" class="btn btn-danger" role="button" (click)="delete(game.nombre)">Eliminar</button> 
-        </tr>   
-        </tbody>
-        </table>
-    </div> 
-   </body> 
+      </div>
+    </body>    
 </html>
-

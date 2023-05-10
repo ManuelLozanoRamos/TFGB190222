@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { UserResponse } from '../../responses/user-response';
+import { UserInfo } from '../userInfo';
 
 
 @Injectable({
@@ -15,6 +16,6 @@ export class ActivationService {
   }
 
   activate(username:string) : Observable<UserResponse> {
-    return this.http.post<UserResponse>(this.url + '/' + username + '/activate', null);
+    return this.http.post<UserResponse>(this.url + '/activate', new UserInfo(username, null, null));
   }
 }

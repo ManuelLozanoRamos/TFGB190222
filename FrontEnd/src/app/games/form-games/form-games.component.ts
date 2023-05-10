@@ -83,85 +83,46 @@ export class FormGamesComponent implements OnInit{
   }
 
   createGame(){
-    const regex = new RegExp('^[ \t\n]*$');
-
-    if(this.game.nombre == null || this.game.nombre.length == 0 || regex.test(this.game.nombre)){
-      //Mensaje de que metas todo papi
-    } else if(this.game.plataforma == null || this.game.plataforma.length == 0 || regex.test(this.game.plataforma)){
-//Mensaje de que metas todo papi
-    } else if(this.game.desarrolladora == null || this.game.desarrolladora.length == 0 || regex.test(this.game.desarrolladora)){
-      //Mensaje de que metas todo papi
-    } else if(this.game.genero1 == null || this.game.genero1.length == 0 || regex.test(this.game.genero1)){
-      //Mensaje de que metas todo papi
-    } else if(this.game.fechaLanzamiento == null || this.game.fechaLanzamiento.toString() == ''){
-      //Mensaje de que metas todo papi
-    }else {
-      if(this.game.genero2 == null)  this.game.genero2 = '';
-      if(this.game.genero3 == null)  this.game.genero3 = '';
-
-      let genero1 = this.game.genero1;
-      let genero2 = this.game.genero2;
-      let genero3 = this.game.genero3;
-
-      if(this.editOrCreate == 'edit'){
-        if((genero1.length == 0 && genero2.length == 0 && genero3.length == 0)
-           || (genero2.length != 0 && genero1.length == 0 ) 
-           || (genero3.length != 0 && (genero1.length == 0 || genero2.length == 0))){
-          //ERROR en la inserccion de los generos, meter bien"
-          console.log("ERROR en la inserccion de los generos, meter bien")
+    if(this.editOrCreate == 'edit'){
+      this.gameInfo.nombre = this.game.nombre;
+      this.gameInfo.plataforma1 = this.game.plataforma1;
+      this.gameInfo.plataforma2 = this.game.plataforma2;
+      this.gameInfo.plataforma3 = this.game.plataforma3;
+      this.gameInfo.desarrolladora = this.game.desarrolladora;
+      this.gameInfo.genero1 = this.game.genero1;
+      this.gameInfo.genero2 = this.game.genero2;
+      this.gameInfo.genero3 = this.game.genero3;
+      this.gameInfo.fechaLanzamiento = this.game.fechaLanzamiento;
+      if(this.gameInfo.genero2 == '')  this.gameInfo.genero2 = null;
+      if(this.gameInfo.genero3 == '')  this.gameInfo.genero3 = null;
+      if(this.gameInfo.plataforma2 == '')  this.gameInfo.plataforma2 = null;
+      if(this.gameInfo.plataforma3 == '')  this.gameInfo.plataforma3 = null;
+      
+      this.gameService.editGame(this.game.nombre ?? '', this.gameInfo).subscribe(
+      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
+        r =>{
+          if(r.response == 'OK'){
+            this.router.navigate(['/admin/games']);
+          }
         }
-        else if(genero1.length > 25 || genero2.length > 25 || genero3.length > 25){
-          //ERROR
-          console.log("ERROR longitudes mal")
+      );
+    } 
+    else {
+      this.game.fechaRegistro = new Date();
+      this.gameService.createGame(this.game).subscribe(
+      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
+        r =>{
+          if(r.response == 'OK'){
+            this.router.navigate(['/admin']);
+          }
         }
-        else {
-          this.gameInfo.plataforma = this.game.plataforma;
-          this.gameInfo.desarrolladora = this.game.desarrolladora;
-          this.gameInfo.genero1 = genero1;
-          this.gameInfo.genero2 = genero2;
-          this.gameInfo.genero3 = genero3;
-          this.gameInfo.fechaLanzamiento = this.game.fechaLanzamiento;
-          this.gameService.editGame(this.game.nombre, this.gameInfo).subscribe(
-          //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
-            r =>{
-              if(r.response == 'OK'){
-                this.router.navigate(['/admin/games']);
-              }
-            }
-          );
-        }
-      } 
-      else {
-        if((genero1.length == 0 && genero2.length == 0 && genero3.length == 0)
-           || (genero2.length != 0 && genero1.length == 0 ) 
-           || (genero3.length != 0 && (genero1.length == 0 || genero2.length == 0))){
-          //ERROR en la inserccion de los generos, meter bien"
-          console.log("ERROR en la inserccion de los generos, meter bien")
-        }
-        else if(genero1.length > 25 || genero2.length > 25 || genero3.length > 25){
-          //ERROR
-          console.log("ERROR longitudes mal")
-        }
-        else {
-          this.game.genero1 = genero1;
-          this.game.genero2 = genero2;
-          this.game.genero3 = genero3;
-          this.game.fechaRegistro = new Date();
-          this.gameService.createGame(this.game).subscribe(
-          //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
-            r =>{
-              if(r.response == 'OK'){
-                this.router.navigate(['/admin']);
-              }
-            }
-          );
-        } 
-      }
+      );
     }
   }
 
+
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
 }

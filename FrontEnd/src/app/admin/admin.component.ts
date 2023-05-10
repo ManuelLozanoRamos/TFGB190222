@@ -54,9 +54,9 @@ export class AdminComponent implements OnInit{
     ]
   }
 
+
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
-
 }

@@ -1,7 +1,5 @@
 package upm.tfg.b190222.reviews_service.info;
 
-import java.time.LocalDate;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +10,13 @@ import lombok.Setter;
 public class ReviewInfo {
      private String titulo;
      private String comentario;
-     private int nota;
-     private LocalDate fechaRegistro;
+     private Integer nota;
+
+     private String username;
+     private String videojuego;
+     private String fechaRegIni;
+     private String fechaRegFin;
+     private String notaMediaIni;
+     private String notaMediaFin;
+     private String order;
 }

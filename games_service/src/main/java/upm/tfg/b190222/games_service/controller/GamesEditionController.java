@@ -31,22 +31,24 @@ public class GamesEditionController {
     UserValidationService userValidationService;
 
     @PutMapping(value="/games/{idGame}/edit")
-    public ResponseEntity<GameResponse> gameEdition(@PathVariable("idGame") String idGame, @RequestBody GameInfo newGameInfo, HttpServletRequest request){
+    public ResponseEntity<GameResponse> gameEdition(@PathVariable("idGame") String idGame, @RequestBody GameInfo gameInfo, HttpServletRequest request){
         String authorizationHeader = request.getHeader("Authorization");
 
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            String [] tokenParts = token.split(":");
 
-            if(!token.contains("USER_SESSION") || !userValidationService.validate(token).equals("VALID_ADMIN")){
-                return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            if(!"USER_SESSION".equals(tokenParts[1]) || !userValidationService.validate(token).equals("VALID_ADMIN")){
+                if(userValidationService.validate(token).equals("VALID"))  return new ResponseEntity<GameResponse>(new GameResponse("WRONG_USER", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+                else return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
             }
 
         } else {
-            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
         }
         
         try{
-            return editGameService.editGame(idGame, newGameInfo);
+            return editGameService.editGame(idGame, gameInfo);
         } catch(Exception e){
             return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

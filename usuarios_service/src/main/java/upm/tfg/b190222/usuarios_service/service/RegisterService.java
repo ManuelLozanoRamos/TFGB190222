@@ -1,5 +1,7 @@
 package upm.tfg.b190222.usuarios_service.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,21 @@ public class RegisterService {
     private EntityManager entityManager;
 
     @Transactional
-    public ResponseEntity<UserResponse> register(Usuario usuario) {
+    public ResponseEntity<UserResponse> register(String username, String password, String mail) {
+        if(username == null || password == null || mail == null){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_REQUEST", null), HttpStatus.BAD_REQUEST);
+        }
+        if(username.isBlank() || username.length() > 20){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_USERNAME_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(password.isBlank() || password.length() > 25){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_PASSWORD_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(mail.isBlank() || mail.length() > 100){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_MAIL_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
+
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
@@ -38,7 +54,7 @@ public class RegisterService {
 
             Usuario user;
 
-            cq.select(users).where(cb.equal(users.get("mail"), usuario.getMail()));
+            cq.select(users).where(cb.equal(users.get("mail"), mail));
 
             try{
                 user = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getSingleResult();
@@ -46,19 +62,24 @@ public class RegisterService {
             } catch (NoResultException e){
             }
 
-            user = entityManager.find(Usuario.class, usuario.getUsername(), LockModeType.PESSIMISTIC_READ);
+            user = entityManager.find(Usuario.class, username, LockModeType.PESSIMISTIC_READ);
         
             if(user != null) return new ResponseEntity<UserResponse>(new UserResponse("USER_EXISTS", null), HttpStatus.OK);
 
             //Envío del correo de confirmación de mail
             try{
-                String token = tokenPetitionService.tokenPetition(usuario.getUsername(), "USER_ACTIVATION");
-                Mail.sendMail(token, usuario.getUsername(), usuario.getMail(), SUBJECT_VALIDATION, BODY_VALIDATION);
+                String token = tokenPetitionService.tokenPetition(username, "USER_ACTIVATION");
+                Mail.sendMail(token, username, mail, SUBJECT_VALIDATION, BODY_VALIDATION);
             } catch(Exception e){
                 return new ResponseEntity<UserResponse>(new UserResponse("MAIL_ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
             }    
 
-            usuario.setPassword(Cifrado.encript(usuario.getPassword()));
+            Usuario usuario = new Usuario();
+            usuario.setUsername(username);
+            usuario.setMail(mail);
+            usuario.setPassword(Cifrado.encript(password));
+            usuario.setActivado(false);
+            usuario.setFechaRegistro(LocalDate.now());
                         
             entityManager.persist(usuario);
 

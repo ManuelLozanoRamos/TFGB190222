@@ -31,7 +31,7 @@ export class ChangePasswordComponent implements OnInit{
           this.username = user;
         } 
         if(token){
-          this.cookieService.set('token', token);
+          this.cookieService.set('token', token, {path:'/',secure:true});
         }
       }
     );
@@ -42,7 +42,7 @@ export class ChangePasswordComponent implements OnInit{
     this.changePasswordService.changePassword(this.username, this.newPassword, this.newPassword).subscribe(
       r => {
         if(r.response == 'OK'){
-          this.cookieService.delete('token');
+          this.cookieService.deleteAll('/');
           this.router.navigate(['/login']);
         } 
       }

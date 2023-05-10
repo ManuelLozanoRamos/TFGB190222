@@ -15,37 +15,49 @@
         </p-menubar>
     
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
-          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9 xl:w-9" style="width: 100%;">
+            <button *ngIf="editOrCreate == 'create'" pButton pRipple class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/admin']"></button>
+            <button *ngIf="editOrCreate == 'edit'" pButton pRipple class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/admin/games']"></button>
             <div *ngIf="editOrCreate == 'create'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Registrar juego</div>
             <div *ngIf="editOrCreate == 'edit'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Editar juego</div>
             <div class="formgrid grid" style="margin-bottom: 10px;">
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'create'">
+              <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'create'">
                 <label for="videojuego" class="block text-900 font-medium">Nombre del juego</label>
                 <input type="text" pInputText id="videojuego" maxlength="75" placeholder="Nombre del videojuego" name="videojuego" [(ngModel)]="game.nombre">
               </div>
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'edit'">
+              <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;" *ngIf="editOrCreate == 'edit'">
                   <label for="videojuego" class="block text-900 font-medium">Nombre del juego</label>
                   <input type="text" pInputText id="videojuego" readOnly maxlength="75" placeholder="Nombre del videojuego" name="videojuego" [(ngModel)]="game.nombre">
               </div>
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
-                  <label for="plataforma" class="block text-900 font-medium">Plataforma</label>
-                  <input type="text" pInputText id="plataforma" maxlength="40" placeholder="Plataforma" name="plataforma" [(ngModel)]="game.plataforma">
-              </div>
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
                   <label for="desarrolladora" class="block text-900 font-medium">Desarrolladora</label>
                   <input type="text" pInputText id="desarrolladora" maxlength="50" placeholder="Desarrolladora" name="desarrolladora" [(ngModel)]="game.desarrolladora">
               </div>
             </div>
             <div class="formgrid grid" style="margin-bottom: 10px;">
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                  <label for="plataforma1" class="block text-900 font-medium">Plataforma 1</label>
+                  <input type="text" pInputText  id="plataforma1" maxlength="40" placeholder="Plataforma 1" name="plataforma1" [(ngModel)]="game.plataforma1">
+              </div>
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                  <label for="plataforma2" class="block text-900 font-medium">Plataforma 2</label>
+                  <input type="text" pInputText  id="plataforma2" maxlength="40" placeholder="Plataforma 2" name="plataforma2" [(ngModel)]="game.plataforma2">
+              </div>
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
+                  <label for="plataforma3" class="block text-900 font-medium ">Plataforma 3</label>
+                  <input type="text" pInputText  id="plataforma3" maxlength="40" placeholder="Plataforma 3" name="plataforma3" [(ngModel)]="game.plataforma3">
+              </div>
+            </div>
+            <div class="formgrid grid" style="margin-bottom: 10px;">
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
                   <label for="genero1" class="block text-900 font-medium">Género 1</label>
                   <input type="text" pInputText  id="genero1" maxlength="25" placeholder="Género 1" name="genero1" [(ngModel)]="game.genero1">
               </div>
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
                   <label for="genero2" class="block text-900 font-medium">Género 2</label>
                   <input type="text" pInputText  id="genero2" maxlength="25" placeholder="Género 2" name="genero2" [(ngModel)]="game.genero2">
               </div>
-              <div class="field col-12 lg:col-4" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-4 xl:col-4" style="display: grid; justify-items: center;">
                   <label for="genero3" class="block text-900 font-medium ">Género 3</label>
                   <input type="text" pInputText  id="genero3" maxlength="25" placeholder="Género 3" name="genero3" [(ngModel)]="game.genero3">
               </div>
@@ -59,9 +71,6 @@
               
             <button pButton pRipple label="Registrar juego" *ngIf="editOrCreate == 'create'" (click)="createGame()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
             <button pButton pRipple label="Actualizar juego" *ngIf="editOrCreate == 'edit'" (click)="createGame()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
-
-            <button pButton pRipple label="Regresar sin registrar juego" *ngIf="editOrCreate == 'create'" [routerLink]="['/admin']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
-            <button pButton pRipple label="Regresar sin actualizar juego" *ngIf="editOrCreate == 'edit'" [routerLink]="['/admin/games']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
           </div>
         </div>
       </div>

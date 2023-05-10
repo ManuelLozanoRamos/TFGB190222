@@ -14,7 +14,9 @@ export class GamesComponent implements OnInit{
   username:string;
   games:Game[];
   nombre:string;
-  plataforma:string;
+  plataforma1:string;
+  plataforma2:string;
+  plataforma3:string;
   desarrolladora:string;
   genero1:string;
   genero2:string;
@@ -33,16 +35,18 @@ export class GamesComponent implements OnInit{
     this.username = this.cookieService.get('token').split(':')[0];
     this.games = [];
     this.nombre = '';
-    this.plataforma = '';
+    this.plataforma1 = '';
+    this.plataforma2 = '';
+    this.plataforma3 = '';
     this.desarrolladora = '';
     this.genero1 = '';
     this.genero2 = '';
     this.genero3 = '';
-    this.notaMediaIni = '';
-    this.notaMediaFin = '';
+    this.notaMediaIni = '1';
+    this.notaMediaFin = '10';
     this.fechaLanIni = '';
     this.fechaLanFin = '';
-    this.orders = ['Fecha Descendente', 'Fecha Ascendente', 'Nombre Descendente', 'Nombre Ascendente', 'Nota Descendente', 'Nota Ascendente'];
+    this.orders = ['Fecha lanzamiento descendente', 'Fecha lanzamiento ascendente', 'Nombre descendente', 'Nombre ascendente', 'Nota media descendente', 'Nota media ascendente'];
     this.order = '';
 
     this.searchAll();
@@ -93,6 +97,9 @@ export class GamesComponent implements OnInit{
           value.generos = value.genero1;
           if(value.genero2 != null && value.genero2 != '') value.generos += ', ' + value.genero2;
           if(value.genero3 != null && value.genero3 != '') value.generos += ', ' + value.genero3;
+          value.plataformas = value.plataforma1;
+          if(value.plataforma2 != null && value.plataforma2 != '') value.plataformas += ', ' + value.plataforma2;
+          if(value.plataforma3 != null && value.plataforma3 != '') value.plataformas += ', ' + value.plataforma3;
         });
       }
     );
@@ -101,7 +108,9 @@ export class GamesComponent implements OnInit{
   search() : void {
     let parametros:Map<string, string> = new Map();
     if(this.nombre != '') parametros.set('nombre', this.nombre);
-    if(this.plataforma != '') parametros.set('plataforma', this.plataforma);
+    if(this.plataforma1 != '') parametros.set('plataforma1', this.plataforma1);
+    if(this.plataforma2 != '') parametros.set('plataforma2', this.plataforma2);
+    if(this.plataforma3 != '') parametros.set('plataforma3', this.plataforma3);
     if(this.desarrolladora != '') parametros.set('desarrolladora', this.desarrolladora);
     if(this.genero1 != '') parametros.set('genero1', this.genero1);
     if(this.genero2 != '') parametros.set('genero2', this.genero2);
@@ -120,13 +129,16 @@ export class GamesComponent implements OnInit{
           value.generos = value.genero1;
           if(value.genero2 != null && value.genero2 != '') value.generos += ', ' + value.genero2;
           if(value.genero3 != null && value.genero3 != '') value.generos += ', ' + value.genero3;
+          value.plataformas = value.plataforma1;
+          if(value.plataforma2 != null && value.plataforma2 != '') value.plataformas += ', ' + value.plataforma2;
+          if(value.plataforma3 != null && value.plataforma3 != '') value.plataformas += ', ' + value.plataforma3;
         });
       }
     );
   }
 
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
 }

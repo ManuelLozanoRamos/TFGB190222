@@ -17,7 +17,7 @@ export class GuardGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const cookie = this.cookieService.check('token');
     if(!cookie || !this.cookieService.get('token').includes('USER_SESSION')){
-      this.cookieService.delete('token');
+      this.cookieService.deleteAll('/');
       this.router.navigate(['/login']);
       return false;
     } 

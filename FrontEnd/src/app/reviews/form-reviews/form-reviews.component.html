@@ -15,15 +15,17 @@
         </p-menubar>
     
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
-          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9 xl:w-9" style="width: 100%;">
+            <button pButton pRipple *ngIf="editOrCreate == 'create'" class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/games/'+review.videojuego+'/reviews']"></button>
+            <button pButton pRipple *ngIf="editOrCreate == 'edit'" class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/users/'+username+'/reviews']"></button>
             <div *ngIf="editOrCreate == 'create'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Crear reseña</div>
             <div *ngIf="editOrCreate == 'edit'" class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Editar reseña</div>
             <div class="formgrid grid" style="margin-bottom: 10px;">  
-              <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
                 <label for="videojuego" class="block text-900 font-medium">Juego</label>
                 <input type="text" pInputText placeholder="Videojuego" id="videojuego" readOnly maxlength="75" name="videojuego" [(ngModel)]="review.videojuego">
               </div>
-              <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
                 <label for="nota" class="block text-900 font-medium">Nota (1-10)</label>
                 <div class="formgrid grid" style="grid-template-columns: 1fr auto; justify-items: center;">
                   <p-rating class="field" [(ngModel)]="review.nota" [stars]="10"></p-rating>
@@ -32,13 +34,13 @@
               </div>
             </div>
             <div class="formgrid grid" style="margin-bottom: 10px;">
-              <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-12 xl:col-12" style="display: grid; justify-items: center;">
                 <label for="titulo" class="block text-900 font-medium">Título</label>
                 <input type="text" pInputText placeholder="Título" id="titulo" maxlength="75" name="titulo" [(ngModel)]="review.titulo">
               </div>
             </div>
             <div class="formgrid grid" style="margin-bottom: 10px;">
-              <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+              <div class="field col-12 lg:col-12 xl:col-12" style="display: grid; justify-items: center;">
                 <label for="comentario" class="block text-900 font-medium">Review</label>
                 <textarea class="textarea-custom" [autoResize]="true" pInputTextarea maxlength="500" rows="5" placeholder="Escribe tu review" [(ngModel)]="review.comentario"></textarea>
               </div>
@@ -46,9 +48,6 @@
               
             <button pButton pRipple label="Registrar review" *ngIf="editOrCreate == 'create'" (click)="createReview()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
             <button pButton pRipple label="Actualizar review" *ngIf="editOrCreate == 'edit'" (click)="createReview()" icon="pi pi-plus" class="w-full p-button-success" style="margin-top: 30px;"></button>
-
-            <button pButton pRipple label="Regresar sin registrar review" *ngIf="editOrCreate == 'create'" [routerLink]="['/games/'+review.videojuego+'/reviews']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
-            <button pButton pRipple label="Regresar sin actualizar review" *ngIf="editOrCreate == 'edit'" [routerLink]="['/users/'+username+'/reviews']" icon="pi pi-arrow-left" class="w-full" style="margin-top: 45px;"></button>
           </div>
         </div>
       </div>

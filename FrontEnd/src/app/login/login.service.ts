@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { UserResponse } from '../responses/user-response';
+import { UserInfo } from '../register/userInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,6 @@ export class LoginService {
       return of(new UserResponse("ERROR_EMPTY_PASS", ''));
     }
 
-    return this.http.get<UserResponse>(this.url, {params:{username:username, password:password}});
+    return this.http.post<UserResponse>(this.url + '/login', new UserInfo(username, password, null));
   }
 }

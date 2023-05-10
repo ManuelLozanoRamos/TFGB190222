@@ -90,7 +90,9 @@ export class FormReviewsComponent implements OnInit{
       this.reviewInfo.comentario = this.review.comentario;
       this.reviewInfo.titulo = this.review.titulo;
       this.reviewInfo.nota = this.review.nota;
-      this.reviewService.editReview(this.review.idReview, this.reviewInfo).subscribe(
+      this.reviewInfo.videojuego = this.review.videojuego;
+      this.reviewInfo.username = this.review.username;
+      this.reviewService.editReview(this.review.idReview ?? 0, this.reviewInfo).subscribe(
       //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
@@ -99,7 +101,6 @@ export class FormReviewsComponent implements OnInit{
         }
       );
     } else {
-      this.review.fechaRegistro = new Date();
       this.review.username = this.username;
       this.reviewService.createReview(this.review).subscribe(
       //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
@@ -113,7 +114,7 @@ export class FormReviewsComponent implements OnInit{
   }
 
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
 }

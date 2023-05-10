@@ -23,6 +23,19 @@ public class TokenGeneratorService {
 
     @Transactional
     public ResponseEntity<TokenResponse> generateToken(String username, String process){
+        if(username == null || process == null){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(username.isBlank() || username.length() > 20){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("BAD_USERNAME_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(process.isBlank() || process.length() > 15){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("BAD_PROCESS_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(!"USER_SESSION".equals(process) && !"USER_ACTIVATION".equals(process) && !"CHANGE_PASS".equals(process)){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("WRONG_PROCESS", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             String token = "";
             boolean tokenExists = true;

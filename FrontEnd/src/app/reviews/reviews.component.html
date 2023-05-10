@@ -15,34 +15,31 @@
         </p-menubar>
     
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; margin-bottom: 50px;">
-          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9" style="width: 100%;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-9 lg:w-9 xl:w-9" style="width: 100%;">
+            <button pButton pRipple class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/games']"></button>
             <div class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Reseñas de "{{game}}"</div>
             <div class="container" style="display: flex; align-items: center; margin-bottom: 35px;" [hidden]="!finished" *ngIf="!userHasReview">
               <p class="w-6" style="font-weight: bold;">No has realizado ninguna reseña de "{{game}}"</p>
-              <button class="w-6" pButton pRipple label="Crear reseña" [routerLink]="['/games/'+game+'/reviews/create']" icon="pi pi-plus"></button>            
+              <button class="w-6 p-button-info" pButton pRipple label="Crear reseña" [routerLink]="['/games/'+game+'/reviews/create']" icon="pi pi-plus"></button>            
             </div>
             <div class="col-12" style="margin-bottom: 10px;" [hidden]="!finished" *ngIf="userHasReview">
               <p style="font-weight: bold;">Tu reseña de "{{game}}":</p>
               <div class="flex" style="flex-direction: column; display: flex;">
-                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                  <p class="text-500 w-2">Juego</p>
-                  <p class="w-10">{{userReview.videojuego}}</p>
+                <div class="flex align-items-center flex-grow-1">
+                  <p class="text-500 w-3">Nota media</p>
+                  <p class="w-9">{{userReview.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
+                </div>
+                <div class="flex align-items-center flex-grow-1">
+                  <p class="text-500 w-3">Fecha Registro</p>
+                  <p class="w-9">{{userReview.fechaRegistro}}</p>
+                </div>
+                <div class="flex align-items-center flex-grow-1">
+                  <p class="text-500 w-3">Título</p>
+                  <p class="w-9">{{userReview.titulo}}</p>
                 </div>
                 <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                  <p class="text-500 w-2">Nota media</p>
-                  <p class="w-10">{{userReview.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
-                </div>
-                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                  <p class="text-500 w-2">Fecha Registro</p>
-                  <p class="w-10">{{userReview.fechaRegistro}}</p>
-                </div>
-                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                  <p class="text-500 w-2">Título</p>
-                  <p class="w-10">{{userReview.titulo}}</p>
-                </div>
-                <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                  <p class="text-500  w-2">Reseña</p>
-                  <p class="w-10">{{userReview.comentario}}</p>
+                  <p class="text-500 w-3">Reseña</p>
+                  <p class="w-9">{{userReview.comentario}}</p>
                 </div>
               </div>
             </div> 
@@ -58,33 +55,33 @@
                 </ng-template>
                 <ng-template pTemplate="content">
                   <div class="formgrid grid" style="margin-bottom: 10px;">
-                    <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                    <div class="field col-12 lg:col-12 xl:col-12" style="display: grid; justify-items: center;">
                       <label for="usuario" class="block text-900 font-medium">Usuario</label>
                       <input type="text" pInputText placeholder="Usuario" id="usuario" maxlength="20" name="usuario" [(ngModel)]="user">
                     </div>
                   </div>
                   <div class="formgrid grid" style="margin-bottom: 10px;">  
-                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
-                      <label for="notaIni" class="block text-900 font-medium">Nota media inicial</label>
-                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media inicial" id="notaIni" name="notaIni" [min]="1" [max]="10" [(ngModel)]="notaIni"></p-inputNumber>
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaIni" class="block text-900 font-medium">Nota inicial</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota inicial" id="notaIni" name="notaIni" [min]="1" [max]="10" [(ngModel)]="notaIni"></p-inputNumber>
                     </div>
-                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
-                      <label for="notaFin" class="block text-900 font-medium">Nota media final</label>
-                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota media final" id="notaFin" name="notaFin" [min]="1" [max]="10" [(ngModel)]="notaFin"></p-inputNumber>
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
+                      <label for="notaFin" class="block text-900 font-medium">Nota final</label>
+                      <p-inputNumber inputId="minmax" mode="decimal"  placeholder="Nota final" id="notaFin" name="notaFin" [min]="1" [max]="10" [(ngModel)]="notaFin"></p-inputNumber>
                     </div>
                   </div>
                   <div class="formgrid grid" style="margin-bottom: 10px;">  
-                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
                       <label for="fechaRegIni" class="block text-900 font-medium">Fecha registro inicial</label>
                       <input type="date" format="dd-MM-yyyy" pInputText id="fechaRegIni" name="fechaRegIni" [(ngModel)]="fechaRegIni">
                     </div>
-                    <div class="field col-12 lg:col-6" style="display: grid; justify-items: center;">
+                    <div class="field col-12 lg:col-6 xl:col-6" style="display: grid; justify-items: center;">
                       <label for="fechaRegIni" class="block text-900 font-medium">Fecha registro final</label>
                       <input type="date" format="dd-MM-yyyy" pInputText id="fechaRegFin" name="fechaRegFin" [(ngModel)]="fechaRegFin">
                     </div>
                   </div>
                   <div class="formgrid grid" style="margin-bottom: 10px;">
-                    <div class="field col-12 lg:col-12" style="display: grid; justify-items: center;">
+                    <div class="field col-12 lg:col-12 xl:col-12" style="display: grid; justify-items: center;">
                       <label for="order" class="block text-900 font-medium">Ordenación</label>   
                       <p-dropdown [options]="orders" id="order" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
                     </div>
@@ -100,25 +97,25 @@
               <ng-template let-review pTemplate="listItem">
                 <div class="col-12">
                   <div class="flex" style="flex-direction: column; display: flex;">
-                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                      <p class="text-500 w-2">Juego</p>
-                      <p class="w-10">{{review.videojuego}}</p>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-3">Usuario</p>
+                      <p class="w-9">{{review.username}}</p>
                     </div>
-                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                      <p class="text-500 w-2">Nota media</p>
-                      <p class="w-10">{{review.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-3">Nota media</p>
+                      <p class="w-9">{{review.nota}} <i class="pi pi-star" style="margin-left: 3px;"></i> </p>
                     </div>
-                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                      <p class="text-500 w-2">Fecha Registro</p>
-                      <p class="w-10">{{review.fechaRegistro}}</p>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-3">Fecha Registro</p>
+                      <p class="w-9">{{review.fechaRegistro | date:'dd-MM-yyyy'}}</p>
                     </div>
-                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                      <p class="text-500 w-2">Título</p>
-                      <p class="w-10">{{review.titulo}}</p>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500 w-3">Título</p>
+                      <p class="w-9">{{review.titulo}}</p>
                     </div>
-                    <div class="flex align-items-center flex-grow-1" style="margin-bottom: 10px;">
-                      <p class="text-500  w-2">Reseña</p>
-                      <p class="w-10">{{review.comentario}}</p>
+                    <div class="flex align-items-center flex-grow-1">
+                      <p class="text-500  w-3">Reseña</p>
+                      <p class="w-9">{{review.comentario}}</p>
                     </div>
                   </div>
                 </div> 

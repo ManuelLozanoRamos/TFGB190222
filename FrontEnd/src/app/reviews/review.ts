@@ -1,19 +1,19 @@
 export class Review {
-    idReview:number;
-    username:string;
-    videojuego:string;
-    titulo:string;
-    comentario:string;
-    nota:number;
-    fechaRegistro:Date;
+    idReview:number|null;
+    username:string|null;
+    videojuego:string|null;
+    titulo:string|null;
+    comentario:string|null;
+    nota:number|null;
+    fechaRegistro:Date|null;
 
     constructor(){
-        this.idReview = 0;
-        this.username = '';
-        this.videojuego = '';
-        this.titulo = '';
-        this.comentario = '';
-        this.nota = 0;
-        this.fechaRegistro = new Date();
+        this.idReview = null;
+        this.username = null;
+        this.videojuego = null;
+        this.titulo = null;
+        this.comentario = null;
+        this.nota = null;
+        this.fechaRegistro = null;
     }
 }

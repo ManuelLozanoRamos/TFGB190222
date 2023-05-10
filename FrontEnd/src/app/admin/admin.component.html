@@ -15,7 +15,8 @@
         </p-menubar>
     
         <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
-          <div class="surface-card p-4 shadow-2 border-round md:w-6 lg:w-6" style="width: 100%; max-width: 4000px;">
+          <div class="surface-card p-4 shadow-2 border-round md:w-6 lg:w-6 xl:w-6" style="width: 100%; max-width: 4000px;">
+            <button pButton pRipple class="p-button-info" icon="pi pi-arrow-left" label="Volver" style="margin-bottom: 20px;" [routerLink]="['/home']"></button>
             <div class=" text-center text-900 text-3xl font-medium mb-3" style="font-weight: bold !important; margin-bottom: 25px !important;">Panel de administrador</div>
             <div class="container">
               <button pButton pRipple [routerLink]="['/admin/games']" label="Gestionar juegos" icon="pi pi-list" class="w-full"></button>

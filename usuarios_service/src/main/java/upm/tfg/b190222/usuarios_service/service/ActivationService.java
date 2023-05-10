@@ -18,12 +18,21 @@ public class ActivationService {
     EntityManager entityManager;
     
     @Transactional
-    public ResponseEntity<UserResponse> activate(String user){
+    public ResponseEntity<UserResponse> activate(String user, String tokenUser){
+        if(user == null){
+            return new ResponseEntity<UserResponse>(new UserResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(user.isBlank() || user.length() > 20){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_USER_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Usuario usuario = entityManager.find(Usuario.class, user, LockModeType.PESSIMISTIC_WRITE);
 
             if(usuario == null) return new ResponseEntity<UserResponse>(new UserResponse("NOT_FOUND", null), HttpStatus.OK);
     
+            if(!tokenUser.equals(usuario.getUsername()))  return new ResponseEntity<UserResponse>(new UserResponse("WRONG_USER", null), HttpStatus.FORBIDDEN);
+
             usuario.setActivado(true);
     
             entityManager.merge(usuario);

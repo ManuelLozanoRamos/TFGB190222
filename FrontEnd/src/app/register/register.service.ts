@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { UserResponse } from '../responses/user-response';
-import { Usuario } from './usuario';
+import { UserInfo } from './userInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +10,8 @@ import { Usuario } from './usuario';
 export class RegisterService {
 
   private url:string = 'http://localhost:8082/api/usuarios';
-  user:Usuario;
 
-  constructor(private http:HttpClient) { 
-    this.user = new Usuario('', '', '');
-  }
+  constructor(private http:HttpClient) {}
 
   register(username:string, password:string, repeatedPassword:string, mail:string) : Observable<UserResponse> {
     const regex = new RegExp('^[ \t\n]*$');
@@ -34,9 +31,6 @@ export class RegisterService {
       return of(new UserResponse('ERROR_NOT_EQ_PASS', ''));
     }
 
-    this.user.username = username;
-    this.user.password = password;
-    this.user.mail = mail;
-    return this.http.post<UserResponse>(this.url, this.user);
+    return this.http.post<UserResponse>(this.url + '/register', new UserInfo(username, password, mail));
   }
 }

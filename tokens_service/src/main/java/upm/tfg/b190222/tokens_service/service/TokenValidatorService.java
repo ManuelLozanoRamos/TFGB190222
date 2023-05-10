@@ -22,6 +22,13 @@ public class TokenValidatorService {
 
     @Transactional
     public ResponseEntity<TokenResponse> validateToken(String token){
+        if(token == null){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(token.isBlank() || token.length() > 123){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("BAD_TOKEN_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Token t = entityManager.find(Token.class, token, LockModeType.PESSIMISTIC_READ);
 

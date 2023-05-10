@@ -16,12 +16,14 @@ create table Token (
 
 create table Game (
 	nombre varchar(75) unique not null,
-    plataforma varchar(40) not null,
+    plataforma1 varchar(40) not null,
+	plataforma2 varchar(40),
+	plataforma3 varchar(40),
     desarrolladora varchar(50) not null,
     genero1 varchar(25) not null,
     genero2 varchar(25),
     genero3 varchar(25),
-    notaMedia float default -1 not null,
+    notaMedia float default 0 not null,
     fechaLanzamiento Date not null,
     fechaRegistro Date not null,
     primary key(nombre)
@@ -73,26 +75,24 @@ end$$
 
 delimiter $$
 create trigger actualizarNotaMediaDelete
-after delete on Review 
-for each Row
-begin 
-	update Game 
-    set notaMedia = (
-		select avg(nota)
-        from Review 
-        where videojuego = OLD.videojuego
-	) 
-	where nombre = OLD.videojuego; 
-    
-    IF (SELECT notaMedia FROM Game WHERE nombre = OLD.videojuego) IS NULL THEN
-        UPDATE Game SET notaMedia = -1 WHERE nombre = OLD.videojuego;
-    END IF;
-    
+after delete on Review
+for each row
+begin
+    declare total_notas int;
+    declare total_reviews int;
+    set total_notas = (select sum(nota) from Review where videojuego = old.videojuego);
+    set total_reviews = (select count(*) from Review where videojuego = old.videojuego);
+    if total_reviews > 0 then
+        update Game set notaMedia = total_notas/total_reviews where nombre = old.videojuego;
+    else
+        update Game set notaMedia = 0 where nombre = old.videojuego;
+    end if;
 end$$
 
 
+
 insert into Usuario values('admin', 'asPnyoYyuVLIAnZfMQ8blw==', 'gameratingsweb@gmail.com', '2023-04-06', 1);
-insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo', 'Acción', 'Plataformas', null, 5, '2007-11-01', '2023-06-04');
+insert into Game values('Super Mario Galaxy', 'Nintendo Wii', 'Nintendo Switch', null, 'Nintendo', 'Acción', 'Plataformas', null, 5, '2007-11-01', '2023-06-04');
 insert into Review values(1, 'admin', 'Super Mario Galaxy', 'Juegazo', 9, 'Divino de la muerte', '2023-02-14');
 
 select * from Review where videojuego='Super Mario Galaxy';

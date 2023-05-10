@@ -1,8 +1,13 @@
 package upm.tfg.b190222.games_service.service;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import upm.tfg.b190222.games_service.entity.Game;
+import upm.tfg.b190222.games_service.info.GameInfo;
 import upm.tfg.b190222.games_service.response.GameResponse;
 
 @Service
@@ -25,9 +31,50 @@ public class GamesSearchService {
     EntityManager entityManager;
 
     @Transactional
-    public ResponseEntity<GameResponse> findGames(String nombre, String plataforma, String desarrolladora,  
-     String genero1,  String genero2, String genero3, String notaMediaIni,  
-     String notaMediaFin, String fechaLanIni, String fechaLanFin, String order){
+    public ResponseEntity<GameResponse> findGames(GameInfo gameInfo){
+        String nombre = gameInfo.getNombre();
+        String desarrolladora = gameInfo.getDesarrolladora();
+        String plataforma1 = gameInfo.getPlataforma1();
+        String plataforma2 = gameInfo.getPlataforma2();
+        String plataforma3 = gameInfo.getPlataforma3();
+        String genero1 = gameInfo.getGenero1();
+        String genero2 = gameInfo.getGenero2();
+        String genero3 = gameInfo.getGenero3();
+        String notaMediaIni = gameInfo.getNotaMediaIni();
+        String notaMediaFin = gameInfo.getNotaMediaFin();
+        String fechaLanIni = gameInfo.getFechaLanIni();
+        String fechaLanFin = gameInfo.getNotaMediaFin();
+        String order = gameInfo.getOrder();
+        
+
+        if(nombre == null && plataforma1 == null && plataforma2 == null && plataforma3 == null && desarrolladora == null 
+        && genero1 == null && genero2 == null && genero3 == null && notaMediaIni == null && notaMediaFin == null 
+        && fechaLanIni == null && fechaLanFin == null && order == null){
+            
+            return new ResponseEntity<GameResponse>(new GameResponse("MISSING_DATA", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }  
+        if(notaMediaIni != null && (Integer.valueOf(notaMediaIni) < 1 || Integer.valueOf(notaMediaIni) < 10)){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_NOTEINI_VALUE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(notaMediaFin != null && (Integer.valueOf(notaMediaFin) < 1 || Integer.valueOf(notaMediaFin) < 10)){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_NOTEFIN_VALUE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if((notaMediaIni == null && notaMediaFin != null) || (notaMediaIni != null && notaMediaFin == null)){
+            return new ResponseEntity<GameResponse>(new GameResponse("MISSING_NOTE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(notaMediaIni != null && notaMediaFin != null && Integer.valueOf(notaMediaIni) > Integer.valueOf(notaMediaFin)){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_NOTE_ORDER", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if((fechaLanIni == null && fechaLanFin != null) || (fechaLanIni != null && fechaLanFin == null)){
+            return new ResponseEntity<GameResponse>(new GameResponse("MISSING_DATE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(fechaLanIni != null && fechaLanFin != null && fechaLanIni.compareTo(fechaLanFin) > 0){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_DATE_ORDER", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+
+
+
+
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Game> cq = cb.createQuery(Game.class);
@@ -38,8 +85,14 @@ public class GamesSearchService {
             if(nombre != null){
                 predicateList.add(cb.equal(games.get("nombre"), nombre));
             }     
-            if(plataforma != null){
-                predicateList.add(cb.equal(games.get("plataforma"), plataforma));
+            if(plataforma1 != null){
+                predicateList.add(cb.or(cb.equal(games.get("plataforma1"), plataforma1), cb.equal(games.get("plataforma2"), plataforma1), cb.equal(games.get("plataforma3"), plataforma1)));
+            } 
+            if(plataforma2 != null){
+                predicateList.add(cb.or(cb.equal(games.get("plataforma1"), plataforma2), cb.equal(games.get("plataforma2"), plataforma2), cb.equal(games.get("plataforma3"), plataforma2)));
+            } 
+            if(plataforma3 != null){
+                predicateList.add(cb.or(cb.equal(games.get("plataforma1"), plataforma3), cb.equal(games.get("plataforma2"), plataforma3), cb.equal(games.get("plataforma3"), plataforma3)));
             } 
             if(desarrolladora != null){
                 predicateList.add(cb.equal(games.get("desarrolladora"), desarrolladora));
@@ -66,29 +119,37 @@ public class GamesSearchService {
                 predicates[i] = predicateList.get(i);
             }
 
-            if(order == null || order.equals("Fecha Descendente")){
+
+            if(order == null || order.equals("Fecha lanzamiento descendente")){
                 cq.select(games).where(predicates).orderBy(cb.desc(games.get("fechaLanzamiento")));
             }
-            else if(order.equals("Fecha Ascendente")){
+            else if(order.equals("Fecha lanzamiento ascendente")){
                 cq.select(games).where(predicates).orderBy(cb.asc(games.get("fechaLanzamiento")));
             }
-            else if(order.equals("Nombre Ascendente")){
+            else if(order.equals("Nombre ascendente")){
                 cq.select(games).where(predicates).orderBy(cb.asc(games.get("nombre")));
             }
-            else if(order.equals("Nombre Descendente")){
+            else if(order.equals("Nombre descendente")){
                 cq.select(games).where(predicates).orderBy(cb.desc(games.get("nombre")));
             }
-            else if(order.equals("Nota Ascendente")){
+            else if(order.equals("Nota media ascendente")){
                 cq.select(games).where(predicates).orderBy(cb.asc(games.get("notaMedia")));
             }
-            else if(order.equals("Nota Descendente")){
+            else if(order.equals("Nota media descendente")){
+                cq.select(games).where(predicates).orderBy(cb.desc(games.get("notaMedia")));
+            } else {
                 cq.select(games).where(predicates).orderBy(cb.desc(games.get("notaMedia")));
             }
 
-            cq.select(games).where(predicates).orderBy(cb.desc(games.get("notaMedia")));
-
             List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
-    
+
+            DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+            df.applyPattern("##.#");
+            df.setRoundingMode(RoundingMode.DOWN);
+            for(Game game: result){
+                game.setNotaMedia(Float.parseFloat(df.format(game.getNotaMedia())));
+            }
+
             return new ResponseEntity<GameResponse>(new GameResponse("OK", new Game(), result), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -107,6 +168,13 @@ public class GamesSearchService {
 
             List<Game> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
+            DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+            df.applyPattern("##.#");
+            df.setRoundingMode(RoundingMode.DOWN);
+            for(Game game: result){
+                game.setNotaMedia(Float.parseFloat(df.format(game.getNotaMedia())));
+            }
+
             return new ResponseEntity<GameResponse>(new GameResponse("OK", new Game(), result), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<GameResponse>(new GameResponse("ERROR", new Game(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -116,6 +184,10 @@ public class GamesSearchService {
 
     @Transactional
     public ResponseEntity<GameResponse> findGameById(String idGame){
+        if(idGame.isBlank() || idGame.length() > 75){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_GAME_LENGTH", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Game result = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_READ);
 

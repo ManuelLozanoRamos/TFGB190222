@@ -39,12 +39,12 @@ export class ReviewsComponent implements OnInit{
     this.game = '';
 
     this.user = '';
-    this.notaIni = '';
-    this.notaFin = '';
+    this.notaIni = '1';
+    this.notaFin = '10';
     this.fechaRegIni = '';
     this.fechaRegFin = '';
     this.order='';
-    this.orders = ['Fecha Descendiente', 'Fecha Ascendiente', 'Juego Descendente', 'Juego Ascendente', 'Nota Descendente', 'Nota Asccendente'];
+    this.orders = ['Fecha registro descendente', 'Fecha registro ascendente', 'Nombre juego descendente', 'Nombre juego ascendente', 'Nota descendente', 'Nota ascendente'];
   }
   
   ngOnInit(): void {
@@ -158,7 +158,7 @@ export class ReviewsComponent implements OnInit{
   }
 
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
 }

@@ -20,11 +20,13 @@ public class DeleteReviewService {
     EntityManager entityManager;
     
     @Transactional
-    public ResponseEntity<ReviewResponse> deleteReview(int idReview){
+    public ResponseEntity<ReviewResponse> deleteReview(int idReview, String tokenUser){
         try{
             Review review = entityManager.find(Review.class, idReview, LockModeType.PESSIMISTIC_WRITE);
 
             if(review == null) return new ResponseEntity<ReviewResponse>(new ReviewResponse("NOT_FOUND", new Review(), new ArrayList<>()), HttpStatus.OK);
+
+            if(!tokenUser.equals(review.getUsername()))  return new ResponseEntity<ReviewResponse>(new ReviewResponse("WRONG_USER", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
 
             entityManager.remove(review);
 

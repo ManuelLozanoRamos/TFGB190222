@@ -17,7 +17,7 @@ export class ReviewService {
   //Obtener reviews
   getReviews(parametros:Map<string, string>):Observable<ReviewResponse>{
     if(parametros.size != 0){
-      let httpParams = new HttpParams();
+      let reviewInfo:ReviewInfo = new ReviewInfo();
 
       let notaIni = parametros.get("notaIni");
       let notaFin = parametros.get("notaFin");
@@ -44,10 +44,10 @@ export class ReviewService {
       }
 
       parametros.forEach((value, key) =>{
-        httpParams = httpParams.set(key, value)
+        reviewInfo[key] = value;
       });
 
-      return this.http.get<ReviewResponse>(this.url, {params:httpParams});
+      return this.http.post<ReviewResponse>(this.url + '/filter', reviewInfo);
     }
     else{
       return of(new ReviewResponse("NO_PETICION", new Review(), []));
@@ -61,6 +61,7 @@ export class ReviewService {
   //Crear review
   createReview(review:Review):Observable<ReviewResponse>{
     const regex = new RegExp('^[ \t\n]*$');
+
     if(review.titulo == null || review.titulo.length == 0 || regex.test(review.titulo)){
       return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
     }
@@ -69,16 +70,6 @@ export class ReviewService {
     }
     if(review.nota == null){
       return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
-    }
-
-    if(review.titulo.length > 75){
-      return of(new ReviewResponse("ERROR_LEN_TIT", new Review, []));
-    }
-    if(review.comentario.length > 500){
-      return of(new ReviewResponse("ERROR_LEN_COM", new Review(), []));
-    }
-    if(review.nota < 1 || review.nota > 10){
-      return of(new ReviewResponse("ERROR_TAM_NOTA", new Review(), []));
     }
 
     return this.http.post<ReviewResponse>(this.url, review);
@@ -91,6 +82,7 @@ export class ReviewService {
 
   editReview(idReview:number, reviewInfo:ReviewInfo):Observable<ReviewResponse>{
     const regex = new RegExp('^[ \t\n]*$');
+    
     if(reviewInfo.titulo == null || reviewInfo.titulo.length == 0 || regex.test(reviewInfo.titulo)){
       return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
     }
@@ -99,16 +91,6 @@ export class ReviewService {
     }
     if(reviewInfo.nota == null){
       return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
-    }
-
-    if(reviewInfo.titulo.length > 75){
-      return of(new ReviewResponse("ERROR_LEN_TIT", new Review(), []));
-    }
-    if(reviewInfo.comentario.length > 500){
-      return of(new ReviewResponse("ERROR_LEN_COM", new Review(), []));
-    }
-    if(reviewInfo.nota < 1 || reviewInfo.nota > 10){
-      return of(new ReviewResponse("ERROR_TAM_NOTA", new Review(), []));
     }
 
     return this.http.put<ReviewResponse>(this.url + '/' + encodeURIComponent(idReview) + '/edit', reviewInfo);

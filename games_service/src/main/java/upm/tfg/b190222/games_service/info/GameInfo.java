@@ -10,11 +10,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class GameInfo {
-    private String plataforma;
+    private String nombre;
+    private String plataforma1;
+    private String plataforma2;
+    private String plataforma3;
     private String desarrolladora;
     private String genero1;
     private String genero2;
     private String genero3;
     private LocalDate fechaLanzamiento;
-    private LocalDate fechaRegistro;
+
+    private String notaMediaIni;
+    private String notaMediaFin;
+    private String fechaLanIni;
+    private String fechaLanFin;
+    private String order;
 }

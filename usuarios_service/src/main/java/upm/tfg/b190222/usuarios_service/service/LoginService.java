@@ -23,6 +23,16 @@ public class LoginService {
 
     @Transactional
     public ResponseEntity<UserResponse> login(String username, String password){
+        if(username == null || password == null){
+            return new ResponseEntity<UserResponse>(new UserResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(username.isBlank() || username.length() > 20){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_USERNAME_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(password.isBlank() || password.length() > 25){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_PASSWORD_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Usuario usuario = entityManager.find(Usuario.class, username, LockModeType.PESSIMISTIC_READ);
 

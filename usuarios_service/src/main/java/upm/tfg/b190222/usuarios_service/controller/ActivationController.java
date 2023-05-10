@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import upm.tfg.b190222.usuarios_service.info.UserInfo;
 import upm.tfg.b190222.usuarios_service.response.UserResponse;
 import upm.tfg.b190222.usuarios_service.service.ActivationService;
 import upm.tfg.b190222.usuarios_service.service.UserValidationService;
@@ -25,23 +26,24 @@ public class ActivationController  {
      @Autowired
      UserValidationService userValidationService;
 
-    @PostMapping(value = "/usuarios/{user}/activate")
-    public ResponseEntity<UserResponse> activate(@PathVariable String user, HttpServletRequest request){
+    @PostMapping(value = "/usuarios/activate")
+    public ResponseEntity<UserResponse> activate(@RequestBody UserInfo userInfo, HttpServletRequest request){
         String authorizationHeader = request.getHeader("Authorization");
-        System.out.println(authorizationHeader);
+        String[] tokenParts;
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            tokenParts = token.split(":");
 
-            if(!token.contains("USER_ACTIVATION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
-                return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.FORBIDDEN);
+            if(!"USER_ACTIVATION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+                return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.UNAUTHORIZED);
             }
 
         } else {
-            return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<UserResponse>(new UserResponse("INVALID_TOKEN", null), HttpStatus.UNAUTHORIZED);
         }
 
         try{
-            return activationService.activate(user);
+            return activationService.activate(userInfo.getUsername(), tokenParts[0]);
         } catch(Exception e){
             return new ResponseEntity<UserResponse>(new UserResponse("ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
         } 

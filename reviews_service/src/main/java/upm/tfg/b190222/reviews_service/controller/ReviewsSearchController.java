@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import upm.tfg.b190222.reviews_service.entity.Review;
+import upm.tfg.b190222.reviews_service.info.ReviewInfo;
 import upm.tfg.b190222.reviews_service.response.ReviewResponse;
 import upm.tfg.b190222.reviews_service.service.ReviewsSearchService;
 import upm.tfg.b190222.reviews_service.service.UserValidationService;
@@ -30,25 +32,47 @@ public class ReviewsSearchController{
     @Autowired
     UserValidationService userValidationService;
 
-    @GetMapping(value="/reviews")
-    public ResponseEntity<ReviewResponse> reviewsSearch(@RequestParam(required = false) String videojuego, @RequestParam(required = false) String username,
-                                        @RequestParam(required = false) String notaIni, @RequestParam(required = false) String notaFin, 
-                                        @RequestParam(required = false) String fechaRegIni, @RequestParam(required = false) String fechaRegFin, 
-                                        @RequestParam(required = false) String order, HttpServletRequest request){
+
+    @PostMapping(value="/reviews/filter")
+    public ResponseEntity<ReviewResponse> reviewsSearch(@RequestBody ReviewInfo reviewInfo, HttpServletRequest request){
         
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            String[] tokenParts = token.split(":");
                                     
-            if(!token.contains("USER_SESSION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
-                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.FORBIDDEN);
+            if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
             }                      
         } else {
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
         }
         
         try{
-            return reviewsSearchService.findReviews(videojuego, username, notaIni, notaFin, fechaRegIni, fechaRegFin, order);
+            return reviewsSearchService.findReviews(reviewInfo);
+        } catch(Exception e){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping(value="/reviews")
+    public ResponseEntity<ReviewResponse> reviewsSearchAll(HttpServletRequest request){
+        
+        String authorizationHeader = request.getHeader("Authorization");
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String token = authorizationHeader.substring(7);
+            String[] tokenParts = token.split(":");
+                                    
+            if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
+            }                      
+        } else {
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
+        }
+        
+        try{
+            return reviewsSearchService.findAllReviews();
         } catch(Exception e){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,13 +83,14 @@ public class ReviewsSearchController{
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            String[] tokenParts = token.split(":");
 
-            if(!token.contains("USER_SESSION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
-                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
             }
 
         } else {
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
         }
 
         try{

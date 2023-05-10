@@ -33,13 +33,15 @@ public class GamesCreationController {
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            String [] tokenParts = token.split(":");
 
-            if(!token.contains("USER_SESSION") || !userValidationService.validate(token).equals("VALID_ADMIN")){
-                return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            if(!"USER_SESSION".equals(tokenParts[1]) || !userValidationService.validate(token).equals("VALID_ADMIN")){
+                if(userValidationService.validate(token).equals("VALID"))  return new ResponseEntity<GameResponse>(new GameResponse("WRONG_USER", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+                else return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
             }
 
         } else {
-            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<GameResponse>(new GameResponse("INVALID_TOKEN", new Game(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
         }
 
         try{

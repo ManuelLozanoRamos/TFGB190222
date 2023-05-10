@@ -20,8 +20,14 @@ public class Game {
     @Column(name="nombre")
     private String nombre;
 
-    @Column(name="plataforma")
-    private String plataforma;
+    @Column(name="plataforma1")
+    private String plataforma1;
+
+    @Column(name="plataforma2")
+    private String plataforma2;
+
+    @Column(name="plataforma3")
+    private String plataforma3;
 
     @Column(name="desarrolladora")
     private String desarrolladora;

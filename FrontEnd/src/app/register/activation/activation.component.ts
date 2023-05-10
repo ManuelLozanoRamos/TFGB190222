@@ -26,12 +26,12 @@ export class ActivationComponent implements OnInit{
         let token = r['token'];
         if(user){
           this.username = user;
-          if(token) this.cookieService.set('token', token);
+          if(token) this.cookieService.set('token', token, {path:'/', secure:true});
           this.activationService.activate(user).subscribe(
             r =>{
               if(r.response == "OK"){
                 this.activated = true;
-                this.cookieService.delete('token');
+                this.cookieService.deleteAll('/');
               } 
             }
           );

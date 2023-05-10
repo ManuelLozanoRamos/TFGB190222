@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { UserInfo } from 'src/app/register/userInfo';
 import { UserResponse } from 'src/app/responses/user-response';
 
 
@@ -19,6 +20,6 @@ export class RequestChangePasswordService {
       return of(new UserResponse("ERROR_EMPTY_USER", ''));
     }
 
-    return this.http.post<UserResponse>(this.url + '/reset/password/send/mail', null, {params:{mail:mail}});
+    return this.http.post<UserResponse>(this.url + '/reset/password/send/mail', new UserInfo(null, null, mail));
   }
 }

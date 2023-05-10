@@ -32,6 +32,13 @@ public class ChangePasswordService {
 
     @Transactional
     public ResponseEntity<UserResponse> sendResetPasswordMail(String mail){
+        if(mail == null) {
+            return new ResponseEntity<UserResponse>(new UserResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(mail.isBlank() || mail.length() > 100){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_MAIL_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
@@ -71,12 +78,24 @@ public class ChangePasswordService {
     }
 
     @Transactional
-    public ResponseEntity<UserResponse> changePassword(String user, String newPassword){
+    public ResponseEntity<UserResponse> changePassword(String user, String newPassword, String tokenUser){
+        if(user == null || newPassword == null){
+            return new ResponseEntity<UserResponse>(new UserResponse("MISSING_DATA", null), HttpStatus.BAD_REQUEST);
+        }
+        if(user.isBlank() || user.length() > 20){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_USERNAME_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+        if(newPassword.isBlank() || newPassword.length() > 25){
+            return new ResponseEntity<UserResponse>(new UserResponse("BAD_PASSWORD_LENGTH", null), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Usuario usuario = entityManager.find(Usuario.class, user, LockModeType.PESSIMISTIC_WRITE);
 
             if(usuario == null) return new ResponseEntity<UserResponse>(new UserResponse("NOT_FOUND", null), HttpStatus.OK);
     
+            if(!tokenUser.equals(usuario.getUsername()))  return new ResponseEntity<UserResponse>(new UserResponse("WRONG_USER", null), HttpStatus.FORBIDDEN);
+
             usuario.setPassword(Cifrado.encript(newPassword));
     
             entityManager.merge(usuario);

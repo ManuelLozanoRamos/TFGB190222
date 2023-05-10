@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import upm.tfg.b190222.tokens_service.info.TokenInfo;
 import upm.tfg.b190222.tokens_service.response.TokenResponse;
 import upm.tfg.b190222.tokens_service.service.TokenValidatorService;
 
@@ -23,14 +24,14 @@ public class TokenValidatorController {
     TokenValidatorService tokenValidatorService;
 
 
-    @GetMapping(value="/token/validate")
-    public ResponseEntity<TokenResponse> validateToken(@RequestParam String token, @RequestParam String protectionToken){
-        if(!secret.equals(protectionToken)){
-            return new ResponseEntity<TokenResponse>(new TokenResponse("ACCESS_DENIED", null), HttpStatus.FORBIDDEN);
+    @PostMapping(value="/token/validate")
+    public ResponseEntity<TokenResponse> validateToken(@RequestBody TokenInfo tokenInfo){
+        if(!secret.equals(tokenInfo.getProtectionToken())){
+            return new ResponseEntity<TokenResponse>(new TokenResponse("ACCESS_DENIED", null), HttpStatus.UNAUTHORIZED);
         }
 
         try{
-            return tokenValidatorService.validateToken(token);
+            return tokenValidatorService.validateToken(tokenInfo.getToken());
         } catch(Exception e){
             return new ResponseEntity<TokenResponse>(new TokenResponse("ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }

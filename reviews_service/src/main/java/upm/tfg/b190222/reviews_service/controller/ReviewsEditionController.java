@@ -31,21 +31,22 @@ public class ReviewsEditionController {
     UserValidationService userValidationService;
 
     @PutMapping(value="/reviews/{idReview}/edit")
-    public ResponseEntity<ReviewResponse> reviewsEdition(@PathVariable("idReview") Integer idReview, @RequestBody ReviewInfo newReviewInfo, HttpServletRequest request){
+    public ResponseEntity<ReviewResponse> reviewsEdition(@PathVariable("idReview") Integer idReview, @RequestBody ReviewInfo reviewInfo, HttpServletRequest request){
         String authorizationHeader = request.getHeader("Authorization");
+        String[] tokenParts;
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
+            tokenParts = token.split(":");
 
-            if(!token.contains("USER_SESSION") || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
-                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
             }
-
         } else {
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<>()), HttpStatus.UNAUTHORIZED);
         }
         
         try{
-            return editReviewService.editReview(idReview, newReviewInfo);
+            return editReviewService.editReview(idReview, reviewInfo, tokenParts[0]);
         } catch(Exception e){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<>()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

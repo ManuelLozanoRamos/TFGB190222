@@ -21,6 +21,10 @@ public class DeleteGameService {
     
     @Transactional
     public ResponseEntity<GameResponse> deleteGame(String idGame){
+        if(idGame.isBlank() || idGame.length() > 75){
+            return new ResponseEntity<GameResponse>(new GameResponse("BAD_GAME_LENGTH", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Game game = entityManager.find(Game.class, idGame, LockModeType.PESSIMISTIC_WRITE);
 

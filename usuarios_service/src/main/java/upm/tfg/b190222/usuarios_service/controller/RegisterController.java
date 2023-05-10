@@ -21,10 +21,10 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @PostMapping(value = "/usuarios")
+    @PostMapping(value = "/usuarios/register")
     public ResponseEntity<UserResponse> register(@RequestBody Usuario usuario){
         try{
-            return registerService.register(usuario);
+            return registerService.register(usuario.getUsername(), usuario.getPassword(), usuario.getMail());
         } catch(Exception e){
             return new ResponseEntity<UserResponse>(new UserResponse("ERROR", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -35,7 +35,7 @@ public class Review {
     private String titulo;
 
     @Column(name="nota")
-    private int nota;
+    private Integer nota;
 
     @Column(name="comentario")
     private String comentario;

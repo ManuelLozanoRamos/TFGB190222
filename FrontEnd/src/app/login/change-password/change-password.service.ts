@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { UserInfo } from 'src/app/register/userInfo';
 import { GameResponse } from 'src/app/responses/game-response';
 import { UserResponse } from 'src/app/responses/user-response';
 
@@ -25,6 +26,6 @@ export class ChangePasswordService {
       return of(new UserResponse('ERROR_NOT_EQ_PASS', ''));
     }
 
-    return this.http.put<UserResponse>(this.url + '/' + user + '/change/password', null, {params:{newPassword:newPassword}});
+    return this.http.put<UserResponse>(this.url + '/change/password', new UserInfo(user, newPassword, null));
   }
 }

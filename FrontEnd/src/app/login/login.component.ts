@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit{
         //Comprobar mensajes de error y validaciones y mostrar mensaje
         b => {
           if(b.response == 'OK'){
-            this.cookieService.set('token', b.token);
+            this.cookieService.set('token', b.token, {path:'/', secure:true});
             this.router.navigate(['/home']);
           } else {
             //mostrar mensaje de que no son validas las credenciales y quitar la redireccion

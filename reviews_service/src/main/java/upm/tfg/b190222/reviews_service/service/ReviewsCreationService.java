@@ -27,14 +27,39 @@ public class ReviewsCreationService {
     
     @Transactional
     public ResponseEntity<ReviewResponse> createReview(Review review){
+        String username = review.getUsername();
+        String videojuego = review.getVideojuego();
+        String titulo = review.getTitulo();
+        String comentario = review.getComentario();
+        Integer nota = review.getNota();
+
+        if(username == null || videojuego == null || titulo == null || comentario == null || nota == null){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("MISSING_DATA", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(videojuego.isBlank() || videojuego.length() > 75){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_GAME_LENGTH", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(username.isBlank() || username.length() > 20){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_USERNAME_LENGTH", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(titulo.isBlank() || titulo.length() > 75){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_TITLE_LENGTH", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(titulo.isBlank() || comentario.length() > 500){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_REVIEW_LENGTH", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+        if(nota < 1 || nota > 10){
+            return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_GRADE_SCOPE", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
+        }
+
         try{
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Review> cq = cb.createQuery(Review.class);
             Root<Review> reviews = cq.from(Review.class);
 
             Predicate [] p = {
-                cb.equal(reviews.get("username"), review.getUsername()),
-                cb.equal(reviews.get("videojuego"), review.getVideojuego())
+                cb.equal(reviews.get("username"), username),
+                cb.equal(reviews.get("videojuego"), videojuego)
             };
             cq.select(reviews).where(p);
 

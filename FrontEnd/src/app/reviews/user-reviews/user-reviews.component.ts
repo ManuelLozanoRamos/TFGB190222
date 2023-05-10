@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
@@ -30,12 +30,12 @@ export class UserReviewsComponent implements OnInit{
     this.reviews = [];
 
     this.videojuego = '';
-    this.notaIni = '';
-    this.notaFin = '';
+    this.notaIni = '1';
+    this.notaFin = '10';
     this.fechaRegIni = '';
     this.fechaRegFin = '';
     this.order='';
-    this.orders = ['Fecha Descendiente', 'Fecha Ascendiente', 'Juego Descendente', 'Juego Ascendente', 'Nota Descendente', 'Nota Asccendente'];
+    this.orders = ['Fecha registro descendente', 'Fecha registro ascendente', 'Nombre juego descendente', 'Nombre juego ascendente', 'Nota descendente', 'Nota ascendente'];
 
     this.searchAll();
   }
@@ -130,8 +130,9 @@ export class UserReviewsComponent implements OnInit{
     );
   }
 
+
   logout() : void {
-    this.cookieService.delete('token', '/');
+    this.cookieService.deleteAll('/');
     this.router.navigate(['/login']);
   }
 
