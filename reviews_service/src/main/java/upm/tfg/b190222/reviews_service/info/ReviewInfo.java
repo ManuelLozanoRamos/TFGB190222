@@ -16,7 +16,7 @@ public class ReviewInfo {
      private String videojuego;
      private String fechaRegIni;
      private String fechaRegFin;
-     private String notaMediaIni;
-     private String notaMediaFin;
+     private String notaIni;
+     private String notaFin;
      private String order;
 }

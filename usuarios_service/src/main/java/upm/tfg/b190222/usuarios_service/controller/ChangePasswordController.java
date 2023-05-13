@@ -30,10 +30,6 @@ public class ChangePasswordController {
 
     @PostMapping(value = "/usuarios/reset/password/send/mail")
     public ResponseEntity<UserResponse> sendResetPasswordMail(@RequestBody UserInfo userInfo){
-        if(userInfo.getMail() == null){
-            return new ResponseEntity<UserResponse>(new UserResponse("BAD_REQUEST", null), HttpStatus.BAD_REQUEST);
-        }
-
         try{
             return changePasswordService.sendResetPasswordMail(userInfo.getMail());
         } catch(Exception e){

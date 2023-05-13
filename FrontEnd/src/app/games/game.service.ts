@@ -30,23 +30,17 @@ export class GameService {
       let fechaLanIni = parametros.get("fechaLanIni");
       let fechaLanFin = parametros.get("fechaLanFin");
 
-      if(Number(notaMediaIni) < 1 || Number(notaMediaIni) > 10){
-        return of(new GameResponse("ERROR_RAN_NINI",new Game() , []));
-      }
-      if(Number(notaMediaFin) < 1 || Number(notaMediaFin) > 10){
-        return of(new GameResponse("ERROR_RAN_NFIN", new Game(), []));
+      if((notaMediaIni != null && notaMediaFin == null) || (notaMediaIni == null && notaMediaFin != null)){
+        return of(new GameResponse("ERROR_SOLO_UNA_NOTA", new Game(), []));
       }
       if(Number(notaMediaIni) > Number(notaMediaFin)){
         return of(new GameResponse("ERROR_NINI_MAYOR_NFIN", new Game(), []));
       }
-      if((notaMediaIni != '' && notaMediaFin == '') || (notaMediaIni == '' && notaMediaFin != '')){
-        return of(new GameResponse("ERROR_SOLO_UNA_NOTA", new Game(), []));
-      }
-      if(fechaLanIni != '' && fechaLanFin != '' && String(fechaLanIni) > String(fechaLanFin)){
-        return of(new GameResponse("ERROR_FINI_MAYOR_FFIN", new Game(), []));
-      }
-      if(fechaLanIni != '' && fechaLanFin == '' || (fechaLanIni == '' && fechaLanFin != '')){
+      if((!fechaLanIni && fechaLanFin) || (fechaLanIni && !fechaLanFin)){
         return of(new GameResponse("ERROR_SOLO_UNA_FECHA", new Game(), []));
+      }
+      if(String(fechaLanIni) > String(fechaLanFin)){
+        return of(new GameResponse("ERROR_FINI_MAYOR_FFIN", new Game(), []));
       }
 
       parametros.forEach((value, key) =>{
@@ -56,7 +50,7 @@ export class GameService {
       return this.http.post<GameResponse>(this.url + '/filter', gameInfo);
     }
     else{
-      return of(new GameResponse("NO_PETICION", new Game(), []));
+      return of(new GameResponse("NO_PETITION", new Game(), []));
     }
   }
 
@@ -70,21 +64,21 @@ export class GameService {
     
     if(game.nombre == null || game.nombre.length == 0 || regex.test(game.nombre)){
       return of(new GameResponse("ERROR_NO_NOM", new Game(), []));
-    } else if(game.plataforma1 == null || game.plataforma1.length == 0 || regex.test(game.plataforma1)){
-      return of(new GameResponse("ERROR_NO_PLAT", new Game(), []));
     } else if(game.desarrolladora == null || game.desarrolladora.length == 0 || regex.test(game.desarrolladora)){
       return of(new GameResponse("ERROR_NO_DESA", new Game(), []));
-    } else if(game.genero1 == null || game.genero1.length == 0 || regex.test(game.genero1)){
+    } else if(game.plataforma1 == null || game.plataforma1.length == 0 || regex.test(game.plataforma1)){
+      return of(new GameResponse("ERROR_NO_PLAT", new Game(), []));
+    }  else if(game.genero1 == null || game.genero1.length == 0 || regex.test(game.genero1)){
       return of(new GameResponse("ERROR_NO_GEN", new Game(), []));
     } else if(game.fechaLanzamiento == null || game.fechaLanzamiento.toString() == ''){
       return of(new GameResponse("ERROR_NO_FECH", new Game(), []));
     }
 
+    if((game.plataforma3 != null && game.plataforma3.length != 0) && (game.plataforma2 == null || game.plataforma2.length == 0)){
+      return of(new GameResponse("ERROR_BAD_PLAT", new Game(), []));
+    }
     if((game.genero3 != null && game.genero3.length != 0) && (game.genero2 == null || game.genero2.length == 0)){
         return of(new GameResponse("ERROR_BAD_GEN", new Game(), []));
-    }
-    if((game.plataforma3 != null && game.plataforma3.length != 0) && (game.plataforma2 == null || game.plataforma2.length == 0)){
-        return of(new GameResponse("ERROR_BAD_PLAT", new Game(), []));
     }
 
     return this.http.post<GameResponse>(this.url, game);
@@ -98,22 +92,21 @@ export class GameService {
   //Edita un game
   editGame(idGame:string, gameInfo:GameInfo):Observable<GameResponse>{
     const regex = new RegExp('^[ \t\n]*$');
-    
-    if(gameInfo.plataforma1 == null || gameInfo.plataforma1.length == 0 || regex.test(gameInfo.plataforma1)){
-      return of(new GameResponse("ERROR_NO_PLAT", new Game(), []));
-    } else if(gameInfo.desarrolladora == null || gameInfo.desarrolladora.length == 0 || regex.test(gameInfo.desarrolladora)){
+    if(gameInfo.desarrolladora == null || gameInfo.desarrolladora.length == 0 || regex.test(gameInfo.desarrolladora)){
       return of(new GameResponse("ERROR_NO_DESA", new Game(), []));
-    } else if(gameInfo.genero1 == null || gameInfo.genero1.length == 0 || regex.test(gameInfo.genero1)){
+    } else if(gameInfo.plataforma1 == null || gameInfo.plataforma1.length == 0 || regex.test(gameInfo.plataforma1)){
+      return of(new GameResponse("ERROR_NO_PLAT", new Game(), []));
+    }  else if(gameInfo.genero1 == null || gameInfo.genero1.length == 0 || regex.test(gameInfo.genero1)){
       return of(new GameResponse("ERROR_NO_GEN", new Game(), []));
     } else if(gameInfo.fechaLanzamiento == null || gameInfo.fechaLanzamiento.toString() == ''){
       return of(new GameResponse("ERROR_NO_FECH", new Game(), []));
     }
 
+    if((gameInfo.plataforma3 != null && gameInfo.plataforma3.length != 0 && !regex.test(gameInfo.plataforma3)) && (gameInfo.plataforma2 == null || gameInfo.plataforma2.length == 0 || regex.test(gameInfo.plataforma2))){
+      return of(new GameResponse("ERROR_BAD_PLAT", new Game(), []));
+    }
     if((gameInfo.genero3 != null && gameInfo.genero3.length != 0 && !regex.test(gameInfo.genero3)) && (gameInfo.genero2 == null || gameInfo.genero2.length == 0 || regex.test(gameInfo.genero2))){
         return of(new GameResponse("ERROR_BAD_GEN", new Game(), []));
-    }
-    if((gameInfo.plataforma3 != null && gameInfo.plataforma3.length != 0 && !regex.test(gameInfo.plataforma3)) && (gameInfo.plataforma2 == null || gameInfo.plataforma2.length == 0 || regex.test(gameInfo.plataforma2))){
-        return of(new GameResponse("ERROR_BAD_PLAT", new Game(), []));
     }
 
     return this.http.put<GameResponse>(this.url + '/' + encodeURIComponent(idGame) + '/edit', gameInfo);

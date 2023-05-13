@@ -43,7 +43,7 @@ public class GamesSearchService {
         String notaMediaIni = gameInfo.getNotaMediaIni();
         String notaMediaFin = gameInfo.getNotaMediaFin();
         String fechaLanIni = gameInfo.getFechaLanIni();
-        String fechaLanFin = gameInfo.getNotaMediaFin();
+        String fechaLanFin = gameInfo.getFechaLanFin();
         String order = gameInfo.getOrder();
         
 
@@ -53,10 +53,10 @@ public class GamesSearchService {
             
             return new ResponseEntity<GameResponse>(new GameResponse("MISSING_DATA", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }  
-        if(notaMediaIni != null && (Integer.valueOf(notaMediaIni) < 1 || Integer.valueOf(notaMediaIni) < 10)){
+        if(notaMediaIni != null && (Integer.valueOf(notaMediaIni) < 1 || Integer.valueOf(notaMediaIni) > 10)){
             return new ResponseEntity<GameResponse>(new GameResponse("BAD_NOTEINI_VALUE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
-        if(notaMediaFin != null && (Integer.valueOf(notaMediaFin) < 1 || Integer.valueOf(notaMediaFin) < 10)){
+        if(notaMediaFin != null && (Integer.valueOf(notaMediaFin) < 1 || Integer.valueOf(notaMediaFin) > 10)){
             return new ResponseEntity<GameResponse>(new GameResponse("BAD_NOTEFIN_VALUE", new Game(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
         if((notaMediaIni == null && notaMediaFin != null) || (notaMediaIni != null && notaMediaFin == null)){

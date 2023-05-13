@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
 import { ReviewInfo } from '../reviewInfo';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-reviews',
@@ -21,7 +21,7 @@ export class FormReviewsComponent implements OnInit{
   itemsUser!:MenuItem[];
 
   constructor(private reviewService:ReviewService, private cookieService:CookieService,
-              private router:Router, private activatedRoute:ActivatedRoute){
+              private router:Router, private activatedRoute:ActivatedRoute, private messageService:MessageService){
     this.review = new Review();
     this.username = this.cookieService.get('token').split(':')[0];
     this.reviewInfo = new ReviewInfo();
@@ -93,21 +93,55 @@ export class FormReviewsComponent implements OnInit{
       this.reviewInfo.videojuego = this.review.videojuego;
       this.reviewInfo.username = this.review.username;
       this.reviewService.editReview(this.review.idReview ?? 0, this.reviewInfo).subscribe(
-      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/users/'+this.username+'/reviews']);
-          }
+            this.messageService.clear();
+            this.messageService.add({severity:'success', detail:'Reseña actualizada con éxito.'});
+            setTimeout(() => {this.router.navigate(['/users/'+this.username+'/reviews']);}, 3000);
+          } else if(r.response == 'EMPTY_NOTA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la nota de la reseña.'});
+          } else if(r.response == 'EMPTY_TITULO'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el título de la reseña.'});
+          } else if(r.response == 'EMPTY_COMENTARIO'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el comentario de la reseña.'});
+          } else if(r.response == 'NOT_FOUND'){
+            this.messageService.clear();
+            this.messageService.add({severity:'error', detail:'No se ha encontrado la reseña a editar.'});
+          } 
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
         }
       );
     } else {
       this.review.username = this.username;
       this.reviewService.createReview(this.review).subscribe(
-      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/games/'+this.review.videojuego+'/reviews']);
-          }
+            this.messageService.clear();
+            this.messageService.add({severity:'success', detail:'Reseña registrada con éxito.'});
+            setTimeout(() => {this.router.navigate(['/games/'+this.review.videojuego+'/reviews']);}, 3000);
+          } else if(r.response == 'EMPTY_NOTA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la nota de la reseña.'});
+          } else if(r.response == 'EMPTY_TITULO'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el título de la reseña.'});
+          } else if(r.response == 'EMPTY_COMENTARIO'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el comentario de la reseña.'});
+          } else if(r.response == 'EXISTS'){
+            this.messageService.clear();
+            this.messageService.add({severity:'error', detail:'Ya has registrado una reseña para este juego'});
+          } 
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
         }
       );
     }

@@ -35,10 +35,12 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { AccordionModule } from 'primeng/accordion';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DataViewModule } from 'primeng/dataview';
+import { ToastModule } from 'primeng/toast';
 
 import { ChangePasswordComponent } from './login/change-password/change-password.component';
 import { RequestChangePasswordComponent } from './login/request-change-password/request-change-password.component';
 import { InterceptorInterceptor } from './interceptor.interceptor';
+import { MessageService } from 'primeng/api';
 
 const routes : Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
@@ -93,9 +95,10 @@ const routes : Routes = [
     InputTextareaModule,
     AccordionModule,
     InputNumberModule,
-    DataViewModule
+    DataViewModule,
+    ToastModule
   ],
-  providers: [{provide:HTTP_INTERCEPTORS, useClass:InterceptorInterceptor, multi:true}, CookieService],
+  providers: [{provide:HTTP_INTERCEPTORS, useClass:InterceptorInterceptor, multi:true}, CookieService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

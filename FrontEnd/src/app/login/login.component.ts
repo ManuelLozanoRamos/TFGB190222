@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from '../app.component';
 import { LoginService } from './login.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit{
   password:string;
 
   constructor(private appComponent:AppComponent, private loginService:LoginService, 
-              private router:Router, private cookieService:CookieService){
+              private router:Router, private cookieService:CookieService, private messageService:MessageService){
     this.username = '';
     this.password = '';
   }
@@ -28,17 +29,28 @@ export class LoginComponent implements OnInit{
     }
     else {
       this.loginService.isRegistered(this.username, this.password).subscribe(
-        //Comprobar mensajes de error y validaciones y mostrar mensaje
         b => {
           if(b.response == 'OK'){
             this.cookieService.set('token', b.token, {path:'/', secure:true});
             this.router.navigate(['/home']);
-          } else {
-            //mostrar mensaje de que no son validas las credenciales y quitar la redireccion
-            this.router.navigate(['/login']);
+          } else if(b.response == 'ERROR_EMPTY_USER'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el nombre de usuario.'});
+          } else if(b.response == 'ERROR_EMPTY_PASS'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la contraseña.'});
+          } else if(b.response == 'NO_USER_EXISTS' || b.response == 'BAD_PASS'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'El nombre de usuario o la contraseña no son correctos.'});
+          } else if(b.response == 'NOT_VALIDATED'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'La dirección de correo asociada a la cuenta no ha sido validada. Revisa tu correo electrónico.'});
           }
         },
-        error => console.log('Error interno: ' + error.status)
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+        }
       );
     }
   }

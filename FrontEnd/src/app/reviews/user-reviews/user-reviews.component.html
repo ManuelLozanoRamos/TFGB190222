@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="user-reviews.component.css"/>
     </head>
     <body>
+      <p-toast></p-toast> 
       <div style="display: flex; flex-direction: column; min-height: 100vh;">
         <p-menubar class="card" [model]="items" [style]="{'margin-bottom': '50px'}">
           <ng-template pTemplate="start">
@@ -60,7 +61,7 @@
                       <p-dropdown [options]="orders" id="order" [(ngModel)]="order" placeholder="Seleccione una opción"></p-dropdown>
                     </div>
                   </div>
-                  <button pButton pRipple label="Buscar juego" (click)="search()" icon="pi pi-search" class="w-full" style="margin-top: 30px;"></button>
+                  <button pButton pRipple label="Buscar reseña" (click)="search()" icon="pi pi-search" class="w-full" style="margin-top: 30px;"></button>
                 </ng-template>
               </p-accordionTab>
             </p-accordion>

@@ -5,7 +5,7 @@ import { AppComponent } from 'src/app/app.component';
 import { Game } from '../game';
 import { GameService } from '../game.service';
 import { GameInfo } from '../gameInfo';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-games',
@@ -22,7 +22,7 @@ export class FormGamesComponent implements OnInit{
   itemsUser!:MenuItem[];
 
   constructor(private gameService:GameService, private cookieService:CookieService,
-              private router:Router, private activatedRoute:ActivatedRoute){
+              private router:Router, private activatedRoute:ActivatedRoute, private messageService:MessageService){
     this.username = this.cookieService.get('token').split(':')[0];
     this.game = new Game();
     this.gameInfo = new GameInfo();
@@ -67,7 +67,6 @@ export class FormGamesComponent implements OnInit{
 
   cargar(){
     this.activatedRoute.params.subscribe(
-      //Comprobar si hay errore y demás
       r => {
         let id=r['id'];
         if(id){
@@ -99,22 +98,77 @@ export class FormGamesComponent implements OnInit{
       if(this.gameInfo.plataforma3 == '')  this.gameInfo.plataforma3 = null;
       
       this.gameService.editGame(this.game.nombre ?? '', this.gameInfo).subscribe(
-      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/admin/games']);
+            this.messageService.clear();
+            this.messageService.add({severity:'success', detail:'Juego actualizado con éxito.'});
+            setTimeout(() => {this.router.navigate(['/admin/games'])}, 3000);
+          } else if(r.response == 'ERROR_NO_DESA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la desarrolladora del juego.'});
+          } else if(r.response == 'ERROR_NO_PLAT'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce al menos la plataforma 1 de lanzamiento del juego.'});
+          } else if(r.response == 'ERROR_NO_GEN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce al menos el género 1 al que pertenece el juegp.'});
+          } else if(r.response == 'ERROR_NO_FECH'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la fecha de lanzamiento del juego.'});
+          } else if(r.response == 'ERROR_BAD_PLAT'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce plataformas de manera continua.'});
+          } else if(r.response == 'ERROR_BAD_GEN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce géneros de manera continua.'});
+          } else if(r.response == 'NOT_FOUND'){
+            this.messageService.clear();
+            this.messageService.add({severity:'error', detail:'El juego no ha sido encontrado.'});
           }
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
         }
       );
     } 
     else {
       this.game.fechaRegistro = new Date();
       this.gameService.createGame(this.game).subscribe(
-      //Comprobar si r.response tambien es EXISTS o ERROR y las validaciones y mostrar mensajes de error en consecuencia
         r =>{
           if(r.response == 'OK'){
-            this.router.navigate(['/admin']);
+            this.messageService.clear();
+            this.messageService.add({severity:'success', detail:'Juego registrado con éxito.'});
+            setTimeout(() => {this.router.navigate(['/admin'])}, 3000);
+          } else if(r.response == 'ERROR_NO_NOM'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce el nombre del juego.'});
+          } else if(r.response == 'ERROR_NO_DESA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la desarrolladora del juego.'});
+          } else if(r.response == 'ERROR_NO_PLAT'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce al menos la plataforma 1 de lanzamiento del juego.'});
+          } else if(r.response == 'ERROR_NO_GEN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce al menos el género 1 al que pertenece el juegp.'});
+          } else if(r.response == 'ERROR_NO_FECH'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce la fecha de lanzamiento del juego.'});
+          } else if(r.response == 'ERROR_BAD_PLAT'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce plataformas de manera continua.'});
+          } else if(r.response == 'ERROR_BAD_GEN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Introduce géneros de manera continua.'});
+          } else if(r.response == 'EXISTS'){
+            this.messageService.clear();
+            this.messageService.add({severity:'error', detail:'El juego ya se encuentra registrado en el sistema.'});
           }
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
         }
       );
     }

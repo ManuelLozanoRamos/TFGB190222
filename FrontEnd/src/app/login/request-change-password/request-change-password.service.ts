@@ -17,7 +17,7 @@ export class RequestChangePasswordService {
   requestChangePassword(mail:string) : Observable<UserResponse>{
     const regex = new RegExp('^[ \t\n]*$');
     if(regex.test(mail)){
-      return of(new UserResponse("ERROR_EMPTY_USER", ''));
+      return of(new UserResponse("ERROR_EMPTY_MAIL", ''));
     }
 
     return this.http.post<UserResponse>(this.url + '/reset/password/send/mail', new UserInfo(null, null, mail));

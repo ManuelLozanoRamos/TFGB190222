@@ -17,10 +17,10 @@ export class ChangePasswordService {
   changePassword(user:string, newPassword:string, repNewPassword:string) : Observable<UserResponse>{
     const regex = new RegExp('^[ \t\n]*$');
     if(regex.test(newPassword)){
-      return of(new UserResponse('ERROR_EMPTY_USER', ''));
+      return of(new UserResponse('ERROR_EMPTY_PASS', ''));
     }
     if(regex.test(repNewPassword)){
-      return of(new UserResponse('ERROR_EMPTY_REPPASS', ''));
+      return of(new UserResponse('ERROR_EMPTY_RPASS', ''));
     }
     if(newPassword != repNewPassword){
       return of(new UserResponse('ERROR_NOT_EQ_PASS', ''));

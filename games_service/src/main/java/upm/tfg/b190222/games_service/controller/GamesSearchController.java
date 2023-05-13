@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,11 +57,7 @@ public class GamesSearchController{
     }
 
     @GetMapping(value="/games")
-    public ResponseEntity<GameResponse> gamesSearchAll(@RequestParam(required = false) String nombre, @RequestParam(required = false) String plataforma1, 
-        @RequestParam(required = false) String plataforma2, @RequestParam(required = false) String plataforma3, @RequestParam(required = false) String desarrolladora, 
-        @RequestParam(required = false) String genero1, @RequestParam(required = false) String genero2, @RequestParam(required = false) String genero3, 
-        @RequestParam(required = false) String notaMediaIni, @RequestParam(required = false) String notaMediaFin, @RequestParam(required = false) String fechaLanIni, 
-        @RequestParam(required = false) String fechaLanFin, @RequestParam(required = false) String order, HttpServletRequest request){
+    public ResponseEntity<GameResponse> gamesSearchAll(HttpServletRequest request){
 
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){

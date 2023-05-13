@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Review } from '../review';
 import { ReviewService } from '../review.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-user-reviews',
@@ -24,7 +24,7 @@ export class UserReviewsComponent implements OnInit{
   items!:MenuItem[];
   itemsUser!:MenuItem[];
 
-  constructor(private reviewService:ReviewService,
+  constructor(private reviewService:ReviewService, private messageService:MessageService,
               private router:Router, private cookieService:CookieService){
     this.username = this.cookieService.get('token').split(':')[0];
     this.reviews = [];
@@ -84,11 +84,11 @@ export class UserReviewsComponent implements OnInit{
       parametros.set('videojuego', this.videojuego);
       realizarPeticion = true;
     } 
-    if(this.notaIni != ''){
+    if(this.notaIni != '' && this.notaIni != null){
       parametros.set('notaIni', this.notaIni);
       realizarPeticion = true;
     } 
-    if(this.notaFin != ''){
+    if(this.notaFin != '' && this.notaFin != null){
       parametros.set('notaFin', this.notaFin);
       realizarPeticion = true;
     } 
@@ -107,9 +107,31 @@ export class UserReviewsComponent implements OnInit{
 
     if(realizarPeticion){
       this.reviewService.getReviews(parametros).subscribe(
-        //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
-        r => this.reviews = r.reviews 
+        r => {
+          if(r.response == 'OK'){
+            this.reviews = r.reviews;
+          } else if(r.response == 'ERROR_SOLO_UNA_NOTA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Debes introducir la nota inicial y la nota final, o ninguna de las dos.'});
+          } else if(r.response == 'ERROR_NINI_MAYOR_NFIN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'La nota inicial no puede ser mayor a la nota final.'});
+          } else if(r.response == 'ERROR_SOLO_UNA_FECHA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Debes introducir la fecha registro inicial y la fecha registro final, o ninguna de las dos.'});
+          } else if(r.response == 'ERROR_FINI_MAYOR_FFIN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'La fecha registro inicial no puede ser mayor a la nota registro final.'});
+          }
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+        }
       );
+    } else {
+      this.messageService.clear();
+      this.messageService.add({severity:'warn', detail:'Introduce algún filtro u ordenación para realizar una búsqueda'});
     }
   }
 
@@ -118,15 +140,31 @@ export class UserReviewsComponent implements OnInit{
     parametros.set('username', this.username);
 
     this.reviewService.getReviews(parametros).subscribe(
-      //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
-      r => this.reviews = r.reviews 
+      r =>{this.reviews = r.reviews },
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+      }
     );
   }
 
 
   delete(idReview:number) : void{
     this.reviewService.delete(idReview).subscribe(
-      r => window.location.reload()
+      r => {
+        if(r.response == 'OK'){
+          this.messageService.clear();
+          this.messageService.add({severity:'success', detail:'Reseña eliminada con éxito.'});
+          setTimeout(() => {window.location.reload();}, 3000);
+        } else if(r.response == 'NOT_FOUND'){
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'No se ha podido encontrar la reseña'});
+        }
+      },
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+      }
     );
   }
 

@@ -29,27 +29,27 @@ public class ReviewsSearchService {
     public ResponseEntity<ReviewResponse> findReviews(ReviewInfo reviewInfo){
         String username = reviewInfo.getUsername();
         String videojuego = reviewInfo.getVideojuego();
-        String notaMediaIni = reviewInfo.getNotaMediaIni();
-        String notaMediaFin = reviewInfo.getNotaMediaFin();
+        String notaIni = reviewInfo.getNotaIni();
+        String notaFin = reviewInfo.getNotaFin();
         String fechaRegIni = reviewInfo.getFechaRegIni();
         String fechaRegFin = reviewInfo.getFechaRegFin();
         String order = reviewInfo.getOrder();
 
-        if(username == null && videojuego == null && notaMediaIni == null && notaMediaFin == null 
+        if(username == null && videojuego == null && notaIni == null && notaFin == null 
         && fechaRegIni == null && fechaRegFin == null && order == null){
 
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_REQUEST", new Review(), new ArrayList<Review>()), HttpStatus.BAD_REQUEST);
         }
-        if(notaMediaIni != null && (Integer.valueOf(notaMediaIni) < 1 || Integer.valueOf(notaMediaIni) < 10)){
+        if(notaIni != null && (Integer.valueOf(notaIni) < 1 || Integer.valueOf(notaIni) > 10)){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_NOTEINI_VALUE", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
-        if(notaMediaFin != null && (Integer.valueOf(notaMediaFin) < 1 || Integer.valueOf(notaMediaFin) < 10)){
+        if(notaFin != null && (Integer.valueOf(notaFin) < 1 || Integer.valueOf(notaFin) > 10)){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_NOTEFIN_VALUE", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
-        if((notaMediaIni == null && notaMediaFin != null) || (notaMediaIni != null && notaMediaFin == null)){
+        if((notaIni == null && notaFin != null) || (notaIni != null && notaFin == null)){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("MISSING_NOTE", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
-        if(notaMediaIni != null && notaMediaFin != null && Integer.valueOf(notaMediaIni) > Integer.valueOf(notaMediaFin)){
+        if(notaIni != null && notaFin != null && Integer.valueOf(notaIni) > Integer.valueOf(notaFin)){
             return new ResponseEntity<ReviewResponse>(new ReviewResponse("BAD_NOTE_ORDER", new Review(), new ArrayList<>()), HttpStatus.BAD_REQUEST);
         }
         if((fechaRegIni == null && fechaRegFin != null) || (fechaRegIni != null && fechaRegFin == null)){
@@ -72,8 +72,8 @@ public class ReviewsSearchService {
             if(username != null){
                 predicateList.add(cb.equal(reviews.get("username"), username));
             }
-            if(notaMediaIni != null){
-                predicateList.add(cb.between(reviews.get("nota"), Integer.valueOf(notaMediaIni), Integer.valueOf(notaMediaFin)));
+            if(notaIni != null){
+                predicateList.add(cb.between(reviews.get("nota"), Integer.valueOf(notaIni), Integer.valueOf(notaFin)));
 
             }
             if(fechaRegIni != null){
@@ -91,6 +91,12 @@ public class ReviewsSearchService {
             }
             else if(order.equals("Fecha registro ascendente")){
                 cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("fechaRegistro")));
+            }
+            else if(order.equals("Nombre usuario ascendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("username")));
+            }
+            else if(order.equals("Nombre usuario descendente")){
+                cq.select(reviews).where(predicates).orderBy(cb.desc(reviews.get("username")));
             }
             else if(order.equals("Nombre juego ascendente")){
                 cq.select(reviews).where(predicates).orderBy(cb.asc(reviews.get("videojuego")));
@@ -116,22 +122,22 @@ public class ReviewsSearchService {
     }
 
 
-    @Transactional
-    public ResponseEntity<ReviewResponse> findAllReviews(){
-        try{
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Review> cq = cb.createQuery(Review.class);
-            Root<Review> games = cq.from(Review.class);
+    // @Transactional
+    // public ResponseEntity<ReviewResponse> findAllReviews(){
+    //     try{
+    //         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    //         CriteriaQuery<Review> cq = cb.createQuery(Review.class);
+    //         Root<Review> games = cq.from(Review.class);
 
-            cq.select(games);     
+    //         cq.select(games);     
 
-            List<Review> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
+    //         List<Review> result = entityManager.createQuery(cq).setLockMode(LockModeType.PESSIMISTIC_READ).getResultList();
 
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("OK", new Review(), result), HttpStatus.OK);
-        } catch(Exception e){
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    //         return new ResponseEntity<ReviewResponse>(new ReviewResponse("OK", new Review(), result), HttpStatus.OK);
+    //     } catch(Exception e){
+    //         return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
 
     @Transactional

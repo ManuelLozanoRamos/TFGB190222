@@ -7,8 +7,8 @@ export class ReviewInfo {
     videojuego:string|null;
     fechaRegIni:string|null;
     fechaRegFin:string|null;
-    notaMediaIni:string|null;
-    notaMediaFin:string|null;
+    notaIni:string|null;
+    notaFin:string|null;
     order:string|null;
 
     [key: string]: any;
@@ -23,8 +23,8 @@ export class ReviewInfo {
         this.videojuego = null;
         this.fechaRegIni = null;
         this.fechaRegFin = null;
-        this.notaMediaIni = null;
-        this.notaMediaFin = null;
+        this.notaIni = null;
+        this.notaFin = null;
         this.order = null;
     }
 }

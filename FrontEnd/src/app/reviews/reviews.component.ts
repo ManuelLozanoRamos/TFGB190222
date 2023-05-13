@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Review } from './review';
 import { ReviewService } from './review.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-reviews',
@@ -30,7 +30,7 @@ export class ReviewsComponent implements OnInit{
   itemsUser!:MenuItem[];
 
   constructor(private reviewService:ReviewService, private activatedRoute:ActivatedRoute,
-              private router:Router, private cookieService:CookieService){
+              private router:Router, private cookieService:CookieService, private messageService:MessageService){
     this.username = this.cookieService.get('token').split(':')[0];
     this.userReview = new Review;
     this.userHasReview = false;
@@ -44,7 +44,7 @@ export class ReviewsComponent implements OnInit{
     this.fechaRegIni = '';
     this.fechaRegFin = '';
     this.order='';
-    this.orders = ['Fecha registro descendente', 'Fecha registro ascendente', 'Nombre juego descendente', 'Nombre juego ascendente', 'Nota descendente', 'Nota ascendente'];
+    this.orders = ['Fecha registro descendente', 'Fecha registro ascendente', 'Nombre usuario descendente', 'Nombre usuario ascendente', 'Nota descendente', 'Nota ascendente'];
   }
   
   ngOnInit(): void {
@@ -101,11 +101,11 @@ export class ReviewsComponent implements OnInit{
       parametros.set('username', this.user);
       realizarPeticion = true;
     } 
-    if(this.notaIni != ''){
+    if(this.notaIni != '' && this.notaIni != null){
       parametros.set('notaIni', this.notaIni);
       realizarPeticion = true;
     } 
-    if(this.notaFin != ''){
+    if(this.notaFin != '' && this.notaFin != null){
       parametros.set('notaFin', this.notaFin);
       realizarPeticion = true;
     } 
@@ -124,9 +124,31 @@ export class ReviewsComponent implements OnInit{
 
     if(realizarPeticion){
       this.reviewService.getReviews(parametros).subscribe(
-        //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
-        r => this.reviews = r.reviews 
+        r => {
+          if(r.response == 'OK'){
+            this.reviews = r.reviews;
+          } else if(r.response == 'ERROR_SOLO_UNA_NOTA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Debes introducir la nota inicial y la nota final, o ninguna de las dos.'});
+          } else if(r.response == 'ERROR_NINI_MAYOR_NFIN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'La nota inicial no puede ser mayor a la nota final.'});
+          } else if(r.response == 'ERROR_SOLO_UNA_FECHA'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'Debes introducir la fecha registro inicial y la fecha registro final, o ninguna de las dos.'});
+          } else if(r.response == 'ERROR_FINI_MAYOR_FFIN'){
+            this.messageService.clear();
+            this.messageService.add({severity:'warn', detail:'La fecha registro inicial no puede ser mayor a la nota registro final.'});
+          }
+        },
+        error => {
+          this.messageService.clear();
+          this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+        }
       );
+    } else {
+      this.messageService.clear();
+      this.messageService.add({severity:'warn', detail:'Introduce algún filtro u ordenación para realizar una búsqueda'});
     }
   }
 
@@ -135,8 +157,11 @@ export class ReviewsComponent implements OnInit{
     parametros.set('videojuego', this.game);
 
     this.reviewService.getReviews(parametros).subscribe(
-      //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
-      r => this.reviews = r.reviews 
+      r =>{this.reviews = r.reviews},
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+      }
     );
   }
 
@@ -146,14 +171,17 @@ export class ReviewsComponent implements OnInit{
     parametros.set('username', this.username);
 
     this.reviewService.getReviews(parametros).subscribe(
-      //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r =>{
         if(r.reviews.length != 0){
           this.userReview = r.reviews[0];
           this.userHasReview = true;
         } 
         this.finished = true;
-      } 
+      },
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
+      }
     );
   }
 

@@ -24,23 +24,18 @@ export class ReviewService {
       let fechaRegIni = parametros.get("fechaRegIni");
       let fechaRegFin = parametros.get("fechaRegFin");
 
-      if(Number(notaIni) < 1 || Number(notaIni) > 10){
-        return of(new ReviewResponse("ERROR_RAN_NINI", new Review(), []));
-      }
-      if(Number(notaFin) < 1 || Number(notaFin) > 10){
-        return of(new ReviewResponse("ERROR_RAN_NFIN", new Review(), []));
+
+      if((notaIni != null && notaFin == null) || (notaIni == null && notaFin != null)){
+        return of(new ReviewResponse("ERROR_SOLO_UNA_NOTA", new Review(), []));
       }
       if(Number(notaIni) > Number(notaFin)){
         return of(new ReviewResponse("ERROR_NINI_MAYOR_NFIN", new Review(), []));
       }
-      if((notaIni != '' && notaFin == '') || (notaIni == '' && notaFin != '')){
-        return of(new ReviewResponse("ERROR_SOLO_UNA_NOTA", new Review(), []));
-      }
-      if(fechaRegIni != '' && fechaRegFin != '' && String(fechaRegIni) > String(fechaRegFin)){
-        return of(new ReviewResponse("ERROR_FINI_MAYOR_FFIN", new Review(), []));
-      }
-      if(fechaRegIni != '' && fechaRegFin == '' || (fechaRegIni == '' && fechaRegFin != '')){
+      if((!fechaRegIni && fechaRegFin) || (fechaRegIni && !fechaRegFin)){
         return of(new ReviewResponse("ERROR_SOLO_UNA_FECHA", new Review(), []));
+      }
+      if(String(fechaRegIni) > String(fechaRegFin)){
+        return of(new ReviewResponse("ERROR_FINI_MAYOR_FFIN", new Review(), []));
       }
 
       parametros.forEach((value, key) =>{
@@ -62,14 +57,14 @@ export class ReviewService {
   createReview(review:Review):Observable<ReviewResponse>{
     const regex = new RegExp('^[ \t\n]*$');
 
+    if(review.nota == null){
+      return of(new ReviewResponse("EMPTY_NOTA", new Review(), []));
+    }
     if(review.titulo == null || review.titulo.length == 0 || regex.test(review.titulo)){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+      return of(new ReviewResponse("EMPTY_TITULO", new Review(), []));
     }
     if(review.comentario == null || review.comentario.length == 0 || regex.test(review.comentario)){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
-    }
-    if(review.nota == null){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+      return of(new ReviewResponse("EMPTY_COMENTARIO", new Review(), []));
     }
 
     return this.http.post<ReviewResponse>(this.url, review);
@@ -83,14 +78,14 @@ export class ReviewService {
   editReview(idReview:number, reviewInfo:ReviewInfo):Observable<ReviewResponse>{
     const regex = new RegExp('^[ \t\n]*$');
     
+    if(reviewInfo.nota == null){
+      return of(new ReviewResponse("EMPTY_NOTA", new Review(), []));
+    }
     if(reviewInfo.titulo == null || reviewInfo.titulo.length == 0 || regex.test(reviewInfo.titulo)){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+      return of(new ReviewResponse("EMPTY_TITULO", new Review(), []));
     }
     if(reviewInfo.comentario == null || reviewInfo.comentario.length == 0 || regex.test(reviewInfo.comentario)){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
-    }
-    if(reviewInfo.nota == null){
-      return of(new ReviewResponse("EMPTY_FIELD", new Review(), []));
+      return of(new ReviewResponse("EMPTY_COMENTARIO", new Review(), []));
     }
 
     return this.http.put<ReviewResponse>(this.url + '/' + encodeURIComponent(idReview) + '/edit', reviewInfo);

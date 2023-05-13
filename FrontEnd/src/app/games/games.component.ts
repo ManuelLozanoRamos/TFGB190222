@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Game } from './game';
 import { GameService } from './game.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-games',
@@ -31,7 +31,8 @@ export class GamesComponent implements OnInit{
   items!:MenuItem[];
   itemsUser!:MenuItem[];
 
-  constructor(private gameService:GameService, private router:Router, private cookieService:CookieService){
+  constructor(private gameService:GameService, private router:Router, private cookieService:CookieService,
+              private messageService:MessageService){
     this.username = this.cookieService.get('token').split(':')[0];
     this.games = [];
     this.nombre = '';
@@ -90,7 +91,6 @@ export class GamesComponent implements OnInit{
   
   searchAll() : void {
     this.gameService.getAllGames().subscribe(
-      //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r =>{
         this.games = r.games;
         this.games.forEach((value) => {
@@ -101,6 +101,10 @@ export class GamesComponent implements OnInit{
           if(value.plataforma2 != null && value.plataforma2 != '') value.plataformas += ', ' + value.plataforma2;
           if(value.plataforma3 != null && value.plataforma3 != '') value.plataformas += ', ' + value.plataforma3;
         });
+      },
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
       }
     );
   }
@@ -115,24 +119,44 @@ export class GamesComponent implements OnInit{
     if(this.genero1 != '') parametros.set('genero1', this.genero1);
     if(this.genero2 != '') parametros.set('genero2', this.genero2);
     if(this.genero3 != '') parametros.set('genero3', this.genero3);
-    if(this.notaMediaIni != '') parametros.set("notaMediaIni", this.notaMediaIni);
-    if(this.notaMediaFin != '') parametros.set("notaMediaFin", this.notaMediaFin);
+    if(this.notaMediaIni != '' && this.notaMediaIni != null) parametros.set("notaMediaIni", this.notaMediaIni);
+    if(this.notaMediaFin != '' && this.notaMediaFin != null) parametros.set("notaMediaFin", this.notaMediaFin);
     if(this.fechaLanIni != '') parametros.set("fechaLanIni", this.fechaLanIni);
     if(this.fechaLanFin != '') parametros.set("fechaLanFin", this.fechaLanFin);
     if(this.order != '') parametros.set("order", this.order);
 
     this.gameService.getGames(parametros).subscribe(
-      //Comprobar si r.response es ERROR y validaciones y si es así entonces mostrar mensaje de error interno
       r =>{
-        this.games = r.games;
-        this.games.forEach((value) => {
-          value.generos = value.genero1;
-          if(value.genero2 != null && value.genero2 != '') value.generos += ', ' + value.genero2;
-          if(value.genero3 != null && value.genero3 != '') value.generos += ', ' + value.genero3;
-          value.plataformas = value.plataforma1;
-          if(value.plataforma2 != null && value.plataforma2 != '') value.plataformas += ', ' + value.plataforma2;
-          if(value.plataforma3 != null && value.plataforma3 != '') value.plataformas += ', ' + value.plataforma3;
-        });
+        if(r.response == 'OK'){
+          this.games = r.games;
+          this.games.forEach((value) => {
+            value.generos = value.genero1;
+            if(value.genero2 != null && value.genero2 != '') value.generos += ', ' + value.genero2;
+            if(value.genero3 != null && value.genero3 != '') value.generos += ', ' + value.genero3;
+            value.plataformas = value.plataforma1;
+            if(value.plataforma2 != null && value.plataforma2 != '') value.plataformas += ', ' + value.plataforma2;
+            if(value.plataforma3 != null && value.plataforma3 != '') value.plataformas += ', ' + value.plataforma3;
+          });
+        } else if(r.response == 'ERROR_SOLO_UNA_NOTA'){
+          this.messageService.clear();
+          this.messageService.add({severity:'warn', detail:'Debes introducir la nota media inicial y la nota media final, o ninguna de las dos.'});
+        } else if(r.response == 'ERROR_NINI_MAYOR_NFIN'){
+          this.messageService.clear();
+          this.messageService.add({severity:'warn', detail:'La nota media inicial no puede ser mayor a la nota media final'});
+        } else if(r.response == 'ERROR_SOLO_UNA_FECHA'){
+          this.messageService.clear();
+          this.messageService.add({severity:'warn', detail:'Debes introducir la fecha lanzamiento inicial y la fecha lanzamiento final, o ninguna de las dos.'});
+        } else if(r.response == 'ERROR_FINI_MAYOR_FFIN'){
+          this.messageService.clear();
+          this.messageService.add({severity:'warn', detail:'La fecha lanzamiento inicial no puede ser mayor a la nota lanzamiento final'});
+        } else if(r.response == 'NO_PETITION'){
+          this.messageService.clear();
+          this.messageService.add({severity:'warn', detail:'Introduce algún filtro u ordenación para realizar una búsqueda'});
+        }
+      },
+      error => {
+        this.messageService.clear();
+        this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'});
       }
     );
   }

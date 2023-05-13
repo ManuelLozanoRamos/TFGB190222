@@ -56,27 +56,27 @@ public class ReviewsSearchController{
     }
 
 
-    @GetMapping(value="/reviews")
-    public ResponseEntity<ReviewResponse> reviewsSearchAll(HttpServletRequest request){
+    // @GetMapping(value="/reviews")
+    // public ResponseEntity<ReviewResponse> reviewsSearchAll(HttpServletRequest request){
         
-        String authorizationHeader = request.getHeader("Authorization");
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-            String token = authorizationHeader.substring(7);
-            String[] tokenParts = token.split(":");
+    //     String authorizationHeader = request.getHeader("Authorization");
+    //     if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+    //         String token = authorizationHeader.substring(7);
+    //         String[] tokenParts = token.split(":");
                                     
-            if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
-                return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
-            }                      
-        } else {
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
-        }
+    //         if(!"USER_SESSION".equals(tokenParts[1]) || (!userValidationService.validate(token).equals("VALID") && !userValidationService.validate(token).equals("VALID_ADMIN"))){
+    //             return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
+    //         }                      
+    //     } else {
+    //         return new ResponseEntity<ReviewResponse>(new ReviewResponse("INVALID_TOKEN", new Review(), new ArrayList<Review>()), HttpStatus.UNAUTHORIZED);
+    //     }
         
-        try{
-            return reviewsSearchService.findAllReviews();
-        } catch(Exception e){
-            return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    //     try{
+    //         return reviewsSearchService.findAllReviews();
+    //     } catch(Exception e){
+    //         return new ResponseEntity<ReviewResponse>(new ReviewResponse("ERROR", new Review(), new ArrayList<Review>()), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     @GetMapping(value="/reviews/{idReview}")
     public ResponseEntity<ReviewResponse> reviewsSearchById(@PathVariable Integer idReview, HttpServletRequest request){
