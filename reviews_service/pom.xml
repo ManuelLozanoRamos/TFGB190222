@@ -6,7 +6,8 @@
 
   <groupId>upm.tfg.b190222.reviews_service</groupId>
   <artifactId>reviews_service</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
+  <packaging>war</packaging>
 
 
 
@@ -82,6 +83,14 @@
         <artifactId>json</artifactId>
         <version>20230227</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-tomcat</artifactId>
+        <version>3.0.6</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -128,5 +137,11 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
+      </plugin>
+    </plugins>
   </build>
 </project>

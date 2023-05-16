@@ -1,1 +1,10 @@
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/service/TokenGeneratorService.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/entity/Token.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/controller/TokenValidatorController.java
 /home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/TokensServiceApplication.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/controller/TokenGeneratorController.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/controller/ErrorsController.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/utils/TokenGenerator.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/service/TokenValidatorService.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/response/TokenResponse.java
+/home/manuel/TFG/tokens_service/src/main/java/upm/tfg/b190222/tokens_service/info/TokenInfo.java
