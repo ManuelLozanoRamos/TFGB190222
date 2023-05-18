@@ -28,7 +28,7 @@ export class RegisterComponent {
       s => {
         if(s.response == 'OK'){
           this.messageService.clear();
-          this.messageService.add({severity:'success', detail:'Cuenta de usuario creada con éxito.'})
+          this.messageService.add({severity:'success', detail:'Cuenta de usuario creada con éxito. Revisa tu correo para activarla y poder utilizarla.'})
           setTimeout(() => {this.router.navigate(['/login'])}, 3000);
         } else if(s.response == 'ERROR_EMPTY_USER'){
           this.messageService.clear();
