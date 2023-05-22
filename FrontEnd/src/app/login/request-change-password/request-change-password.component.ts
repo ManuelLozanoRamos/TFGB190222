@@ -27,7 +27,7 @@ export class RequestChangePasswordComponent {
         } else if (r.response == 'NOT_VALIDATED'){
           this.messageService.clear();
           this.messageService.add({severity:'warn', detail:'La dirección de correo asociada a la cuenta no ha sido validada. Revisa tu correo electrónico.'});
-        } else if(r.response == 'NOT_EXISTS'){
+        } else if(r.response == 'NO_USER_EXISTS'){
           this.messageService.clear();
           this.messageService.add({severity:'warn', detail:'La dirección de correo no está asociada a ninguna cuenta registrada.'});
         }

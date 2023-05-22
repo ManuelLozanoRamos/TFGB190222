@@ -33,7 +33,7 @@ export class ActivationComponent implements OnInit{
               if(r.response == "OK"){
                 this.activated = true;
                 this.cookieService.deleteAll('/');
-              } else if(r.response == 'NOT_FOUND'){
+              } else if(r.response == 'NO_USER_EXISTS'){
                 this.messageService.clear();
                 this.messageService.add({severity:'error', detail:'El usuario ' + this.username + ' no está registrado.'});
               }

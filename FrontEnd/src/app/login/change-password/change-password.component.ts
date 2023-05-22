@@ -58,7 +58,7 @@ export class ChangePasswordComponent implements OnInit{
         } else if(r.response == 'ERROR_NOT_EQ_PASS'){
           this.messageService.clear();
           this.messageService.add({severity:'warn', detail:'Ambas contraseñas deben ser iguales.'})
-        } else if(r.response == 'NOT_FOUND'){
+        } else if(r.response == 'NO_USER_EXISTS'){
           this.messageService.clear();
           this.messageService.add({severity:'error', detail:'Se ha producido un error interno. Inténtalo de nuevo más tarde.'})
         } 

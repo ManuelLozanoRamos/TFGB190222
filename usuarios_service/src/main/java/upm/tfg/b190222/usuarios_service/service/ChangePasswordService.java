@@ -69,7 +69,7 @@ public class ChangePasswordService {
 
                 return new ResponseEntity<UserResponse>(new UserResponse("OK", null), HttpStatus.OK);
             } else {
-                return new ResponseEntity<UserResponse>(new UserResponse("NOT_EXISTS", null), HttpStatus.OK);
+                return new ResponseEntity<UserResponse>(new UserResponse("NO_USER_EXISTS", null), HttpStatus.OK);
             }  
         } catch(Exception e){
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class ChangePasswordService {
         try{
             Usuario usuario = entityManager.find(Usuario.class, user, LockModeType.PESSIMISTIC_WRITE);
 
-            if(usuario == null) return new ResponseEntity<UserResponse>(new UserResponse("NOT_FOUND", null), HttpStatus.OK);
+            if(usuario == null) return new ResponseEntity<UserResponse>(new UserResponse("NO_USER_EXISTS", null), HttpStatus.OK);
     
             if(!tokenUser.equals(usuario.getUsername()))  return new ResponseEntity<UserResponse>(new UserResponse("WRONG_USER", null), HttpStatus.FORBIDDEN);
 
